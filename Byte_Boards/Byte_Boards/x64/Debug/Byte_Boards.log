@@ -1,4 +1,4 @@
 ﻿  main.cpp
-C:\Users\Usuario\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(57,12): warning C4101: 'k': variable local sin referencia
-C:\Users\Usuario\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(57,9): warning C4101: 'j': variable local sin referencia
-  Byte_Boards.vcxproj -> C:\Users\Usuario\Documents\GitHub\ByteBoard\Byte_Boards\x64\Debug\Byte_Boards.exe
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(143,28): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(143,25): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
+  Byte_Boards.vcxproj -> C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\x64\Debug\Byte_Boards.exe

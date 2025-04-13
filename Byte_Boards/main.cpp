@@ -6,6 +6,9 @@
 
 using namespace std;
 
+void Imprimir_Tablero(void);
+
+//Clase Pieza
 class pieza {
 private:
 	int pos[2];
@@ -17,17 +20,21 @@ public:
 	pieza(int posx, int posy, int tipo_pieza, int pieza_num);
 	void mover(int n_posx, int n_posy);
 	virtual void mostrar(void);
+	vector<int> pos_actual(void);
 };
 
+//Clase Peon
 class peon : public pieza {
 private:
 	int cant;
 public:
 	peon(int posx, int posy, int tipo_pieza, int pieza_num);
+	void mover_peon(int n_posx, int n_posy);
 	void mostrar(void);
+
 };
 
-
+//Constructor pieza
 pieza::pieza(int posx, int posy, int tipo_pieza, int pieza_num)
 {
 	pos[0] = posx;
@@ -36,16 +43,68 @@ pieza::pieza(int posx, int posy, int tipo_pieza, int pieza_num)
 	num_pieza = pieza_num;
 }
 
+//Constructor Peon
 peon::peon(int posx, int posy, int tipo_pieza, int pieza_num)
 	:pieza(posx, posy, tipo_pieza, pieza_num)
 {
 	cant = 0;
 }
-void pieza::mostrar(void)
+
+//Posicion actual pieza
+vector<int> pieza::pos_actual(void)
 {
-	cout << "La posicion de la pieza de tipo " << name[num_tipo] << " y numero \"" << num_pieza << "\" es " << pos[0] << " en \"x\", y " << pos[1] << " en \"y\"" << endl;
+	vector<int> pos_act{ pos[0], pos[1] };
+	return pos_act;
 }
 
+//Verificador del movimiento del peon
+void peon::mover_peon(int n_posx, int n_posy) {
+
+	vector<int> pos_peon_actual;
+	pos_peon_actual = pos_actual();
+
+	// cout << endl << endl << "*** La posicion actual de ese peon en \"x\" es " << pos_peon_actual[0] << "y " << pos_peon_actual[1] << "en \"y\"***" << endl;
+	// cout << "*** Segun lo que me dices, la nueva posicion que quieres es " << n_posx << "en \"x\", y " << n_posy << "en \"y\"***";
+
+	if (cant == 0)
+	{
+		if ((n_posx - pos_peon_actual[0] == 0) && (n_posy - pos_peon_actual[1] <= 2) && (n_posy - pos_peon_actual[1] >= 1))
+		{
+			mover(n_posx, n_posy);
+			cant++;
+		}
+		else
+			cout << "La has liado, intentalo de nuevo" << endl << endl;
+	}
+	else
+		if (cant != 0)
+		{
+			if ((n_posx - pos_peon_actual[0] == 0) && (n_posy - pos_peon_actual[1] == 1))
+			{
+				mover(n_posx, n_posy);
+				cant++;
+			}
+			else
+				cout << "La has liado, intentalo de nuevo" << endl << endl;
+		}
+
+}
+
+//Actualizador de la posicion de la pieza
+void pieza::mover(int n_posx, int n_posy)
+{
+	pos[0] = n_posx;
+	pos[1] = n_posy;
+}
+
+
+//Mostrar datos relavantes a la clase pieza
+void pieza::mostrar(void)
+{
+	cout << endl << "La posicion de la pieza de tipo " << name[num_tipo] << " y numero \"" << num_pieza << "\" es " << pos[0] << " en \"x\", y " << pos[1] << " en \"y\"" << endl;
+}
+
+//Mostrar datos relecantes a la sub-clase peon
 void peon::mostrar(void) {
 	pieza::mostrar();
 
@@ -54,17 +113,83 @@ void peon::mostrar(void) {
 
 int main()
 {
-	int i, j, k;
-	pieza* nums[16];
-	for (i = 0; i < 8; i++)
+	//Imprimir_Tablero();
+
+	int i;
+	size_t num = 7, x, y;
+	// pieza *nums[17];
+	peon* nums[9];
+	for (i = 1; i < 9; i++)
 	{
-		nums[i] = new peon(i + 1, 2, 5, i + 1);
+		nums[i] = new peon(i, 2, 5, i);
 	}
 
-	for (i = 0; i < 8; i++)
+	// for (i = 0; i < 8; i++)
+	// {
+	//	nums[i]->mostrar();
+	// }
+	//
+	while (num <= 8)
 	{
-		nums[i]->mostrar();
+		Imprimir_Tablero();
+		cout << endl << "Escribe a continuacion que peon quieres utilizar, y donde lo quieres colocar:" << endl;
+		cout << "Numero de peon:" << endl;
+		cin >> num;
+		nums[num]->mostrar();
+		cout << endl << "Nueva Posicion en \"x\":" << endl;
+		cin >> x;
+		cout << endl << "Nueva Posicion en \"y\":" << endl;
+		cin >> y;
+		nums[num]->mover_peon(x, y);
+		nums[num]->mostrar();
+		system("cls");
 	}
 
 	return 0;
+}
+
+void Imprimir_Tablero(void)
+{
+	size_t i, j, k = 2, y;
+	cout << "\t\tTamblero de Ajedrez" << endl << endl;
+	for (i = 0; i < 8; i++)
+	{
+
+		for (y = 0; y < 3; y++)
+		{
+			if (y == 1)
+				cout << "POSICION EN Y: " << 8 - i << "\t\t";
+			else
+				cout << "                \t\t";
+			if (i != 6)
+			{
+				for (j = 0; j < 8; j++)
+				{
+					if ((j + k) % 2 == 0)
+					{
+						cout << "||||||";
+					}
+					else
+						cout << "      ";
+				}
+			}
+			else
+				for (j = 0; j < 8; j++)
+				{
+					if ((j + k) % 2 == 0)
+					{
+						cout << "||PP||";
+					}
+					else
+						cout << "  PP  ";
+				}
+
+			cout << endl;
+		}
+
+		k++;
+	}
+	cout << endl << endl << "POSICION EN X: \t\t\t";
+	cout << "  1      2     3     4     5     6     7     8" << endl << endl;
+
 }

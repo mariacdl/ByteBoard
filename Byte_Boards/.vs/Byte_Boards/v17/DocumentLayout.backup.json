@@ -1,9 +1,9 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Usuario\\Documents\\GitHub\\ByteBoard\\Byte_Boards\\",
+  "WorkspaceRootPath": "C:\\Users\\aleja\\Documents\\GitHub\\ByteBoard\\Byte_Boards\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{0414B1C7-4601-4C27-B70B-E9767A1F00B6}|Byte_Boards.vcxproj|C:\\Users\\Usuario\\Documents\\GitHub\\ByteBoard\\Byte_Boards\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{0414B1C7-4601-4C27-B70B-E9767A1F00B6}|Byte_Boards.vcxproj|C:\\Users\\aleja\\Documents\\GitHub\\ByteBoard\\Byte_Boards\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{0414B1C7-4601-4C27-B70B-E9767A1F00B6}|Byte_Boards.vcxproj|solutionrelative:main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
@@ -14,37 +14,17 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 0,
           "Children": [
-            {
-              "$type": "Bookmark",
-              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:128:0:{13b12e3e-c1b4-4539-9371-4fe9a0d523fc}"
-            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "main.cpp",
-              "DocumentMoniker": "C:\\Users\\Usuario\\Documents\\GitHub\\ByteBoard\\Byte_Boards\\main.cpp",
+              "DocumentMoniker": "C:\\Users\\aleja\\Documents\\GitHub\\ByteBoard\\Byte_Boards\\main.cpp",
               "RelativeDocumentMoniker": "main.cpp",
-              "ToolTip": "C:\\Users\\Usuario\\Documents\\GitHub\\ByteBoard\\Byte_Boards\\main.cpp",
+              "ToolTip": "C:\\Users\\aleja\\Documents\\GitHub\\ByteBoard\\Byte_Boards\\main.cpp",
               "RelativeToolTip": "main.cpp",
-              "ViewState": "AgIAAC8AAADAMjMzMzMbwD4AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAAACsAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-03-26T14:49:14.839Z",
               "EditorCaption": ""
