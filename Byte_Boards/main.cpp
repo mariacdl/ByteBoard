@@ -174,7 +174,7 @@ int main()
 	//
 	while (num <= 8)
 	{
-		//Imprimir_Tablero();
+		Imprimir_Tablero();
 		cout << "Escribe a continuacion que tipo de pieza quieres utlizar:" << endl;
 		cout << "1. rey\n" << "2. dama\n" << "3. torre\n" << "4. alfil\n" << "5. caballo\n" << "6. peon \n" << endl;
 
