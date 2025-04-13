@@ -34,6 +34,15 @@ public:
 
 };
 
+//Clase Torre
+class torre : public pieza {
+private:
+
+public:
+	torre(int posx, int posy, int tipo_pieza, int pieza_num);
+	void mover_torre(int n_posx, int n_posy);
+};
+
 //Constructor pieza
 pieza::pieza(int posx, int posy, int tipo_pieza, int pieza_num)
 {
@@ -48,6 +57,13 @@ peon::peon(int posx, int posy, int tipo_pieza, int pieza_num)
 	:pieza(posx, posy, tipo_pieza, pieza_num)
 {
 	cant = 0;
+}
+
+//Constructor Torre
+torre::torre(int posx, int posy, int tipo_pieza, int pieza_num)
+	:pieza(posx, posy, tipo_pieza, pieza_num)
+{
+
 }
 
 //Posicion actual pieza
@@ -90,6 +106,25 @@ void peon::mover_peon(int n_posx, int n_posy) {
 
 }
 
+// Verificador del movimiento de la torre
+void torre::mover_torre(int n_posx, int n_posy)
+{
+	vector<int> pos_torre_actual;
+	pos_torre_actual = pos_actual();
+
+	if ((n_posx - pos_torre_actual[0] == 0) && (n_posy - pos_torre_actual[1] != 0))
+	{
+		mover(n_posx, n_posy);
+	}
+	else if ((n_posy - pos_torre_actual[1] == 0) && (n_posx - pos_torre_actual[0] != 0))
+	{
+		mover(n_posx, n_posy);
+	}
+	else
+		cout << "La has liado, intentalo de nuevo" << endl << endl;
+
+}
+
 //Actualizador de la posicion de la pieza
 void pieza::mover(int n_posx, int n_posy)
 {
@@ -116,32 +151,145 @@ int main()
 	//Imprimir_Tablero();
 
 	int i;
-	size_t num = 7, x, y;
+	size_t num = 7, x, y, z;
+	int opt;
+	char trash;
+	vector<string> opciones{ "rey", "dama", "torre", "alfil", "caballo", "peon" };
 	// pieza *nums[17];
-	peon* nums[9];
+	peon* num_p[9];
+	torre* num_t[3];
+
 	for (i = 1; i < 9; i++)
 	{
-		nums[i] = new peon(i, 2, 5, i);
+		num_p[i] = new peon(i, 2, 5, i);
 	}
+
+	num_t[1] = new torre(1, 1, 2, 1);
+	num_t[2] = new torre(8, 1, 2, 2);
 
 	// for (i = 0; i < 8; i++)
 	// {
 	//	nums[i]->mostrar();
-	// }
+	// } 
 	//
 	while (num <= 8)
 	{
-		Imprimir_Tablero();
-		cout << endl << "Escribe a continuacion que peon quieres utilizar, y donde lo quieres colocar:" << endl;
-		cout << "Numero de peon:" << endl;
-		cin >> num;
-		nums[num]->mostrar();
-		cout << endl << "Nueva Posicion en \"x\":" << endl;
-		cin >> x;
-		cout << endl << "Nueva Posicion en \"y\":" << endl;
-		cin >> y;
-		nums[num]->mover_peon(x, y);
-		nums[num]->mostrar();
+		//Imprimir_Tablero();
+		cout << "Escribe a continuacion que tipo de pieza quieres utlizar:" << endl;
+		cout << "1. rey\n" << "2. dama\n" << "3. torre\n" << "4. alfil\n" << "5. caballo\n" << "6. peon \n" << endl;
+
+		do {
+			cin >> opt;
+		} while ((opt > 7) || (opt < 1));
+
+
+		switch (opt)
+		{
+		case 1:
+		{
+			//cout << "Usted ha elegido al rey\n";
+			do {
+				cout << "Que numero de " << opciones[opt - 1] << "quiere utilizar? " << endl;
+				cin >> num;
+			} while (num != 1);
+			break;
+		}
+		case 2:
+		{
+			//cout << "Usted ha elegido a la dama\n";
+			do {
+				cout << "Que numero de " << opciones[opt - 1] << "quiere utilizar? " << endl;
+				cin >> num;
+			} while (num != 1);
+			break;
+		}
+		case 3:
+		{
+			do {
+				cout << "Que numero de " << opciones[opt - 1] << "quiere utilizar? " << endl;
+				cin >> num;
+			} while ((num != 1) && (num != 2));
+			//cout << "Usted ha elegido a la torre\n";
+			num_t[num]->mostrar();
+			break;
+		}
+		case 4:
+		{
+			//cout << "Usted ha elegido al alfil\n";
+			do {
+				cout << "Que numero de " << opciones[opt - 1] << "quiere utilizar? " << endl;
+				cin >> num;
+			} while ((num != 1) && (num != 2));
+			break;
+		}
+		case 5:
+		{
+			//cout << "Usted ha elegido al caballo\n";
+			do {
+				cout << "Que numero de " << opciones[opt - 1] << "quiere utilizar? " << endl;
+				cin >> num;
+			} while ((num != 1) && (num != 2));
+			break;
+		}
+		case 6:
+		{
+			//cout << "Usted ha elegido al peon\n";
+			do {
+				cout << "Que numero de " << opciones[opt - 1] << "quiere utilizar? " << endl;
+				cin >> num;
+			} while ((num < 1) || (num > 8));
+			num_p[num]->mostrar();
+			break;
+		}
+		}
+
+		do {
+			cout << endl << "Nueva Posicion en \"x\":" << endl;
+			cin >> x;
+		} while ((x < 1) || (x > 8));
+
+		do {
+			cout << endl << "Nueva Posicion en \"y\":" << endl;
+			cin >> y;
+		} while ((y < 1) || (y > 8));
+
+		switch (opt)
+		{
+		case 1:
+		{
+			//cout << "Usted ha elegido al rey\n";
+			break;
+		}
+		case 2:
+		{
+			//cout << "Usted ha elegido a la dama\n";
+			break;
+		}
+		case 3:
+		{
+			//cout << "Usted ha elegido a la torre\n";
+			num_t[num]->mover_torre(x, y);
+			break;
+		}
+		case 4:
+		{
+			//cout << "Usted ha elegido al alfil\n";
+			break;
+		}
+		case 5:
+		{
+			//cout << "Usted ha elegido al caballo\n";
+			break;
+		}
+		case 6:
+		{
+			//cout << "Usted ha elegido al peon\n";
+			num_p[num]->mover_peon(x, y);
+			break;
+		}
+		}
+		cout << "Pulse cualquier tecla [...]:" << endl;
+		cin >> trash;
 		system("cls");
 	}
 
@@ -190,6 +338,6 @@ void Imprimir_Tablero(void)
 		k++;
 	}
 	cout << endl << endl << "POSICION EN X: \t\t\t";
-	cout << "  1      2     3     4     5     6     7     8" << endl << endl;
+	cout << "  1      2     3     4     5     6     7     8" << endl;
 
 }
