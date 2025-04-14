@@ -1,8 +1,8 @@
 
-
 #include <iostream>
 #include <string>
 #include <vector>
+#include <math.h>
 
 using namespace std;
 
@@ -43,6 +43,15 @@ public:
 	void mover_torre(int n_posx, int n_posy);
 };
 
+//Class Caballo
+class caballo : public pieza {
+private:
+
+public:
+	caballo(int posx, int posy, int tipo_pieza, int pieza_num);
+	void mover_caballo(int n_posx, int n_posy);
+};
+
 //Constructor pieza
 pieza::pieza(int posx, int posy, int tipo_pieza, int pieza_num)
 {
@@ -61,6 +70,13 @@ peon::peon(int posx, int posy, int tipo_pieza, int pieza_num)
 
 //Constructor Torre
 torre::torre(int posx, int posy, int tipo_pieza, int pieza_num)
+	:pieza(posx, posy, tipo_pieza, pieza_num)
+{
+
+}
+
+//Constructor Caballo
+caballo::caballo(int posx, int posy, int tipo_pieza, int pieza_num)
 	:pieza(posx, posy, tipo_pieza, pieza_num)
 {
 
@@ -125,6 +141,25 @@ void torre::mover_torre(int n_posx, int n_posy)
 
 }
 
+// Verificador del movimiento del caballo
+void caballo::mover_caballo(int n_posx, int n_posy)
+{
+	vector<int> pos_caballo_actual;
+	pos_caballo_actual = pos_actual();
+
+	if ((abs(n_posx - pos_caballo_actual[0]) == 2) && (abs(n_posy - pos_caballo_actual[1]) == 1))
+	{
+		mover(n_posx, n_posy);
+	}
+	else if ((abs(n_posx - pos_caballo_actual[0]) == 1) && (abs(n_posy - pos_caballo_actual[1]) == 2))
+	{
+		mover(n_posx, n_posy);
+	}
+	else
+		cout << "La has liado, intentalo de nuevo" << endl << endl;
+
+}
+
 //Actualizador de la posicion de la pieza
 void pieza::mover(int n_posx, int n_posy)
 {
@@ -148,8 +183,6 @@ void peon::mostrar(void) {
 
 int main()
 {
-	//Imprimir_Tablero();
-
 	int i;
 	size_t num = 7, x, y, z;
 	int opt;
@@ -158,6 +191,7 @@ int main()
 	// pieza *nums[17];
 	peon* num_p[9];
 	torre* num_t[3];
+	caballo* num_c[3];
 
 	for (i = 1; i < 9; i++)
 	{
@@ -167,10 +201,13 @@ int main()
 	num_t[1] = new torre(1, 1, 2, 1);
 	num_t[2] = new torre(8, 1, 2, 2);
 
+	num_c[1] = new caballo(2, 1, 4, 1);
+	num_c[2] = new caballo(7, 1, 4, 2);
+
 	// for (i = 0; i < 8; i++)
 	// {
 	//	nums[i]->mostrar();
-	// } 
+	// }
 	//
 	while (num <= 8)
 	{
@@ -189,7 +226,7 @@ int main()
 		{
 			//cout << "Usted ha elegido al rey\n";
 			do {
-				cout << "Que numero de " << opciones[opt - 1] << "quiere utilizar? " << endl;
+				cout << "Que numero de " << opciones[opt - 1] << " quieres utilizar? " << endl;
 				cin >> num;
 			} while (num != 1);
 			break;
@@ -198,7 +235,7 @@ int main()
 		{
 			//cout << "Usted ha elegido a la dama\n";
 			do {
-				cout << "Que numero de " << opciones[opt - 1] << "quiere utilizar? " << endl;
+				cout << "Que numero de " << opciones[opt - 1] << " quieres utilizar? " << endl;
 				cin >> num;
 			} while (num != 1);
 			break;
@@ -206,7 +243,7 @@ int main()
 		case 3:
 		{
 			do {
-				cout << "Que numero de " << opciones[opt - 1] << "quiere utilizar? " << endl;
+				cout << "Que numero de " << opciones[opt - 1] << " quieres utilizar? " << endl;
 				cin >> num;
 			} while ((num != 1) && (num != 2));
 			//cout << "Usted ha elegido a la torre\n";
@@ -217,7 +254,7 @@ int main()
 		{
 			//cout << "Usted ha elegido al alfil\n";
 			do {
-				cout << "Que numero de " << opciones[opt - 1] << "quiere utilizar? " << endl;
+				cout << "Que numero de " << opciones[opt - 1] << " quiere utilizar? " << endl;
 				cin >> num;
 			} while ((num != 1) && (num != 2));
 			break;
@@ -226,16 +263,17 @@ int main()
 		{
 			//cout << "Usted ha elegido al caballo\n";
 			do {
-				cout << "Que numero de " << opciones[opt - 1] << "quiere utilizar? " << endl;
+				cout << "Que numero de " << opciones[opt - 1] << " quieres utilizar? " << endl;
 				cin >> num;
 			} while ((num != 1) && (num != 2));
+			num_c[num]->mostrar();
 			break;
 		}
 		case 6:
 		{
 			//cout << "Usted ha elegido al peon\n";
 			do {
-				cout << "Que numero de " << opciones[opt - 1] << "quiere utilizar? " << endl;
+				cout << "Que numero de " << opciones[opt - 1] << "q uieres utilizar? " << endl;
 				cin >> num;
 			} while ((num < 1) || (num > 8));
 			num_p[num]->mostrar();
@@ -279,6 +317,7 @@ int main()
 		case 5:
 		{
 			//cout << "Usted ha elegido al caballo\n";
+			num_c[num]->mover_caballo(x, y);
 			break;
 		}
 		case 6:
@@ -288,6 +327,7 @@ int main()
 			break;
 		}
 		}
+		// num_c[num]->mostrar();
 		cout << "Pulse cualquier tecla [...]:" << endl;
 		cin >> trash;
 		system("cls");
