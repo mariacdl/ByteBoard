@@ -1,24 +1,16 @@
 
-class tablero {
-private:
-	vector<vector<string>> mat_tablero;
-public:
-	tablero(void);
-	void actualizar_talero(void);
-	void imprimir_tablero(void);
-};
-
-
 #include <iostream>
 #include <string>
 #include <vector>
 #include <math.h>
 #include <fstream>
+#include <sstream>
 
 using namespace std;
 
-void Imprimir_Tablero(void);
 
+int Leer_Tablero_2(vector<vector<string>>& matrix);
+void Imprimir_Tablero_2(vector<vector<string>> matrix);
 
 
 //Clase Pieza
@@ -28,10 +20,12 @@ private:
 	vector <string> name{ "rey", "dama", "torre", "alfil", "caballo", "peon" };
 	int num_tipo;
 	int num_pieza;
-
+protected:
+	vector<vector<string>>* tablero_live;
 public:
 	pieza(int posx, int posy, int tipo_pieza, int pieza_num);
 	void mover(int n_posx, int n_posy);
+	void tablero_act(vector<vector<string>>& tablero_directo);
 	virtual void mostrar(void);
 	vector<int> pos_actual(void);
 };
@@ -44,6 +38,8 @@ public:
 	peon(int posx, int posy, int tipo_pieza, int pieza_num);
 	void mover_peon(int n_posx, int n_posy);
 	void mostrar(void);
+	bool obstaculos_peon_x(int posx, int posy, int n_posx, int n_posy, vector<vector<string>> tablero_directo);
+	// bool obstaculos_peon_xy(int posx, int posy, int n_posx, int n_posy, vector<vector<string>> tablero_directo); Esta funcion servirá para comer en diagonal
 
 };
 
@@ -54,6 +50,8 @@ private:
 public:
 	torre(int posx, int posy, int tipo_pieza, int pieza_num);
 	void mover_torre(int n_posx, int n_posy);
+	bool obstaculos_torre_x(int posx, int posy, int n_posx, int n_posy, vector<vector<string>> tablero_directo);
+	bool obstaculos_torre_y(int posx, int posy, int n_posx, int n_posy, vector<vector<string>> tablero_directo);
 };
 
 //Clase Caballo
@@ -63,6 +61,8 @@ private:
 public:
 	caballo(int posx, int posy, int tipo_pieza, int pieza_num);
 	void mover_caballo(int n_posx, int n_posy);
+	bool obstaculos_caballo_xy(int posx, int posy, int n_posx, int n_posy, vector<vector<string>> tablero_directo);
+	//bool obstaculos_caballo_xY(int posx, int posy, int n_posx, int n_posy, vector<vector<string>> tablero_directo);
 };
 
 //Clase Alfil
@@ -73,11 +73,13 @@ private:
 public:
 	alfil(int posx, int posy, int tipo_pieza, int pieza_num);
 	void mover_alfil(int n_posx, int n_posy);
+	bool obstaculos_alfil_xy(int posx, int posy, int n_posx, int n_posy, vector<vector<string>> tablero_directo);
 };
 
 
 //Constructor pieza
 pieza::pieza(int posx, int posy, int tipo_pieza, int pieza_num)
+	: tablero_live(nullptr)
 {
 	pos[0] = posx;
 	pos[1] = posy;
@@ -120,6 +122,12 @@ vector<int> pieza::pos_actual(void)
 	return pos_act;
 }
 
+//Posicion actual de todas las piezas en el tablero
+void pieza::tablero_act(vector<vector<string>>& tablero_directo)
+{
+	tablero_live = &tablero_directo;
+}
+
 //Verificador del movimiento del peon
 void peon::mover_peon(int n_posx, int n_posy) {
 
@@ -133,8 +141,13 @@ void peon::mover_peon(int n_posx, int n_posy) {
 	{
 		if ((n_posx - pos_peon_actual[0] == 0) && (n_posy - pos_peon_actual[1] <= 2) && (n_posy - pos_peon_actual[1] >= 1))
 		{
-			mover(n_posx, n_posy);
-			cant++;
+			if (obstaculos_peon_x(pos_peon_actual[0], pos_peon_actual[1], n_posx, n_posy, *tablero_live))
+			{
+				(*tablero_live)[8 - n_posy][n_posx] = (*tablero_live)[8 - pos_peon_actual[1]][pos_peon_actual[0]];
+				(*tablero_live)[8 - pos_peon_actual[1]][pos_peon_actual[0]] = "XXXX";
+				mover(n_posx, n_posy);
+				cant++;
+			}
 		}
 		else
 			cout << "La has liado, intentalo de nuevo" << endl << endl;
@@ -144,8 +157,14 @@ void peon::mover_peon(int n_posx, int n_posy) {
 		{
 			if ((n_posx - pos_peon_actual[0] == 0) && (n_posy - pos_peon_actual[1] == 1))
 			{
-				mover(n_posx, n_posy);
-				cant++;
+				if (obstaculos_peon_x(pos_peon_actual[0], pos_peon_actual[1], n_posx, n_posy, *tablero_live))
+				{
+
+					(*tablero_live)[8 - n_posy][n_posx] = (*tablero_live)[8 - pos_peon_actual[1]][pos_peon_actual[0]];
+					(*tablero_live)[8 - pos_peon_actual[1]][pos_peon_actual[0]] = "XXXX";
+					mover(n_posx, n_posy);
+					cant++;
+				}
 			}
 			else
 				cout << "La has liado, intentalo de nuevo" << endl << endl;
@@ -153,24 +172,108 @@ void peon::mover_peon(int n_posx, int n_posy) {
 
 }
 
+//Verificador mediante el tablero del movimento del peon
+bool peon::obstaculos_peon_x(int posx, int posy, int n_posx, int n_posy, vector<vector<string>> tablero_directo)
+{
+	if (tablero_directo[8 - n_posy][n_posx] == "XXXX")
+		return true;
+	else
+	{
+		cout << "Hay un obstaculo, elije otro movimiento" << endl;
+		return false;
+	}
+
+}
 // Verificador del movimiento de la torre
 void torre::mover_torre(int n_posx, int n_posy)
 {
 	vector<int> pos_torre_actual;
 	pos_torre_actual = pos_actual();
-
+	//vector<vector<string>> tablero_directo_torre = tablero_live;
 	if ((n_posx - pos_torre_actual[0] == 0) && (n_posy - pos_torre_actual[1] != 0))
 	{
-		mover(n_posx, n_posy);
+		if (obstaculos_torre_x(pos_torre_actual[0], pos_torre_actual[1], n_posx, n_posy, *tablero_live))
+		{
+			(*tablero_live)[8 - n_posy][n_posx] = (*tablero_live)[8 - pos_torre_actual[1]][pos_torre_actual[0]];
+			(*tablero_live)[8 - pos_torre_actual[1]][pos_torre_actual[0]] = "XXXX";
+			mover(n_posx, n_posy);
+		}
+
 	}
 	else if ((n_posy - pos_torre_actual[1] == 0) && (n_posx - pos_torre_actual[0] != 0))
 	{
-		mover(n_posx, n_posy);
+		if (obstaculos_torre_y(pos_torre_actual[0], pos_torre_actual[1], n_posx, n_posy, *tablero_live))
+		{
+			(*tablero_live)[8 - n_posy][n_posx] = (*tablero_live)[8 - pos_torre_actual[1]][pos_torre_actual[0]];
+			(*tablero_live)[8 - pos_torre_actual[1]][pos_torre_actual[0]] = "XXXX";
+			mover(n_posx, n_posy);
+		}
 	}
 	else
 		cout << "La has liado, intentalo de nuevo" << endl << endl;
 
 }
+bool torre::obstaculos_torre_x(int posx, int posy, int n_posx, int n_posy, vector<vector<string>> tablero_directo)
+{
+	int i, dist, count = 0;
+	dist = n_posy - posy;
+	if (dist > 0)
+	{
+		for (i = 1; i <= dist; i++)
+		{
+			if (tablero_directo[(8 - posy) - i][posx] != "XXXX")
+				count++;
+		}
+	}
+	else
+	{
+		for (i = 1; i <= abs(dist); i++)
+		{
+			if (tablero_directo[(8 - posy) + i][posx] != "XXXX")
+				count++;
+		}
+	}
+
+	if (count == 0)
+		return true;
+	else
+	{
+		cout << "No se puede hacer ese movimiento, intentelo de nuevo" << endl;
+		return false;
+	}
+
+}
+
+bool torre::obstaculos_torre_y(int posx, int posy, int n_posx, int n_posy, vector<vector<string>> tablero_directo)
+{
+	int i, dist, count = 0;
+	dist = n_posx - posx;
+	if (dist > 0)
+	{
+		for (i = 1; i <= dist; i++)
+		{
+			cout << tablero_directo[(8 - posy)][posx + i] << endl;	// ningun rastro
+			if (tablero_directo[(8 - posy)][posx + i] != "XXXX")    //problema unicamente al ir hacia la izquierda
+				count++;
+		}
+	}
+	else
+		for (i = 1; i <= abs(dist); i++)
+		{
+			cout << tablero_directo[(8 - posy)][posx - i] << endl;	// ningun rastro
+			if (tablero_directo[(8 - posy)][posx - i] != "XXXX")    //problema unicamente al ir hacia la izquierda
+				count++;
+		}
+
+	if (count == 0)
+		return true;
+	else
+	{
+		cout << "No se puede hacer ese movimiento, intentelo de nuevo" << endl;
+		return false;
+	}
+}
+
 
 // Verificador del movimiento del caballo
 void caballo::mover_caballo(int n_posx, int n_posy)
@@ -180,17 +283,40 @@ void caballo::mover_caballo(int n_posx, int n_posy)
 
 	if ((abs(n_posx - pos_caballo_actual[0]) == 2) && (abs(n_posy - pos_caballo_actual[1]) == 1))
 	{
-		mover(n_posx, n_posy);
+		if (obstaculos_caballo_xy(pos_caballo_actual[0], pos_caballo_actual[1], n_posx, n_posy, *tablero_live))
+		{
+			(*tablero_live)[8 - n_posy][n_posx] = (*tablero_live)[8 - pos_caballo_actual[1]][pos_caballo_actual[0]];
+			(*tablero_live)[8 - pos_caballo_actual[1]][pos_caballo_actual[0]] = "XXXX";
+			mover(n_posx, n_posy);
+		}
 	}
 	else if ((abs(n_posx - pos_caballo_actual[0]) == 1) && (abs(n_posy - pos_caballo_actual[1]) == 2))
 	{
-		mover(n_posx, n_posy);
+		if (obstaculos_caballo_xy(pos_caballo_actual[0], pos_caballo_actual[1], n_posx, n_posy, *tablero_live))
+		{
+			(*tablero_live)[8 - n_posy][n_posx] = (*tablero_live)[8 - pos_caballo_actual[1]][pos_caballo_actual[0]];
+			(*tablero_live)[8 - pos_caballo_actual[1]][pos_caballo_actual[0]] = "XXXX";
+			mover(n_posx, n_posy);
+		}
 	}
 	else
 		cout << "La has liado, intentalo de nuevo" << endl << endl;
 
 }
 
+bool caballo::obstaculos_caballo_xy(int posx, int posy, int n_posx, int n_posy, vector<vector<string>> tablero_directo)
+{
+	cout << "He llegado" << endl;
+	int distx = n_posx - posx;
+	int disty = n_posy - posy;
+	if (tablero_directo[(8 - posy) - disty][posx + distx] == "XXXX")
+		return true;
+	else
+	{
+		cout << "No se puede hacer ese movimiento, intentelo de nuevo" << endl;
+		return false;
+	}
+}
 //Verificador del movimiento del alfil
 void alfil::mover_alfil(int n_posx, int n_posy)
 {
@@ -209,6 +335,7 @@ void pieza::mover(int n_posx, int n_posy)
 {
 	pos[0] = n_posx;
 	pos[1] = n_posy;
+	int i, j;
 }
 
 
@@ -222,22 +349,24 @@ void pieza::mostrar(void)
 void peon::mostrar(void) {
 	pieza::mostrar();
 
-	cout << "Esta pieza ha sido movida " << cant << " veces" << endl << endl;
+	cout << "Esta pieza ha sido movida " << cant << " veces" << endl;
 }
 
 int main()
 {
-	int i;
-	size_t num = 7, x, y, z;
+	int i, leer;
+	size_t num = 7, x, y;
 	int opt;
 	char trash;
 	vector<string> opciones{ "rey", "dama", "torre", "alfil", "caballo", "peon" };
-	// pieza *nums[17];
+
+	vector<vector<string>> matriz;
+	vector<vector<string>>& matriz_live = matriz;
+
 	peon* num_p[9];
 	torre* num_t[3];
 	caballo* num_c[3];
 	alfil* num_a[3];
-
 	for (i = 1; i < 9; i++)
 	{
 		num_p[i] = new peon(i, 2, 5, i);
@@ -257,10 +386,15 @@ int main()
 	//	nums[i]->mostrar();
 	// }
 	//
+	leer = Leer_Tablero_2(matriz);
+	if (leer != 0)
+		return -1;
+
 	while (num <= 8)
 	{
-		Imprimir_Tablero();
-		cout << "Escribe a continuacion que tipo de pieza quieres utlizar:" << endl;
+		Imprimir_Tablero_2(matriz);
+
+		cout << endl << "Escribe a continuacion que tipo de pieza quieres utlizar:" << endl;
 		cout << "1. rey\n" << "2. dama\n" << "3. torre\n" << "4. alfil\n" << "5. caballo\n" << "6. peon \n" << endl;
 
 		do {
@@ -355,6 +489,7 @@ int main()
 		case 3:
 		{
 			//cout << "Usted ha elegido a la torre\n";
+			num_t[num]->tablero_act(matriz_live);
 			num_t[num]->mover_torre(x, y);
 			num_t[num]->mostrar();
 			break;
@@ -362,6 +497,7 @@ int main()
 		case 4:
 		{
 			//cout << "Usted ha elegido al alfil\n";
+			num_a[num]->tablero_act(matriz_live);
 			num_a[num]->mover_alfil(x, y);
 			num_a[num]->mostrar();
 			break;
@@ -369,6 +505,7 @@ int main()
 		case 5:
 		{
 			//cout << "Usted ha elegido al caballo\n";
+			num_c[num]->tablero_act(matriz_live);
 			num_c[num]->mover_caballo(x, y);
 			num_c[num]->mostrar();
 			break;
@@ -376,6 +513,7 @@ int main()
 		case 6:
 		{
 			//cout << "Usted ha elegido al peon\n";
+			num_p[num]->tablero_act(matriz_live);
 			num_p[num]->mover_peon(x, y);
 			num_p[num]->mostrar();
 			break;
@@ -390,48 +528,45 @@ int main()
 	return 0;
 }
 
-void Imprimir_Tablero(void)
+
+void Imprimir_Tablero_2(vector<vector<string>> matrix)
 {
-	size_t i, j, k = 2, y;
-	cout << "\t\tTamblero de Ajedrez" << endl << endl;
+	size_t i, j;
 	for (i = 0; i < 8; i++)
 	{
-
-		for (y = 0; y < 3; y++)
-		{
-			if (y == 1)
-				cout << "POSICION EN Y: " << 8 - i << "\t\t";
-			else
-				cout << "                \t\t";
-			if (i != 6)
-			{
-				for (j = 0; j < 8; j++)
-				{
-					if ((j + k) % 2 == 0)
-					{
-						cout << "||||||";
-					}
-					else
-						cout << "      ";
-				}
-			}
-			else
-				for (j = 0; j < 8; j++)
-				{
-					if ((j + k) % 2 == 0)
-					{
-						cout << "||PP||";
-					}
-					else
-						cout << "  PP  ";
-				}
-
-			cout << endl;
+		for (j = 0; j < 9; j++) {
+			cout << matrix[i][j] << " ";
 		}
-
-		k++;
+		cout << endl;
 	}
-	cout << endl << endl << "POSICION EN X: \t\t\t";
-	cout << "  1      2     3     4     5     6     7     8" << endl;
+}
+
+int Leer_Tablero_2(vector<vector<string>>& matrix)
+{
+
+	string linea;
+	string elemento;
+
+	// pieza *nums[17];
+	ifstream table;
+	table.open("C:/Users/aleja/Documents/GitHub/ByteBoard/Byte_Boards/tablero.txt", ios::in); //CAUTION
+	if (!table.is_open()) {
+		cout << "No se ha conseguido Leer adecuadamente el tablero\n";
+		return -1;
+	}
+	else
+	{
+		while (getline(table, linea))
+		{
+			vector<string> fila;  // Vector que guarda los elementos de la linea actual
+			stringstream ss(linea);
+
+			while (getline(ss, elemento, ';')) {
+				fila.push_back(elemento);
+			}
+			matrix.push_back(fila);
+		}
+		return 0;
+	}
 
 }

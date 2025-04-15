@@ -1,12 +1,12 @@
 ﻿  main.cpp
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(4,8): error C2143: error de sintaxis: falta ';' delante de '<'
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(4,2): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(4,36): error C2238: símbolos (token) inesperados delante de ';'
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(358,31): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(358,28): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(365,31): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(365,28): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(372,33): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(372,30): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(379,30): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(379,27): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(338,9): warning C4101: 'j': variable local sin referencia
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(338,6): warning C4101: 'i': variable local sin referencia
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(493,31): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(493,28): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(501,31): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(501,28): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(509,33): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(509,30): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(517,30): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(517,27): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
+  Byte_Boards.vcxproj -> C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\x64\Debug\Byte_Boards.exe
