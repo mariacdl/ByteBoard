@@ -1,4 +1,6 @@
 
+//////////
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -21,7 +23,7 @@ private:
 	int num_tipo;
 	int num_pieza;
 protected:
-	vector<vector<string>>* tablero_live;
+	vector<vector<string>> *tablero_live;
 public:
 	pieza(int posx, int posy, int tipo_pieza, int pieza_num);
 	void mover(int n_posx, int n_posy);
@@ -66,14 +68,13 @@ public:
 };
 
 //Clase Alfil
-
 class alfil : public pieza {
 private:
 
 public:
 	alfil(int posx, int posy, int tipo_pieza, int pieza_num);
 	void mover_alfil(int n_posx, int n_posy);
-	bool obstaculos_alfil_xy(int posx, int posy, int n_posx, int n_posy, vector<vector<string>> tablero_directo);
+	bool obstaculos_alfil_xy(int posx, int posy, int n_posx, int n_posy, vector<vector<string>> tablero_directo, int quad);
 };
 
 
@@ -176,7 +177,7 @@ void peon::mover_peon(int n_posx, int n_posy) {
 bool peon::obstaculos_peon_x(int posx, int posy, int n_posx, int n_posy, vector<vector<string>> tablero_directo)
 {
 	if (tablero_directo[8 - n_posy][n_posx] == "XXXX")
-		return true;
+	return true;
 	else
 	{
 		cout << "Hay un obstaculo, elije otro movimiento" << endl;
@@ -184,6 +185,7 @@ bool peon::obstaculos_peon_x(int posx, int posy, int n_posx, int n_posy, vector<
 	}
 
 }
+
 // Verificador del movimiento de la torre
 void torre::mover_torre(int n_posx, int n_posy)
 {
@@ -213,6 +215,8 @@ void torre::mover_torre(int n_posx, int n_posy)
 		cout << "La has liado, intentalo de nuevo" << endl << endl;
 
 }
+
+//Verificador mediante el tablero del movimento de la torre en el eje_x
 bool torre::obstaculos_torre_x(int posx, int posy, int n_posx, int n_posy, vector<vector<string>> tablero_directo)
 {
 	int i, dist, count = 0;
@@ -244,6 +248,7 @@ bool torre::obstaculos_torre_x(int posx, int posy, int n_posx, int n_posy, vecto
 
 }
 
+//Verificador mediante el tablero del movimento de la torre en el eje_y
 bool torre::obstaculos_torre_y(int posx, int posy, int n_posx, int n_posy, vector<vector<string>> tablero_directo)
 {
 	int i, dist, count = 0;
@@ -258,12 +263,12 @@ bool torre::obstaculos_torre_y(int posx, int posy, int n_posx, int n_posy, vecto
 		}
 	}
 	else
-		for (i = 1; i <= abs(dist); i++)
-		{
-			cout << tablero_directo[(8 - posy)][posx - i] << endl;	// ningun rastro
-			if (tablero_directo[(8 - posy)][posx - i] != "XXXX")    //problema unicamente al ir hacia la izquierda
-				count++;
-		}
+	for (i = 1; i <= abs(dist); i++)
+			{
+				cout << tablero_directo[(8 - posy)][posx - i] << endl;	// ningun rastro
+				if (tablero_directo[(8 - posy)][posx - i] != "XXXX")    //problema unicamente al ir hacia la izquierda
+					count++;
+			}
 
 	if (count == 0)
 		return true;
@@ -304,9 +309,9 @@ void caballo::mover_caballo(int n_posx, int n_posy)
 
 }
 
+//Verificador mediante el tablero del movimento del caballo
 bool caballo::obstaculos_caballo_xy(int posx, int posy, int n_posx, int n_posy, vector<vector<string>> tablero_directo)
 {
-	cout << "He llegado" << endl;
 	int distx = n_posx - posx;
 	int disty = n_posy - posy;
 	if (tablero_directo[(8 - posy) - disty][posx + distx] == "XXXX")
@@ -317,19 +322,102 @@ bool caballo::obstaculos_caballo_xy(int posx, int posy, int n_posx, int n_posy, 
 		return false;
 	}
 }
+
 //Verificador del movimiento del alfil
 void alfil::mover_alfil(int n_posx, int n_posy)
 {
 	vector<int> pos_alfil_actual;
 	pos_alfil_actual = pos_actual();
+
+	int quadr = 0;
+	int distx = n_posx - pos_alfil_actual[0];
+	int disty = n_posy - pos_alfil_actual[1];
+
+	if((distx > 0) && (disty > 0))
+		quadr = 1;
+	if ((distx < 0) && (disty > 0))
+		quadr = 2;
+	if ((distx < 0) && (disty < 0))
+		quadr = 3;
+	if ((distx > 0) && (disty < 0))
+		quadr = 4;
+
 	if ((abs(n_posx - pos_alfil_actual[0]) == abs(n_posy - pos_alfil_actual[1])))
 	{
-		mover(n_posx, n_posy);
+		if (obstaculos_alfil_xy(pos_alfil_actual[0], pos_alfil_actual[1], n_posx, n_posy, *tablero_live, quadr))
+		{
+			(*tablero_live)[8 - n_posy][n_posx] = (*tablero_live)[8 - pos_alfil_actual[1]][pos_alfil_actual[0]];
+			(*tablero_live)[8 - pos_alfil_actual[1]][pos_alfil_actual[0]] = "XXXX";
+			mover(n_posx, n_posy);
+		}
 	}
 	else
 		cout << "La has liado, intentalo de nuevo" << endl << endl;
 
 }
+
+//Verificador mediante el tablero del movimento del alfil
+bool alfil::obstaculos_alfil_xy(int posx, int posy, int n_posx, int n_posy, vector<vector<string>> tablero_directo, int quad)
+{
+	int dist = n_posx - posx;
+	dist = abs(dist);
+	int i;
+	int count = 0;
+
+	switch (quad)
+	{
+		case 1:
+		{
+			for (i = 1; i <= dist; i++)
+			{
+			cout << tablero_directo[(8 - posy) - i][posx + i] << endl;
+			if (tablero_directo[(8 - posy) - i][posx + i] != "XXXX")
+				count++;
+			}
+
+			break;
+		}
+	case 2:
+	{
+		for (i = 1; i <= dist; i++)
+		{
+			cout << tablero_directo[(8 - posy) - i][posx - i] << endl;
+			if (tablero_directo[(8 - posy) - i][posx - i] != "XXXX")
+				count++;
+		}
+		break;
+	}
+	case 3:
+	{
+		for (i = 1; i <= dist; i++)
+		{
+			cout << tablero_directo[(8 - posy) + i][posx - i] << endl;
+			if (tablero_directo[(8 - posy) + i][posx - i] != "XXXX")
+				count++;
+		}
+		break;
+	}
+	case 4:
+	{
+		for (i = 1; i <= dist; i++)
+		{
+			cout << tablero_directo[(8 - posy) + i][posx + i] << endl;
+			if (tablero_directo[(8 - posy) + i][posx + i] != "XXXX")
+				count++;
+		}
+		break;
+	}
+	}
+	if (count == 0)
+		return true;
+	else
+	{
+		cout << "No se puede hacer ese movimiento, intentelo de nuevo" << endl;
+		return false;
+	}
+}
+
+
 //Actualizador de la posicion de la pieza
 void pieza::mover(int n_posx, int n_posy)
 {
@@ -570,3 +658,4 @@ int Leer_Tablero_2(vector<vector<string>>& matrix)
 	}
 
 }
+
