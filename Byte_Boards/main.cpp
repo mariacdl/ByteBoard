@@ -1,5 +1,7 @@
 
-//////////
+
+
+
 
 #include <iostream>
 #include <string>
@@ -23,7 +25,7 @@ private:
 	int num_tipo;
 	int num_pieza;
 protected:
-	vector<vector<string>> *tablero_live;
+	vector<vector<string>>* tablero_live;
 public:
 	pieza(int posx, int posy, int tipo_pieza, int pieza_num);
 	void mover(int n_posx, int n_posy);
@@ -77,6 +79,28 @@ public:
 	bool obstaculos_alfil_xy(int posx, int posy, int n_posx, int n_posy, vector<vector<string>> tablero_directo, int quad);
 };
 
+class rey : public pieza {
+private:
+	bool jaque;
+public:
+	rey(int posx, int posy, int tipo_pieza, int pieza_num);
+	void mover_rey(int n_posx, int n_posy);
+	bool obstaculos_rey_xy(int posx, int posy, int n_posx, int n_posy, vector<vector<string>> tablero_directo);
+	//bool obstaculos_rey_x(int posx, int posy, int n_posx, int n_posy, vector<vector<string>> tablero_directo);
+	//bool obstaculos_rey_y(int posx, int posy, int n_posx, int n_posy, vector<vector<string>> tablero_directo);
+};
+
+class dama : public pieza {
+private:
+
+public:
+	dama(int posx, int posy, int tipo_pieza, int pieza_num);
+	void mover_dama(int n_posx, int n_posy);
+	bool obstaculos_dama_xy(int posx, int posy, int n_posx, int n_posy, vector<vector<string>> tablero_directo, int quad);
+	bool obstaculos_dama_x(int posx, int posy, int n_posx, int n_posy, vector<vector<string>> tablero_directo);
+	bool obstaculos_dama_y(int posx, int posy, int n_posx, int n_posy, vector<vector<string>> tablero_directo);
+};
+
 
 //Constructor pieza
 pieza::pieza(int posx, int posy, int tipo_pieza, int pieza_num)
@@ -111,6 +135,20 @@ caballo::caballo(int posx, int posy, int tipo_pieza, int pieza_num)
 
 //Constructor Alfil
 alfil::alfil(int posx, int posy, int tipo_pieza, int pieza_num)
+	:pieza(posx, posy, tipo_pieza, pieza_num)
+{
+
+}
+
+//Constructor Rey
+rey::rey(int posx, int posy, int tipo_pieza, int pieza_num)
+	:pieza(posx, posy, tipo_pieza, pieza_num)
+{
+	jaque = false;
+}
+
+//Constructor Dama
+dama::dama(int posx, int posy, int tipo_pieza, int pieza_num)
 	:pieza(posx, posy, tipo_pieza, pieza_num)
 {
 
@@ -177,7 +215,7 @@ void peon::mover_peon(int n_posx, int n_posy) {
 bool peon::obstaculos_peon_x(int posx, int posy, int n_posx, int n_posy, vector<vector<string>> tablero_directo)
 {
 	if (tablero_directo[8 - n_posy][n_posx] == "XXXX")
-	return true;
+		return true;
 	else
 	{
 		cout << "Hay un obstaculo, elije otro movimiento" << endl;
@@ -257,18 +295,16 @@ bool torre::obstaculos_torre_y(int posx, int posy, int n_posx, int n_posy, vecto
 	{
 		for (i = 1; i <= dist; i++)
 		{
-			cout << tablero_directo[(8 - posy)][posx + i] << endl;	// ningun rastro
-			if (tablero_directo[(8 - posy)][posx + i] != "XXXX")    //problema unicamente al ir hacia la izquierda
+			if (tablero_directo[(8 - posy)][posx + i] != "XXXX")
 				count++;
 		}
 	}
 	else
-	for (i = 1; i <= abs(dist); i++)
-			{
-				cout << tablero_directo[(8 - posy)][posx - i] << endl;	// ningun rastro
-				if (tablero_directo[(8 - posy)][posx - i] != "XXXX")    //problema unicamente al ir hacia la izquierda
-					count++;
-			}
+		for (i = 1; i <= abs(dist); i++)
+		{
+			if (tablero_directo[(8 - posy)][posx - i] != "XXXX")
+				count++;
+		}
 
 	if (count == 0)
 		return true;
@@ -333,7 +369,7 @@ void alfil::mover_alfil(int n_posx, int n_posy)
 	int distx = n_posx - pos_alfil_actual[0];
 	int disty = n_posy - pos_alfil_actual[1];
 
-	if((distx > 0) && (disty > 0))
+	if ((distx > 0) && (disty > 0))
 		quadr = 1;
 	if ((distx < 0) && (disty > 0))
 		quadr = 2;
@@ -366,22 +402,20 @@ bool alfil::obstaculos_alfil_xy(int posx, int posy, int n_posx, int n_posy, vect
 
 	switch (quad)
 	{
-		case 1:
+	case 1:
+	{
+		for (i = 1; i <= dist; i++)
 		{
-			for (i = 1; i <= dist; i++)
-			{
-			cout << tablero_directo[(8 - posy) - i][posx + i] << endl;
 			if (tablero_directo[(8 - posy) - i][posx + i] != "XXXX")
 				count++;
-			}
-
-			break;
 		}
+
+		break;
+	}
 	case 2:
 	{
 		for (i = 1; i <= dist; i++)
 		{
-			cout << tablero_directo[(8 - posy) - i][posx - i] << endl;
 			if (tablero_directo[(8 - posy) - i][posx - i] != "XXXX")
 				count++;
 		}
@@ -391,7 +425,6 @@ bool alfil::obstaculos_alfil_xy(int posx, int posy, int n_posx, int n_posy, vect
 	{
 		for (i = 1; i <= dist; i++)
 		{
-			cout << tablero_directo[(8 - posy) + i][posx - i] << endl;
 			if (tablero_directo[(8 - posy) + i][posx - i] != "XXXX")
 				count++;
 		}
@@ -401,7 +434,6 @@ bool alfil::obstaculos_alfil_xy(int posx, int posy, int n_posx, int n_posy, vect
 	{
 		for (i = 1; i <= dist; i++)
 		{
-			cout << tablero_directo[(8 - posy) + i][posx + i] << endl;
 			if (tablero_directo[(8 - posy) + i][posx + i] != "XXXX")
 				count++;
 		}
@@ -417,6 +449,222 @@ bool alfil::obstaculos_alfil_xy(int posx, int posy, int n_posx, int n_posy, vect
 	}
 }
 
+//Verificador del movimiento del rey
+void rey::mover_rey(int n_posx, int n_posy)
+{
+	vector<int> pos_rey_actual;
+	pos_rey_actual = pos_actual();
+
+	int distx = n_posx - pos_rey_actual[0];
+	int disty = n_posy - pos_rey_actual[1];
+
+	if ((abs(distx) <= 1) && (abs(disty) <= 1))
+	{
+		if (obstaculos_rey_xy(pos_rey_actual[0], pos_rey_actual[1], n_posx, n_posy, *tablero_live))
+		{
+			(*tablero_live)[8 - n_posy][n_posx] = (*tablero_live)[8 - pos_rey_actual[1]][pos_rey_actual[0]];
+			(*tablero_live)[8 - pos_rey_actual[1]][pos_rey_actual[0]] = "XXXX";
+			mover(n_posx, n_posy);
+		}
+	}
+	else
+		cout << "La has liado, intentalo de nuevo" << endl << endl;
+}
+
+//Verificador mediante el tablero del movimento diagonal de la dama
+bool rey::obstaculos_rey_xy(int posx, int posy, int n_posx, int n_posy, vector<vector<string>> tablero_directo)
+{
+	int distx = n_posx - posx;
+	int disty = n_posy - posy;
+	if (tablero_directo[(8 - posy) - disty][posx + distx] == "XXXX")
+		return true;
+	else
+	{
+		cout << "No se puede hacer ese movimiento, intentelo denuevo" << endl;
+		return false;
+	}
+}
+
+//Verificador del movimiento de la dama
+void dama::mover_dama(int n_posx, int n_posy)
+{
+	vector<int> pos_dama_actual;
+	pos_dama_actual = pos_actual();
+
+	int quadr = 9;
+	int distx = n_posx - pos_dama_actual[0];
+	int disty = n_posy - pos_dama_actual[1];
+
+	if ((distx == 0) && (abs(disty) >= 1))
+		quadr = -1;
+	else
+		if ((disty == 0) && (abs(distx) >= 1))
+			quadr = 0;
+		else
+			if ((distx > 0) && (disty > 0))
+				quadr = 1;
+			else
+				if ((distx < 0) && (disty > 0))
+					quadr = 2;
+				else
+					if ((distx < 0) && (disty < 0))
+						quadr = 3;
+					else
+						if ((distx > 0) && (disty < 0))
+							quadr = 4;
+
+	if ((abs(n_posx - pos_dama_actual[0]) == abs(n_posy - pos_dama_actual[1])))
+	{
+		if (obstaculos_dama_xy(pos_dama_actual[0], pos_dama_actual[1], n_posx, n_posy, *tablero_live, quadr))
+		{
+			(*tablero_live)[8 - n_posy][n_posx] = (*tablero_live)[8 - pos_dama_actual[1]][pos_dama_actual[0]];
+			(*tablero_live)[8 - pos_dama_actual[1]][pos_dama_actual[0]] = "XXXX";
+			mover(n_posx, n_posy);
+		}
+	}
+	else
+		if (quadr == -1)
+		{
+			if (obstaculos_dama_x(pos_dama_actual[0], pos_dama_actual[1], n_posx, n_posy, *tablero_live))
+			{
+				(*tablero_live)[8 - n_posy][n_posx] = (*tablero_live)[8 - pos_dama_actual[1]][pos_dama_actual[0]];
+				(*tablero_live)[8 - pos_dama_actual[1]][pos_dama_actual[0]] = "XXXX";
+				mover(n_posx, n_posy);
+			}
+		}
+		else
+			if (quadr == 0)
+			{
+				if (obstaculos_dama_y(pos_dama_actual[0], pos_dama_actual[1], n_posx, n_posy, *tablero_live))
+				{
+					(*tablero_live)[8 - n_posy][n_posx] = (*tablero_live)[8 - pos_dama_actual[1]][pos_dama_actual[0]];
+					(*tablero_live)[8 - pos_dama_actual[1]][pos_dama_actual[0]] = "XXXX";
+					mover(n_posx, n_posy);
+				}
+			}
+			else
+				cout << "La has liado, intentalo de nuevo" << endl << endl;
+
+}
+
+//Verificador mediante el tablero del movimento diagonal de la dama
+bool dama::obstaculos_dama_xy(int posx, int posy, int n_posx, int n_posy, vector<vector<string>> tablero_directo, int quad)
+{
+	int dist = n_posx - posx;
+	dist = abs(dist);
+	int i;
+	int count = 0;
+
+	switch (quad)
+	{
+	case 1:
+	{
+		for (i = 1; i <= dist; i++)
+		{
+			if (tablero_directo[(8 - posy) - i][posx + i] != "XXXX")
+				count++;
+		}
+
+		break;
+	}
+	case 2:
+	{
+		for (i = 1; i <= dist; i++)
+		{
+			if (tablero_directo[(8 - posy) - i][posx - i] != "XXXX")
+				count++;
+		}
+		break;
+	}
+	case 3:
+	{
+		for (i = 1; i <= dist; i++)
+		{
+			if (tablero_directo[(8 - posy) + i][posx - i] != "XXXX")
+				count++;
+		}
+		break;
+	}
+	case 4:
+	{
+		for (i = 1; i <= dist; i++)
+		{
+			if (tablero_directo[(8 - posy) + i][posx + i] != "XXXX")
+				count++;
+		}
+		break;
+	}
+	}
+	if (count == 0)
+		return true;
+	else
+	{
+		cout << "No se puede hacer ese movimiento, intentelo de nuevo" << endl;
+		return false;
+	}
+}
+
+
+//Verificador mediante el tablero del movimento de la torre en el eje_x
+bool dama::obstaculos_dama_x(int posx, int posy, int n_posx, int n_posy, vector<vector<string>> tablero_directo)
+{
+	int i, dist, count = 0;
+	dist = n_posy - posy;
+	if (dist > 0)
+	{
+		for (i = 1; i <= dist; i++)
+		{
+			if (tablero_directo[(8 - posy) - i][posx] != "XXXX")
+				count++;
+		}
+	}
+	else
+	{
+		for (i = 1; i <= abs(dist); i++)
+		{
+			if (tablero_directo[(8 - posy) + i][posx] != "XXXX")
+				count++;
+		}
+	}
+
+	if (count == 0)
+		return true;
+	else
+	{
+		cout << "No se puede hacer ese movimiento, intentelo de nuevo" << endl;
+		return false;
+	}
+
+}
+
+//Verificador mediante el tablero del movimento de la torre en el eje_y
+bool dama::obstaculos_dama_y(int posx, int posy, int n_posx, int n_posy, vector<vector<string>> tablero_directo)
+{
+	int i, dist, count = 0;
+	dist = n_posx - posx;
+	if (dist > 0)
+	{
+		for (i = 1; i <= dist; i++)
+		{
+			if (tablero_directo[(8 - posy)][posx + i] != "XXXX")    //problema unicamente al ir hacia la izquierda
+				count++;
+		}
+	}
+	else
+		for (i = 1; i <= abs(dist); i++)
+		{
+			if (tablero_directo[(8 - posy)][posx - i] != "XXXX")    //problema unicamente al ir hacia la izquierda
+				count++;
+		}
+
+	if (count == 0)
+		return true;
+	else
+	{
+		cout << "No se puede hacer ese movimiento, intentelo de nuevo" << endl;
+		return false;
+	}
+}
 
 //Actualizador de la posicion de la pieza
 void pieza::mover(int n_posx, int n_posy)
@@ -455,6 +703,9 @@ int main()
 	torre* num_t[3];
 	caballo* num_c[3];
 	alfil* num_a[3];
+	rey* num_r[2];
+	dama* num_d[2];
+
 	for (i = 1; i < 9; i++)
 	{
 		num_p[i] = new peon(i, 2, 5, i);
@@ -468,6 +719,10 @@ int main()
 
 	num_a[1] = new alfil(3, 1, 3, 1);
 	num_a[2] = new alfil(6, 1, 3, 2);
+
+	num_r[1] = new rey(5, 1, 0, 1);
+
+	num_d[1] = new dama(4, 1, 1, 1);
 
 	// for (i = 0; i < 8; i++)
 	// {
@@ -495,19 +750,13 @@ int main()
 		case 1:
 		{
 			//cout << "Usted ha elegido al rey\n";
-			do {
-				cout << "Que numero de " << opciones[opt - 1] << " quieres utilizar? " << endl;
-				cin >> num;
-			} while (num != 1);
+			num_r[1]->mostrar();
 			break;
 		}
 		case 2:
 		{
 			//cout << "Usted ha elegido a la dama\n";
-			do {
-				cout << "Que numero de " << opciones[opt - 1] << " quieres utilizar? " << endl;
-				cin >> num;
-			} while (num != 1);
+			num_d[1]->mostrar();
 			break;
 		}
 		case 3:
@@ -567,11 +816,17 @@ int main()
 		case 1:
 		{
 			//cout << "Usted ha elegido al rey\n";
+			num_r[1]->tablero_act(matriz_live);
+			num_r[1]->mover_rey(x, y);
+			num_r[1]->mostrar();
 			break;
 		}
 		case 2:
 		{
 			//cout << "Usted ha elegido a la dama\n";
+			num_d[1]->tablero_act(matriz_live);
+			num_d[1]->mover_dama(x, y);
+			num_d[1]->mostrar();
 			break;
 		}
 		case 3:
@@ -637,7 +892,8 @@ int Leer_Tablero_2(vector<vector<string>>& matrix)
 
 	// pieza *nums[17];
 	ifstream table;
-	table.open("C:/Users/aleja/Documents/GitHub/ByteBoard/Byte_Boards/tablero.txt", ios::in); //CAUTION
+	//table.open("C:/Users/Usuario/Desktop/INFO/pruebasVS/Trabajo/tablero.txt", ios::in); //CAUTION
+	table.open("tablero.txt", ios::in); //CAUTION
 	if (!table.is_open()) {
 		cout << "No se ha conseguido Leer adecuadamente el tablero\n";
 		return -1;
@@ -658,4 +914,3 @@ int Leer_Tablero_2(vector<vector<string>>& matrix)
 	}
 
 }
-
