@@ -1,12 +1,25 @@
 
+class tablero {
+private:
+	vector<vector<string>> mat_tablero;
+public:
+	tablero(void);
+	void actualizar_talero(void);
+	void imprimir_tablero(void);
+};
+
+
 #include <iostream>
 #include <string>
 #include <vector>
 #include <math.h>
+#include <fstream>
 
 using namespace std;
 
 void Imprimir_Tablero(void);
+
+
 
 //Clase Pieza
 class pieza {
@@ -43,7 +56,7 @@ public:
 	void mover_torre(int n_posx, int n_posy);
 };
 
-//Class Caballo
+//Clase Caballo
 class caballo : public pieza {
 private:
 
@@ -51,6 +64,17 @@ public:
 	caballo(int posx, int posy, int tipo_pieza, int pieza_num);
 	void mover_caballo(int n_posx, int n_posy);
 };
+
+//Clase Alfil
+
+class alfil : public pieza {
+private:
+
+public:
+	alfil(int posx, int posy, int tipo_pieza, int pieza_num);
+	void mover_alfil(int n_posx, int n_posy);
+};
+
 
 //Constructor pieza
 pieza::pieza(int posx, int posy, int tipo_pieza, int pieza_num)
@@ -77,6 +101,13 @@ torre::torre(int posx, int posy, int tipo_pieza, int pieza_num)
 
 //Constructor Caballo
 caballo::caballo(int posx, int posy, int tipo_pieza, int pieza_num)
+	:pieza(posx, posy, tipo_pieza, pieza_num)
+{
+
+}
+
+//Constructor Alfil
+alfil::alfil(int posx, int posy, int tipo_pieza, int pieza_num)
 	:pieza(posx, posy, tipo_pieza, pieza_num)
 {
 
@@ -160,6 +191,19 @@ void caballo::mover_caballo(int n_posx, int n_posy)
 
 }
 
+//Verificador del movimiento del alfil
+void alfil::mover_alfil(int n_posx, int n_posy)
+{
+	vector<int> pos_alfil_actual;
+	pos_alfil_actual = pos_actual();
+	if ((abs(n_posx - pos_alfil_actual[0]) == abs(n_posy - pos_alfil_actual[1])))
+	{
+		mover(n_posx, n_posy);
+	}
+	else
+		cout << "La has liado, intentalo de nuevo" << endl << endl;
+
+}
 //Actualizador de la posicion de la pieza
 void pieza::mover(int n_posx, int n_posy)
 {
@@ -171,7 +215,7 @@ void pieza::mover(int n_posx, int n_posy)
 //Mostrar datos relavantes a la clase pieza
 void pieza::mostrar(void)
 {
-	cout << endl << "La posicion de la pieza de tipo " << name[num_tipo] << " y numero \"" << num_pieza << "\" es " << pos[0] << " en \"x\", y " << pos[1] << " en \"y\"" << endl;
+	cout << endl << "La posicion del \"" << name[num_tipo] << "_" << num_pieza << "\" es:" << endl << "x = " << pos[0] << "\ny = " << pos[1] << endl;
 }
 
 //Mostrar datos relecantes a la sub-clase peon
@@ -192,6 +236,7 @@ int main()
 	peon* num_p[9];
 	torre* num_t[3];
 	caballo* num_c[3];
+	alfil* num_a[3];
 
 	for (i = 1; i < 9; i++)
 	{
@@ -203,6 +248,9 @@ int main()
 
 	num_c[1] = new caballo(2, 1, 4, 1);
 	num_c[2] = new caballo(7, 1, 4, 2);
+
+	num_a[1] = new alfil(3, 1, 3, 1);
+	num_a[2] = new alfil(6, 1, 3, 2);
 
 	// for (i = 0; i < 8; i++)
 	// {
@@ -242,11 +290,11 @@ int main()
 		}
 		case 3:
 		{
+			//cout << "Usted ha elegido a la torre\n";
 			do {
 				cout << "Que numero de " << opciones[opt - 1] << " quieres utilizar? " << endl;
 				cin >> num;
 			} while ((num != 1) && (num != 2));
-			//cout << "Usted ha elegido a la torre\n";
 			num_t[num]->mostrar();
 			break;
 		}
@@ -257,6 +305,7 @@ int main()
 				cout << "Que numero de " << opciones[opt - 1] << " quiere utilizar? " << endl;
 				cin >> num;
 			} while ((num != 1) && (num != 2));
+			num_a[num]->mostrar();
 			break;
 		}
 		case 5:
@@ -273,7 +322,7 @@ int main()
 		{
 			//cout << "Usted ha elegido al peon\n";
 			do {
-				cout << "Que numero de " << opciones[opt - 1] << "q uieres utilizar? " << endl;
+				cout << "Que numero de " << opciones[opt - 1] << " quieres utilizar? " << endl;
 				cin >> num;
 			} while ((num < 1) || (num > 8));
 			num_p[num]->mostrar();
@@ -307,23 +356,28 @@ int main()
 		{
 			//cout << "Usted ha elegido a la torre\n";
 			num_t[num]->mover_torre(x, y);
+			num_t[num]->mostrar();
 			break;
 		}
 		case 4:
 		{
 			//cout << "Usted ha elegido al alfil\n";
+			num_a[num]->mover_alfil(x, y);
+			num_a[num]->mostrar();
 			break;
 		}
 		case 5:
 		{
 			//cout << "Usted ha elegido al caballo\n";
 			num_c[num]->mover_caballo(x, y);
+			num_c[num]->mostrar();
 			break;
 		}
 		case 6:
 		{
 			//cout << "Usted ha elegido al peon\n";
 			num_p[num]->mover_peon(x, y);
+			num_p[num]->mostrar();
 			break;
 		}
 		}

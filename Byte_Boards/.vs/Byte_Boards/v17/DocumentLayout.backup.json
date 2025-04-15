@@ -5,6 +5,9 @@
     {
       "AbsoluteMoniker": "D:0:0:{0414B1C7-4601-4C27-B70B-E9767A1F00B6}|Byte_Boards.vcxproj|C:\\Users\\aleja\\Documents\\GitHub\\ByteBoard\\Byte_Boards\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{0414B1C7-4601-4C27-B70B-E9767A1F00B6}|Byte_Boards.vcxproj|solutionrelative:main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\aleja\\Desktop\\INFO\\Ajedrez_ultima\\Trabajo\\ALFIL1.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,8 +17,21 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ALFIL1.cpp",
+              "DocumentMoniker": "C:\\Users\\aleja\\Desktop\\INFO\\Ajedrez_ultima\\Trabajo\\ALFIL1.cpp",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\Desktop\\INFO\\Ajedrez_ultima\\Trabajo\\ALFIL1.cpp",
+              "ToolTip": "C:\\Users\\aleja\\Desktop\\INFO\\Ajedrez_ultima\\Trabajo\\ALFIL1.cpp",
+              "RelativeToolTip": "..\\..\\..\\..\\Desktop\\INFO\\Ajedrez_ultima\\Trabajo\\ALFIL1.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYBAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-04-15T13:15:49.091Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
@@ -24,7 +40,7 @@
               "RelativeDocumentMoniker": "main.cpp",
               "ToolTip": "C:\\Users\\aleja\\Documents\\GitHub\\ByteBoard\\Byte_Boards\\main.cpp",
               "RelativeToolTip": "main.cpp",
-              "ViewState": "AgIAALkAAAAAAAAAAAAQwNUAAAACAAAAAAAAAA==",
+              "ViewState": "AgIAABUAAAAAAAAAAAAAAAQAAAAHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-03-26T14:49:14.839Z",
               "EditorCaption": ""
