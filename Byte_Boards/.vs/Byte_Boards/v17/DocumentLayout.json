@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\aleja\\Documents\\GitHub\\ByteBoard\\Byte_Boards\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{D107F4C8-89CC-BEA8-D3D7-CA6B7733353D}|Elementos de la soluci\u00F3n{D107F4C8-89CC-BEA8-D3D7-CA6B7733353D}|C:\\Users\\aleja\\Documents\\GitHub\\ByteBoard\\Byte_Boards\\trastero.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{D107F4C8-89CC-BEA8-D3D7-CA6B7733353D}|Elementos de la soluci\u00F3n{D107F4C8-89CC-BEA8-D3D7-CA6B7733353D}|solutionrelative:trastero.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{0414B1C7-4601-4C27-B70B-E9767A1F00B6}|Byte_Boards.vcxproj|C:\\Users\\aleja\\Documents\\GitHub\\ByteBoard\\Byte_Boards\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{0414B1C7-4601-4C27-B70B-E9767A1F00B6}|Byte_Boards.vcxproj|solutionrelative:main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
@@ -14,19 +18,34 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "main.cpp",
               "DocumentMoniker": "C:\\Users\\aleja\\Documents\\GitHub\\ByteBoard\\Byte_Boards\\main.cpp",
               "RelativeDocumentMoniker": "main.cpp",
               "ToolTip": "C:\\Users\\aleja\\Documents\\GitHub\\ByteBoard\\Byte_Boards\\main.cpp",
               "RelativeToolTip": "main.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAF4CAAAAAAAAAAAAwHACAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-04-15T13:19:20.987Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "trastero.h",
+              "DocumentMoniker": "C:\\Users\\aleja\\Documents\\GitHub\\ByteBoard\\Byte_Boards\\trastero.h",
+              "RelativeDocumentMoniker": "trastero.h",
+              "ToolTip": "C:\\Users\\aleja\\Documents\\GitHub\\ByteBoard\\Byte_Boards\\trastero.h",
+              "RelativeToolTip": "trastero.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAMEFAAACAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-04-17T10:13:21.875Z",
+              "IsPinned": true,
               "EditorCaption": ""
             }
           ]
