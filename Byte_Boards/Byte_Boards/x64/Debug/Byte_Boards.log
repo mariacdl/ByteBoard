@@ -1,41 +1,35 @@
 ﻿  main.cpp
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\trastero.h(544,12): warning C4101: 'trade': variable local sin referencia
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\trastero.h(651,12): warning C4101: 'trade': variable local sin referencia
   (compilando archivo de origen "main.cpp")
   
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\trastero.h(1274,9): warning C4101: 'j': variable local sin referencia
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\trastero.h(1566,9): warning C4101: 'j': variable local sin referencia
   (compilando archivo de origen "main.cpp")
   
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\trastero.h(1274,6): warning C4101: 'i': variable local sin referencia
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\trastero.h(1566,6): warning C4101: 'i': variable local sin referencia
   (compilando archivo de origen "main.cpp")
   
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(328,40): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(328,37): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(347,40): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(347,37): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(371,41): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(371,38): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(390,41): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(390,38): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(414,48): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(414,45): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(433,44): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(433,41): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(457,48): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(457,45): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(476,44): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(476,41): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(500,50): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(500,47): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(519,46): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(519,43): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(544,47): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(544,44): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(563,43): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(563,40): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\trastero.h(193,1): warning C4715: 'rey::mover_rey': no todas las rutas de acceso de control devuelven un valor
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\trastero.h(665,1): warning C4715: 'dama::mover_dama': no todas las rutas de acceso de control devuelven un valor
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\trastero.h(875,1): warning C4715: 'torre::mover_torre': no todas las rutas de acceso de control devuelven un valor
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\trastero.h(1010,1): warning C4715: 'alfil::mover_alfil': no todas las rutas de acceso de control devuelven un valor
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\trastero.h(1123,1): warning C4715: 'caballo::mover_caballo': no todas las rutas de acceso de control devuelven un valor
-C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\trastero.h(1205,1): warning C4715: 'peon::mover_peon': no todas las rutas de acceso de control devuelven un valor
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(378,44): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(378,41): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(427,44): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(427,41): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(478,42): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(478,39): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(500,43): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(500,40): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(521,43): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(521,40): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(543,45): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(543,42): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(568,47): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(568,44): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(587,43): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\main.cpp(587,40): warning C4267: 'argumento': conversión de 'size_t' a 'int'; posible pérdida de datos
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\trastero.h(747,1): warning C4715: 'rey::verificador_enroque': no todas las rutas de acceso de control devuelven un valor
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\trastero.h(817,1): warning C4715: 'dama::mover_dama': no todas las rutas de acceso de control devuelven un valor
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\trastero.h(1041,1): warning C4715: 'torre::mover_torre': no todas las rutas de acceso de control devuelven un valor
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\trastero.h(1221,1): warning C4715: 'alfil::mover_alfil': no todas las rutas de acceso de control devuelven un valor
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\trastero.h(1297,1): warning C4715: 'alfil::obstaculos_alfil_xy': no todas las rutas de acceso de control devuelven un valor
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\trastero.h(1333,1): warning C4715: 'caballo::mover_caballo': no todas las rutas de acceso de control devuelven un valor
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\trastero.h(1415,1): warning C4715: 'peon::mover_peon': no todas las rutas de acceso de control devuelven un valor
+C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\trastero.h(1497,1): warning C4715: 'peon::comp_tope_peon': no todas las rutas de acceso de control devuelven un valor
   Byte_Boards.vcxproj -> C:\Users\aleja\Documents\GitHub\ByteBoard\Byte_Boards\x64\Debug\Byte_Boards.exe

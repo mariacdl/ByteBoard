@@ -8,6 +8,42 @@ struct Death_ID {
 	int blanc;
 };
 
+struct datos_damas
+{
+	int C_D_T;		//Cantidad Damas Totales
+	int C_D_B;		//Cantidad Damas Blancas
+	int C_D_N;		//Cantidad Damas Negras
+	vector<int> conv_B_T;
+	vector<int> conv_N_T;
+};
+
+struct datos_torres
+{
+	int C_T_T;		//Cantidad Torres Totales
+	int C_T_B;		//Cantidad Torres Blancas
+	int C_T_N;		//Cantidad Torres Negras
+	vector<int> conv_B_T;
+	vector<int> conv_N_T;
+};
+
+struct datos_alfiles
+{
+	int C_A_T;		//Cantidad Alfiles Totales
+	int C_A_B;		//Cantidad Alfiles Blancas
+	int C_A_N;		//Cantidad Alfiles Negras
+	vector<int> conv_B_T;
+	vector<int> conv_N_T;
+};
+
+struct datos_caballos
+{
+	int C_C_T;		//Cantidad Caballos Totales
+	int C_C_B;		//Cantidad Caballos	Blancos
+	int C_C_N;		//Cantidad Caballos Negros
+	vector<int> conv_B_T;
+	vector<int> conv_N_T;
+};
+
 //Funciones
 int Leer_Tablero_2(vector<vector<string>>& matrix);
 void Imprimir_Tablero_2(vector<vector<string>> matrix);
@@ -32,7 +68,8 @@ public:
 	void tablero_act(vector<vector<string>>& tablero_directo);
 	virtual void mostrar(void);
 	vector<int> pos_actual(void);
-	void Juicio_final(int tipo_muerto, int num_muerto, int blanco_muerto);
+	void Juicio_final(int tipo_muerto, int num_muerto, int blanco_muerto); // Este Juicio final determina si ha muerto una pieza
+	void Juicio_final(int num_tipo_mejora); // Este juicio final apaga a los peones ascendidos
 	bool obituary(void);
 };
 
@@ -41,15 +78,17 @@ public:
 class rey : public pieza {
 private:
 	bool jaque;
+	bool mov_r;
 public:
 	rey(int posx, int posy, int tipo_pieza, int pieza_num, bool col, bool live);
-	bool mover_rey(int n_posx, int n_posy);
+	int mover_rey(int n_posx, int n_posy, bool mov_torre_Iz, bool mov_torre_Dch);
 	bool obstaculos_rey_xy(int posx, int posy, int n_posx, int n_posy, vector<vector<string>> tablero_directo);
 	bool comp_jaque(void);
 	bool comp_jaque_xy(int posx, int posy, vector<vector<string>> tablero_directo);
 	bool comp_jaque_x(int posx, int posy, vector<vector<string>> tablero_directo);
 	bool comp_jaque_y(int posx, int posy, vector<vector<string>> tablero_directo);
 	bool comp_jaque_caballo(int posx, int posy, vector<vector<string>> tablero_directo);
+	bool verificador_enroque(int posx, int posy, int n_posx, int n_posy, vector<vector<string>> tablero_directo, bool m_t_I, bool m_t_D);
 };
 
 //Clase Dama
@@ -67,12 +106,14 @@ public:
 //Clase Torre
 class torre : public pieza {
 private:
-
+	bool mov_t;
 public:
 	torre(int posx, int posy, int tipo_pieza, int pieza_num, bool col, bool live);
 	bool mover_torre(int n_posx, int n_posy);
+	void mover_torre(int tipo);
 	bool obstaculos_torre_x(int posx, int posy, int n_posx, int n_posy, vector<vector<string>> tablero_directo);
 	bool obstaculos_torre_y(int posx, int posy, int n_posx, int n_posy, vector<vector<string>> tablero_directo);
+	bool mov_torre(void);
 };
 
 //Clase Alfil
@@ -106,6 +147,8 @@ public:
 	void mostrar(void);
 	bool obstaculos_peon_x(int posx, int posy, int n_posx, int n_posy, vector<vector<string>> tablero_directo, int cant_mov);
 	bool obstaculos_peon_xy(int posx, int posy, int n_posx, int n_posy, vector<vector<string>> tablero_directo); // Esta funcion servirá para comer en diagonal
+	vector<int> comp_tope_peon(void);
+	void transductor_peon_a_premio(int num_tipo_mejora, int num_pieza_mejora, bool blanche);
 };
 
 
@@ -127,6 +170,7 @@ rey::rey(int posx, int posy, int tipo_pieza, int pieza_num, bool col, bool live)
 	:pieza(posx, posy, tipo_pieza, pieza_num, col, live)
 {
 	jaque = false;
+	mov_r = false;
 }
 
 //Constructor Dama
@@ -140,7 +184,7 @@ dama::dama(int posx, int posy, int tipo_pieza, int pieza_num, bool col, bool liv
 torre::torre(int posx, int posy, int tipo_pieza, int pieza_num, bool col, bool live)
 	:pieza(posx, posy, tipo_pieza, pieza_num, col, live)
 {
-
+	mov_t = false;
 }
 
 //Constructor Alfil
@@ -166,7 +210,7 @@ peon::peon(int posx, int posy, int tipo_pieza, int pieza_num, bool col, bool liv
 
 
 //Verificador del movimiento del rey
-bool rey::mover_rey(int n_posx, int n_posy)
+int rey::mover_rey(int n_posx, int n_posy, bool mov_torre_Iz, bool mov_torre_Dch)
 {
 	vector<int> pos_rey_actual;
 	pos_rey_actual = pos_actual();
@@ -181,14 +225,49 @@ bool rey::mover_rey(int n_posx, int n_posy)
 			(*tablero_live)[8 - n_posy][n_posx] = (*tablero_live)[8 - pos_rey_actual[1]][pos_rey_actual[0]];
 			(*tablero_live)[8 - pos_rey_actual[1]][pos_rey_actual[0]] = "XXXX";
 			mover(n_posx, n_posy);
-			return true;
+			return 1;
+		}
+		else
+		{
+			return 0;
 		}
 	}
 	else
-	{
-		cout << "La has liado, intentalo de nuevo" << endl << endl;
-		return false;
-	}
+		if ((abs(distx) == 2) && (abs(disty) == 0) && !mov_r && (!mov_torre_Iz || !mov_torre_Dch) && !jaque)
+		{
+			if (distx < 0)
+			{
+				if (verificador_enroque(pos_rey_actual[0], pos_rey_actual[1], n_posx, n_posy, *tablero_live, mov_torre_Iz, mov_torre_Dch))
+				{
+					(*tablero_live)[8 - n_posy][n_posx] = (*tablero_live)[8 - pos_rey_actual[1]][pos_rey_actual[0]];
+					(*tablero_live)[8 - pos_rey_actual[1]][pos_rey_actual[0]] = "XXXX";
+					mover(n_posx, n_posy);
+					//cout << n_posx << n_posy << endl;
+					return 2;
+				}
+				else
+				{
+					return 0;
+				}
+			}
+			else
+				if (verificador_enroque(pos_rey_actual[0], pos_rey_actual[1], n_posx, n_posy, *tablero_live, mov_torre_Iz, mov_torre_Dch))
+				{
+					(*tablero_live)[8 - n_posy][n_posx] = (*tablero_live)[8 - pos_rey_actual[1]][pos_rey_actual[0]];
+					(*tablero_live)[8 - pos_rey_actual[1]][pos_rey_actual[0]] = "XXXX";
+					mover(n_posx, n_posy);
+					return 3;
+				}
+				else
+				{
+					return 0;
+				}
+		}
+		else
+		{
+			cout << "La has liado, intentalo de nuevo" << endl << endl;
+			return 0;
+		}
 
 }
 
@@ -228,33 +307,37 @@ bool rey::comp_jaque(void)
 {
 	vector<int> pos_rey_actual;
 	pos_rey_actual = pos_actual();
-
 	if (comp_jaque_xy(pos_rey_actual[0], pos_rey_actual[1], *tablero_live))
 	{
 		//cout << "El rey" << (blanco ? "blanco" : "negro") << " esta en jaque" << endl;
+		jaque = true;
 		return true;
 	}
 	else
 		if (comp_jaque_x(pos_rey_actual[0], pos_rey_actual[1], *tablero_live))
 		{
 			//cout << "El rey " << (blanco ? "blanco" : "negro") << " esta en jaque" << endl;
+			jaque = true;
 			return true;
 		}
 		else
 			if (comp_jaque_y(pos_rey_actual[0], pos_rey_actual[1], *tablero_live))
 			{
 				//cout << "El rey " << (blanco ? "blanco" : "negro") << " esta en jaque" << endl;
+				jaque = true;
 				return true;
 			}
 			else
 				if (comp_jaque_caballo(pos_rey_actual[0], pos_rey_actual[1], *tablero_live))
 				{
 					//cout << "El rey " << (blanco ? "blanco" : "negro") << " esta en jaque" << endl;
+					jaque = true;
 					return true;
 				}
 				else
 				{
 					//cout << "El rey " << (blanco ? "blanco" : "negro") << " no esta en jaque" << endl;
+					jaque = false;
 					return false;
 				}
 }
@@ -267,98 +350,112 @@ bool rey::comp_jaque_xy(int posx, int posy, vector<vector<string>> tablero_direc
 	//Cuadrante 1 - +
 	for (i = 1; ((8 - posy) - i) >= 0 && (posx + i) <= 8; i++)
 	{
-		string rival = tablero_directo[(8 - posy) - i][posx + i];
-		//cout << rival;
-		if (blanco && (rival[3] == 'B'))
-			break;
-		else
-			if (!blanco && (rival[3] == 'N'))
+		if ((posx + i <= 8) && (posx + i > 0))
+		{
+			string rival = tablero_directo[(8 - posy) - i][posx + i];
+			//cout << rival;
+			if (blanco && (rival[3] == 'B'))
 				break;
 			else
-				if (blanco && (((rival[3] == 'N') && ((rival[0] == 'A') || (rival[0] == 'D')))))
-				{
-					count = 1;
+				if (!blanco && (rival[3] == 'N'))
 					break;
-				}
 				else
-					if (!blanco && (((rival[3] == 'B') && ((rival[0] == 'A') || (rival[0] == 'D')))))
+					if (blanco && (((rival[3] == 'N') && ((rival[0] == 'A') || (rival[0] == 'D')))))
 					{
 						count = 1;
 						break;
 					}
+					else
+						if (!blanco && (((rival[3] == 'B') && ((rival[0] == 'A') || (rival[0] == 'D')))))
+						{
+							count = 1;
+							break;
+						}
+		}
+
 	}
 
 	//Cuadrante 2 - -
 	for (i = 1; ((8 - posy) - i) >= 0 && (posx - i) >= 1; i++)
 	{
-		string rival = tablero_directo[(8 - posy) - i][posx - i];
-		//cout << rival;
-		if (blanco && (rival[3] == 'B'))
-			break;
-		else
-			if (!blanco && (rival[3] == 'N'))
+		if ((posx - i <= 8) && (posx - i > 0))
+		{
+			string rival = tablero_directo[(8 - posy) - i][posx - i];
+			//cout << rival;
+			if (blanco && (rival[3] == 'B'))
 				break;
 			else
-				if (blanco && (((rival[3] == 'N') && ((rival[0] == 'A') || (rival[0] == 'D')))))
-				{
-					count = 1;
+				if (!blanco && (rival[3] == 'N'))
 					break;
-				}
 				else
-					if (!blanco && (((rival[3] == 'B') && ((rival[0] == 'A') || (rival[0] == 'D')))))
+					if (blanco && (((rival[3] == 'N') && ((rival[0] == 'A') || (rival[0] == 'D')))))
 					{
 						count = 1;
 						break;
 					}
+					else
+						if (!blanco && (((rival[3] == 'B') && ((rival[0] == 'A') || (rival[0] == 'D')))))
+						{
+							count = 1;
+							break;
+						}
+		}
 	}
 	// CAMBIO AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII "<= 8" -> "<= 7"
 	//Cuadrante 3 + - 
 	for (i = 1; ((8 - posy) + i) <= 7 && (posx - i) >= 1; i++)
 	{
-		string rival = tablero_directo[(8 - posy) + i][posx - i];
-		//cout << rival;
-		if (blanco && (rival[3] == 'B'))
-			break;
-		else
-			if (!blanco && (rival[3] == 'N'))
+		if ((posx - i <= 8) && (posx - i > 0))
+		{
+			string rival = tablero_directo[(8 - posy) + i][posx - i];
+			//cout << rival;
+			if (blanco && (rival[3] == 'B'))
 				break;
 			else
-				if (blanco && (((rival[3] == 'N') && ((rival[0] == 'A') || (rival[0] == 'D')))))
-				{
-					count = 1;
+				if (!blanco && (rival[3] == 'N'))
 					break;
-				}
 				else
-					if (!blanco && (((rival[3] == 'B') && ((rival[0] == 'A') || (rival[0] == 'D')))))
+					if (blanco && (((rival[3] == 'N') && ((rival[0] == 'A') || (rival[0] == 'D')))))
 					{
 						count = 1;
 						break;
 					}
+					else
+						if (!blanco && (((rival[3] == 'B') && ((rival[0] == 'A') || (rival[0] == 'D')))))
+						{
+							count = 1;
+							break;
+						}
+		}
 	}
 	// CAMBIO AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII "<= 8" -> "<= 7"
 	//Cuadrante 4 + +
 	for (i = 1; ((8 - posy) + i) <= 7 && (posx + i) <= 8; i++)
 	{
-		string rival = tablero_directo[(8 - posy) + i][posx + i];
-		//cout << rival;
-		if (blanco && (rival[3] == 'B'))
-			break;
-		else
-			if (!blanco && (rival[3] == 'N'))
+		if ((posx + i <= 8) && (posx + i > 0))
+		{
+			string rival = tablero_directo[(8 - posy) + i][posx + i];
+			//cout << rival;
+			if (blanco && (rival[3] == 'B'))
 				break;
 			else
-				if (blanco && (((rival[3] == 'N') && ((rival[0] == 'A') || (rival[0] == 'D')))))
-				{
-					count = 1;
+				if (!blanco && (rival[3] == 'N'))
 					break;
-				}
 				else
-					if (!blanco && (((rival[3] == 'B') && ((rival[0] == 'A') || (rival[0] == 'D')))))
+					if (blanco && (((rival[3] == 'N') && ((rival[0] == 'A') || (rival[0] == 'D')))))
 					{
 						count = 1;
 						break;
 					}
+					else
+						if (!blanco && (((rival[3] == 'B') && ((rival[0] == 'A') || (rival[0] == 'D')))))
+						{
+							count = 1;
+							break;
+						}
+		}
 	}
+
 	//cout << " count = " << count << endl;
 	if (count == 0)
 	{
@@ -370,23 +467,30 @@ bool rey::comp_jaque_xy(int posx, int posy, vector<vector<string>> tablero_direc
 				count = 1;
 				//cout << "rival peon" << rival;
 			}
-			rival = tablero_directo[(8 - posy) + 1][posx - 1];
-			if ((rival[3] == 'N') && (rival[0] == 'P'))
+			if ((posx - 1 <= 8) && (posx - 1 > 0))
 			{
-				count = 1;
-				//cout << "rival peon" << rival;
-			}
-		}
-		else
-			if (!blanco)
-			{
-				string rival = tablero_directo[(8 - posy) - 1][posx - 1];
-				if ((rival[3] == 'B') && (rival[0] == 'P'))
+				rival = tablero_directo[(8 - posy) + 1][posx - 1];
+				if ((rival[3] == 'N') && (rival[0] == 'P'))
 				{
 					count = 1;
 					//cout << "rival peon" << rival;
 				}
-				rival = tablero_directo[(8 - posy) - 1][posx + 1];
+			}
+
+		}
+		else
+			if (!blanco)
+			{
+				if ((posx - 1 <= 8) && (posx - 1 > 0))
+				{
+					string rival = tablero_directo[(8 - posy) - 1][posx - 1];
+					if ((rival[3] == 'B') && (rival[0] == 'P'))
+					{
+						count = 1;
+						//cout << "rival peon" << rival;
+					}
+				}
+				string rival = tablero_directo[(8 - posy) - 1][posx + 1];
 				if ((rival[3] == 'B') && (rival[0] == 'P'))
 				{
 					count = 1;
@@ -411,7 +515,6 @@ bool rey::comp_jaque_y(int posx, int posy, vector<vector<string>> tablero_direct
 {
 	int i;
 	int count = 0;
-
 	//Vertical positiva - 
 	for (i = 1; ((8 - posy) - i) >= 0; i++)
 	{
@@ -477,55 +580,59 @@ bool rey::comp_jaque_x(int posx, int posy, vector<vector<string>> tablero_direct
 {
 	int i;
 	int count = 0;
-
 	//Horizontal positiva + 
 	for (i = 1; (posx + i) <= 8; i++)
 	{
-		string rival = tablero_directo[(8 - posy)][posx + i];
-		//cout << rival;
-		if (blanco && (rival[3] == 'B'))
-			break;
-		else
-			if (!blanco && (rival[3] == 'N'))
+		if ((posx + i <= 8) && (posx + i > 0))
+		{
+			string rival = tablero_directo[(8 - posy)][posx + i];
+			if (blanco && (rival[3] == 'B'))
 				break;
 			else
-				if (blanco && (((rival[3] == 'N') && ((rival[0] == 'T') || (rival[0] == 'D')))))
-				{
-					count = 1;
+				if (!blanco && (rival[3] == 'N'))
 					break;
-				}
 				else
-					if (!blanco && (((rival[3] == 'B') && ((rival[0] == 'T') || (rival[0] == 'D')))))
+					if (blanco && (((rival[3] == 'N') && ((rival[0] == 'T') || (rival[0] == 'D')))))
 					{
 						count = 1;
 						break;
 					}
+					else
+						if (!blanco && (((rival[3] == 'B') && ((rival[0] == 'T') || (rival[0] == 'D')))))
+						{
+							count = 1;
+							break;
+						}
+		}
+
 	}
 
 	//Horizontal negativa -
 	for (i = 1; posx - i >= 0; i++)
 	{
-		string rival = tablero_directo[(8 - posy)][posx - i];
-		//cout << rival;
-		if (blanco && (rival[3] == 'B'))
-			break;
-		else
-			if (!blanco && (rival[3] == 'N'))
+		if ((posx - i <= 8) && (posx - i > 0))
+		{
+			string rival = tablero_directo[(8 - posy)][posx - i];
+			if (blanco && (rival[3] == 'B'))
 				break;
 			else
-				if (blanco && (((rival[3] == 'N') && ((rival[0] == 'T') || (rival[0] == 'D')))))
-				{
-					count = 1;
+				if (!blanco && (rival[3] == 'N'))
 					break;
-				}
 				else
-					if (!blanco && (((rival[3] == 'B') && ((rival[0] == 'T') || (rival[0] == 'D')))))
+					if (blanco && (((rival[3] == 'N') && ((rival[0] == 'T') || (rival[0] == 'D')))))
 					{
 						count = 1;
 						break;
 					}
+					else
+						if (!blanco && (((rival[3] == 'B') && ((rival[0] == 'T') || (rival[0] == 'D')))))
+						{
+							count = 1;
+							break;
+						}
+		}
+
 	}
-	//cout << " count = " << count << endl;
 	if (count == 1)
 	{
 		cout << "Hay un jaque en el eje x" << endl;
@@ -545,7 +652,7 @@ bool rey::comp_jaque_caballo(int posx, int posy, vector<vector<string>> tablero_
 	int count = 0;
 	vector<int> fila{ 1,2,2,1 };
 	vector<int> columna{ -2,-1,1,2, };
-
+	//cout << "comp_jaque_caballo" << endl;
 	//((8 - posy) - i) >= 0 && (posx + i)
 	//Cuadrante 1 - +
 	for (j = 1; j >= -1; j -= 2)
@@ -558,7 +665,7 @@ bool rey::comp_jaque_caballo(int posx, int posy, vector<vector<string>> tablero_
 			//cout << "Posicion en [i] = " << (8 - posy) - x << "Posicion en [j] = " << posx + y << endl;
 			if (((8 - posy) - x <= 7) && ((8 - posy) - x >= 0))
 			{
-				if ((posx + x <= 8) && (posx + x >= 0))
+				if ((posx + y <= 8) && (posx + y > 0))  //(posx + x <= 8) && (posx + x >= 0) -> ((posx + y <= 8) && (posx + y > 0))
 				{
 					string rival = tablero_directo[(8 - posy) - x][posx + y];
 					//cout << "El objetivo es " << rival << endl;
@@ -574,14 +681,13 @@ bool rey::comp_jaque_caballo(int posx, int posy, vector<vector<string>> tablero_
 							break;
 						}
 				}
-				
+
 			}
 
 		}
 	}
-	
-	//cout << " count = " << count << endl;
 
+	//cout << " count = " << count << endl;
 	if (count == 1)
 	{
 		cout << "Hay un jaque causado por caballo" << endl;
@@ -593,6 +699,52 @@ bool rey::comp_jaque_caballo(int posx, int posy, vector<vector<string>> tablero_
 	}
 }
 
+//Verificador de roque
+bool rey::verificador_enroque(int posx, int posy, int n_posx, int n_posy, vector<vector<string>> tablero_directo, bool m_t_I, bool m_t_D)
+{
+	int distx = n_posx - posx;
+	int i, count = 0;
+	if (distx > 0 && !m_t_D)
+	{
+		for (i = 1; i <= 3; i++)
+		{
+			if (tablero_directo[(8 - posy)][posx + i] != "XXXX")
+				count++;
+		}
+		if (comp_jaque_xy(posx + 1, posy, tablero_directo) || comp_jaque_y(posx + 1, posy, tablero_directo) || comp_jaque_caballo(posx + 1, posy, tablero_directo))
+		{
+			count++;
+		}
+		if (count == 0)
+			return true;
+		else
+		{
+			cout << "No se puede hacer ese movimiento, intentelo de nuevo" << endl;
+			return false;
+		}
+	}
+	else
+		if (distx < 0 && !m_t_I)
+		{
+			for (i = 1; i <= 2; i++)
+			{
+				if (tablero_directo[(8 - posy)][posx - i] != "XXXX")
+					count++;
+			}
+			if (comp_jaque_xy(posx - 1, posy, tablero_directo) || comp_jaque_y(posx - 1, posy, tablero_directo) || comp_jaque_caballo(posx - 1, posy, tablero_directo))
+			{
+				count++;
+			}
+			if (count == 0)
+				return true;
+			else
+			{
+				cout << "No se puede hacer ese movimiento, intentelo de nuevo" << endl;
+				return false;
+			}
+		}
+
+}
 
 
 //Verificador del movimiento de la dama
@@ -730,10 +882,14 @@ bool dama::obstaculos_dama_xy(int posx, int posy, int n_posx, int n_posy, vector
 				Death_List(rival);
 				muerte = true;
 			}
+		if ((rival == "XXXX") || muerte)
+			return true;
+		else
+		{
+			cout << "No se puede hacer ese movimiento, intentelo de nuevo" << endl;
+			return false;
+		}
 	}
-
-	if ((rival == "XXXX") || muerte)
-		return true;
 	else
 	{
 		cout << "No se puede hacer ese movimiento, intentelo de nuevo" << endl;
@@ -779,10 +935,14 @@ bool dama::obstaculos_dama_x(int posx, int posy, int n_posx, int n_posy, vector<
 				Death_List(rival);
 				muerte = true;
 			}
+		if ((tablero_directo[(8 - posy) - dist][posx] == "XXXX") || muerte)
+			return true;
+		else
+		{
+			cout << "No se puede hacer ese movimiento, intentelo de nuevo" << endl;
+			return false;
+		}
 	}
-
-	if ((tablero_directo[(8 - posy) - dist][posx] == "XXXX") || muerte)
-		return true;
 	else
 	{
 		cout << "No se puede hacer ese movimiento, intentelo de nuevo" << endl;
@@ -827,10 +987,14 @@ bool dama::obstaculos_dama_y(int posx, int posy, int n_posx, int n_posy, vector<
 				Death_List(rival);
 				muerte = true;
 			}
+		if ((tablero_directo[(8 - posy)][posx + dist] == "XXXX") || muerte)
+			return true;
+		else
+		{
+			cout << "No se puede hacer ese movimiento, intentelo de nuevo" << endl;
+			return false;
+		}
 	}
-
-	if ((tablero_directo[(8 - posy)][posx + dist] == "XXXX") || muerte)
-		return true;
 	else
 	{
 		cout << "No se puede hacer ese movimiento, intentelo de nuevo" << endl;
@@ -853,6 +1017,7 @@ bool torre::mover_torre(int n_posx, int n_posy)
 			(*tablero_live)[8 - n_posy][n_posx] = (*tablero_live)[8 - pos_torre_actual[1]][pos_torre_actual[0]];
 			(*tablero_live)[8 - pos_torre_actual[1]][pos_torre_actual[0]] = "XXXX";
 			mover(n_posx, n_posy);
+			mov_t = true;
 			return true;
 		}
 
@@ -864,6 +1029,7 @@ bool torre::mover_torre(int n_posx, int n_posy)
 			(*tablero_live)[8 - n_posy][n_posx] = (*tablero_live)[8 - pos_torre_actual[1]][pos_torre_actual[0]];
 			(*tablero_live)[8 - pos_torre_actual[1]][pos_torre_actual[0]] = "XXXX";
 			mover(n_posx, n_posy);
+			mov_t = true;
 			return true;
 		}
 	}
@@ -871,6 +1037,37 @@ bool torre::mover_torre(int n_posx, int n_posy)
 	{
 		cout << "La has liado, intentalo de nuevo" << endl << endl;
 		return false;
+	}
+}
+
+//Mueve la torre en el caso de que se detecte un jaque:
+void torre::mover_torre(int tipo)
+{
+	vector<int> pos_torre_actual;
+	pos_torre_actual = pos_actual();
+
+	switch (tipo)
+	{
+	case 2:
+	{
+		int n_posy = pos_torre_actual[1];
+		int n_posx = pos_torre_actual[0] + 2;
+		(*tablero_live)[8 - n_posy][n_posx] = (*tablero_live)[8 - pos_torre_actual[1]][pos_torre_actual[0]];
+		(*tablero_live)[8 - pos_torre_actual[1]][pos_torre_actual[0]] = "XXXX";
+		mover(n_posx, n_posy);
+		mov_t++;
+		break;
+	}
+	case 3:
+	{
+		int n_posy = pos_torre_actual[1];
+		int n_posx = pos_torre_actual[0] - 3;
+		(*tablero_live)[8 - n_posy][n_posx] = (*tablero_live)[8 - pos_torre_actual[1]][pos_torre_actual[0]];
+		(*tablero_live)[8 - pos_torre_actual[1]][pos_torre_actual[0]] = "XXXX";
+		mover(n_posx, n_posy);
+		mov_t++;
+		break;
+	}
 	}
 }
 
@@ -912,10 +1109,14 @@ bool torre::obstaculos_torre_x(int posx, int posy, int n_posx, int n_posy, vecto
 				Death_List(rival);
 				muerte = true;
 			}
+		if ((tablero_directo[(8 - posy) - dist][posx] == "XXXX") || muerte)
+			return true;
+		else
+		{
+			cout << "No se puede hacer ese movimiento, intentelo de nuevo" << endl;
+			return false;
+		}
 	}
-
-	if ((tablero_directo[(8 - posy) - dist][posx] == "XXXX") || muerte)
-		return true;
 	else
 	{
 		cout << "No se puede hacer ese movimiento, intentelo de nuevo" << endl;
@@ -960,16 +1161,26 @@ bool torre::obstaculos_torre_y(int posx, int posy, int n_posx, int n_posy, vecto
 				Death_List(rival);
 				muerte = true;
 			}
+		if ((tablero_directo[(8 - posy)][posx + dist] == "XXXX") || muerte)
+			return true;
+		else
+		{
+			cout << "No se puede hacer ese movimiento, intentelo de nuevo" << endl;
+			return false;
+		}
 	}
-
-	if ((tablero_directo[(8 - posy)][posx + dist] == "XXXX") || muerte)
-		return true;
 	else
 	{
 		cout << "No se puede hacer ese movimiento, intentelo de nuevo" << endl;
 		return false;
 	}
 
+}
+
+//Devuelve a la funcion main informacion acerca de si se ha movido la torre o no, para el roque 
+bool torre::mov_torre(void)
+{
+	return mov_t;
 }
 
 
@@ -1075,10 +1286,9 @@ bool alfil::obstaculos_alfil_xy(int posx, int posy, int n_posx, int n_posy, vect
 				Death_List(rival);
 				muerte = true;
 			}
+		if ((rival == "XXXX") || muerte)
+			return true;
 	}
-
-	if ((rival == "XXXX") || muerte)
-		return true;
 	else
 	{
 		cout << "No se puede hacer ese movimiento, intentelo de nuevo" << endl;
@@ -1252,6 +1462,88 @@ bool peon::obstaculos_peon_xy(int posx, int posy, int n_posx, int n_posy, vector
 	}
 }
 
+//Verificador de que el peon blanco / negro no ha llegado al otro lado del tablero
+vector<int> peon::comp_tope_peon(void)
+{
+	vector<int> pos_peon_actual = pos_actual();
+	int premio_tope;
+	vector<int> premio_escogido{ 0,0 };	//Posicion del peon en el eje x, y la recompensa escogida
+	if (blanco)
+	{
+		if (pos_peon_actual[1] == 1)
+		{
+			cout << endl << "Has llegado con el peon al otro lado del tablero, ahora puedes elejir convertirlo en:" << endl;
+			cout << "1. Dama" << endl << "2. Torre" << endl << "3. Alfil" << endl << "4. Caballo" << endl;
+			cin >> premio_tope;
+			premio_escogido[0] = pos_peon_actual[0];
+			premio_escogido[1] = premio_tope;
+			return premio_escogido;
+		}
+		else return premio_escogido;
+	}
+	if (!blanco)
+	{
+		if (pos_peon_actual[1] == 8)
+		{
+			cout << endl << "Has llegado con el peon al otro lado del tablero, ahora puedes elejir convertirlo en:" << endl;
+			cout << "1. Dama" << endl << "2. Torre" << endl << "3. Alfil" << endl << "4. Caballo" << endl;
+			cin >> premio_tope;
+			premio_escogido[0] = pos_peon_actual[0];
+			premio_escogido[1] = premio_tope;
+			return premio_escogido;
+		}
+		else return premio_escogido;
+	}
+}
+
+//Se encarga de actualizar en el tablero a un peon en una pieza mejorada
+void peon::transductor_peon_a_premio(int num_tipo_mejora, int num_pieza_mejora, bool blanche)
+{
+	vector<int> pos_peon_actual;
+	pos_peon_actual = pos_actual();
+
+	switch (num_tipo_mejora)
+	{
+	case 1:
+	{
+		string puzle;
+		string pieza_1 = to_string(num_pieza_mejora);
+		string pieza_2 = (blanche ? "B" : "N");
+		puzle = "D" + pieza_1 + "_" + pieza_2;
+		(*tablero_live)[8 - pos_peon_actual[1]][pos_peon_actual[0]] = puzle;
+		break;
+	}
+	case 2:
+	{
+		string puzle;
+		string pieza_1 = to_string(num_pieza_mejora);
+		string pieza_2 = (blanche ? "B" : "N");
+		puzle = "T" + pieza_1 + "_" + pieza_2;
+		(*tablero_live)[8 - pos_peon_actual[1]][pos_peon_actual[0]] = puzle;
+		break;
+	}
+	case 3:
+	{
+		string puzle;
+		string pieza_1 = to_string(num_pieza_mejora);
+		string pieza_2 = (blanche ? "B" : "N");
+		puzle = "A" + pieza_1 + "_" + pieza_2;
+		(*tablero_live)[8 - pos_peon_actual[1]][pos_peon_actual[0]] = puzle;
+		break;
+	}
+	case 4:
+	{
+		string puzle;
+		string pieza_1 = to_string(num_pieza_mejora);
+		string pieza_2 = (blanche ? "B" : "N");
+		puzle = "C" + pieza_1 + "_" + pieza_2;
+		(*tablero_live)[8 - pos_peon_actual[1]][pos_peon_actual[0]] = puzle;
+		break;
+	}
+
+	}
+}
+
 
 //Posicion actual pieza
 vector<int> pieza::pos_actual(void)
@@ -1282,6 +1574,7 @@ void pieza::Juicio_final(int tipo_muerto, int num_muerto, int blanco_muerto)
 	cout << num_tipo << " = " << tipo_muerto << endl;
 	cout << num_pieza << " = " << num_muerto << endl;
 	cout << blanco << " = " << blanco_muerto << endl; */
+
 	if ((num_tipo == tipo_muerto) && (num_pieza == num_muerto) && (blanco == (bool)blanco_muerto))
 	{
 		vida = false;
@@ -1289,11 +1582,18 @@ void pieza::Juicio_final(int tipo_muerto, int num_muerto, int blanco_muerto)
 	}
 }
 
+//Comprobar si hay que ascender a alguna pieza
+void pieza::Juicio_final(int num_tipo_mejora)
+{
+	cout << "Esta pieza ha sido ascendida a " << name[num_tipo_mejora] << " y de ahora en adelante dejará de ser un peon" << endl;
+	vida = false;
+}
+
 //Comprobar si la pieza seleccionada ha muerto
 bool pieza::obituary(void)
 {
 	if (num_pieza != 0)
-	cout << "La vida del " << name[num_tipo] << " numero " << num_pieza << " de color " << (blanco ? "blanco" : "negro") << " es del tipo " << (vida ? "vivo" : "muerto") << endl;
+		cout << "La vida del " << name[num_tipo] << " numero " << num_pieza << " de color " << (blanco ? "blanco" : "negro") << " es del tipo " << (vida ? "vivo" : "muerto") << endl;
 	return !vida;
 }
 
@@ -1310,13 +1610,19 @@ void peon::mostrar(void) {
 	cout << "Esta pieza ha sido movida " << cant << " veces" << endl;
 }
 
-void Imprimir_Tablero_2(vector<vector<string>> matrix)
-{
+
+void Imprimir_Tablero_2(vector<vector<string>> matrix) {
 	size_t i, j;
-	for (i = 0; i < 8; i++)
-	{
-		for (j = 0; j < 9; j++) {
-			cout << matrix[i][j] << " ";
+	string celda;
+	for (i = 0; i < 8; i++) {
+		for (j = 1; j < 9; j++) {
+			celda = matrix[i][j];
+			if (celda[3] == 'B')
+				cout << "\033[31m" << celda << "\033[m ";
+			else if (celda[3] == 'N')
+				cout << "\033[32m" << celda << "\033[m ";
+			else
+				cout << celda << " ";
 		}
 		cout << endl;
 	}
@@ -1476,3 +1782,4 @@ struct Death_ID Read_Victim_Data(struct Death_ID victim)
 	Death_Note.close();
 	return victim_ID;
 }
+
