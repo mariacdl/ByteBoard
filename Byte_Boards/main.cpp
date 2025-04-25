@@ -8,8 +8,7 @@
 #include "trastero.h" 
 
 
-int main()
-{
+int main() {
 	struct Death_ID victim { 0, 0, 0 };
 	struct Death_ID victima { 0, 0, 0 };
 
@@ -17,7 +16,6 @@ int main()
 	struct datos_torres T { 4, 2, 2, { 0, 3, 4 }, { 0,1,2 } };
 	struct datos_alfiles A { 4, 2, 2, { 0, 3, 4 }, { 0,1,2 } };
 	struct datos_caballos C { 4, 2, 2, { 0, 3, 4 }, { 0,1,2 } };
-
 
 	int i, leer;
 	size_t num = 7, x, y;
@@ -40,43 +38,43 @@ int main()
 	vector<vector<string>>& matriz_live = matriz;
 	vector<vector<string>> matriz_aux;
 
-	peon* num_p[17];
-	torre* num_t[5];	  // + 16 (8 + 8) asume que llegan todos los peones al otro lado del tablero para conevrtirse en torres
-	caballo* num_c[5 + 16]; // + 16 (8 + 8) asume que llegan todos los peones al otro lado del tablero para convertirse en caballos
-	alfil* num_a[5 + 16];	  // + 16 (8 + 8) asume que llegan todos los peones al otro lado del tablero para convertirse en alfiles
-	rey* num_r[3];
-	dama* num_d[3 + 16];	  // + 16 (8 + 8) asume que llegan todos los peones al otro lado del tablero para conevrtirse en damas
+	Peon* num_p[17];
+	Torre* num_t[5];	  // + 16 (8 + 8) asume que llegan todos los peones al otro lado del tablero para conevrtirse en torres
+	Caballo* num_c[5 + 16]; // + 16 (8 + 8) asume que llegan todos los peones al otro lado del tablero para convertirse en caballos
+	Alfil* num_a[5 + 16];	  // + 16 (8 + 8) asume que llegan todos los peones al otro lado del tablero para convertirse en alfiles
+	Rey* num_r[3];
+	Dama* num_d[3 + 16];	  // + 16 (8 + 8) asume que llegan todos los peones al otro lado del tablero para conevrtirse en damas
 
 	for (i = 1; i < 9; i++)
 	{
-		num_p[i] = new peon(i, 2, 5, i, false, true);
+		num_p[i] = new Peon(i, 2, 5, i, false, true);
 	}
 
 	for (i = 1; i < 9; i++)
 	{
-		num_p[i + 8] = new peon(i, 7, 5, i, true, true);
+		num_p[i + 8] = new Peon(i, 7, 5, i, true, true);
 	}
 
-	num_r[1] = new rey(4, 1, 0, 1, false, true);
-	num_r[2] = new rey(4, 8, 0, 1, true, true);
+	num_r[1] = new Rey(4, 1, 0, 1, false, true);
+	num_r[2] = new Rey(4, 8, 0, 1, true, true);
 
-	num_d[1] = new dama(5, 1, 1, 1, false, true);
-	num_d[2] = new dama(5, 8, 1, 1, true, true);
+	num_d[1] = new Dama(5, 1, 1, 1, false, true);
+	num_d[2] = new Dama(5, 8, 1, 1, true, true);
 
-	num_a[1] = new alfil(3, 1, 3, 1, false, true);
-	num_a[2] = new alfil(6, 1, 3, 2, false, true);
-	num_a[3] = new alfil(3, 8, 3, 1, true, true);
-	num_a[4] = new alfil(6, 8, 3, 2, true, true);
+	num_a[1] = new Alfil(3, 1, 3, 1, false, true);
+	num_a[2] = new Alfil(6, 1, 3, 2, false, true);
+	num_a[3] = new Alfil(3, 8, 3, 1, true, true);
+	num_a[4] = new Alfil(6, 8, 3, 2, true, true);
 
-	num_c[1] = new caballo(2, 1, 4, 1, false, true);
-	num_c[2] = new caballo(7, 1, 4, 2, false, true);
-	num_c[3] = new caballo(2, 8, 4, 1, true, true);
-	num_c[4] = new caballo(7, 8, 4, 2, true, true);
+	num_c[1] = new Caballo(2, 1, 4, 1, false, true);
+	num_c[2] = new Caballo(7, 1, 4, 2, false, true);
+	num_c[3] = new Caballo(2, 8, 4, 1, true, true);
+	num_c[4] = new Caballo(7, 8, 4, 2, true, true);
 
-	num_t[1] = new torre(1, 1, 2, 1, false, true);
-	num_t[2] = new torre(8, 1, 2, 2, false, true);
-	num_t[3] = new torre(1, 8, 2, 1, true, true);
-	num_t[4] = new torre(8, 8, 2, 2, true, true);
+	num_t[1] = new Torre(1, 1, 2, 1, false, true);
+	num_t[2] = new Torre(8, 1, 2, 2, false, true);
+	num_t[3] = new Torre(1, 8, 2, 1, true, true);
+	num_t[4] = new Torre(8, 8, 2, 2, true, true);
 
 	leer = Leer_Tablero_2(matriz);
 	if (leer != 0)
@@ -84,12 +82,12 @@ int main()
 
 	while (opt != 7)
 	{
-		num_r[0] = new rey(0, 0, 0, 0, false, false);
-		num_d[0] = new dama(0, 0, 1, 0, false, false);
-		num_t[0] = new torre(0, 0, 2, 0, false, false);
-		num_a[0] = new alfil(0, 0, 3, 0, false, false);
-		num_c[0] = new caballo(0, 0, 4, 0, false, false);
-		num_p[0] = new peon(0, 0, 5, 0, false, false);
+		num_r[0] = new Rey(0, 0, 0, 0, false, false);
+		num_d[0] = new Dama(0, 0, 1, 0, false, false);
+		num_t[0] = new Torre(0, 0, 2, 0, false, false);
+		num_a[0] = new Alfil(0, 0, 3, 0, false, false);
+		num_c[0] = new Caballo(0, 0, 4, 0, false, false);
+		num_p[0] = new Peon(0, 0, 5, 0, false, false);
 
 		Death_List("****");
 		bewegung = false;
@@ -678,28 +676,28 @@ int main()
 					{
 					case 1:
 					{
-						num_d[++D.C_D_T] = new dama(verificar_ascenso[0], 1, 1, ++D.C_D_B, true, true);
+						num_d[++D.C_D_T] = new Dama(verificar_ascenso[0], 1, 1, ++D.C_D_B, true, true);
 						num_p[num + 8]->transductor_peon_a_premio(verificar_ascenso[1], D.C_D_B, true);
 						D.conv_B_T.push_back(D.C_D_T);
 						break;
 					}
 					case 2:
 					{
-						num_t[++T.C_T_T] = new torre(verificar_ascenso[0], 1, 2, ++T.C_T_B, true, true);
+						num_t[++T.C_T_T] = new Torre(verificar_ascenso[0], 1, 2, ++T.C_T_B, true, true);
 						num_p[num + 8]->transductor_peon_a_premio(verificar_ascenso[1], T.C_T_B, true);
 						T.conv_B_T.push_back(T.C_T_T);
 						break;
 					}
 					case 3:
 					{
-						num_a[++A.C_A_T] = new alfil(verificar_ascenso[0], 1, 3, ++A.C_A_B, true, true);
+						num_a[++A.C_A_T] = new Alfil(verificar_ascenso[0], 1, 3, ++A.C_A_B, true, true);
 						num_p[num + 8]->transductor_peon_a_premio(verificar_ascenso[1], A.C_A_B, true);
 						A.conv_B_T.push_back(A.C_A_T);
 						break;
 					}
 					case 4:
 					{
-						num_c[++C.C_C_T] = new caballo(verificar_ascenso[0], 1, 4, ++C.C_C_B, true, true);
+						num_c[++C.C_C_T] = new Caballo(verificar_ascenso[0], 1, 4, ++C.C_C_B, true, true);
 						num_p[num + 8]->transductor_peon_a_premio(verificar_ascenso[1], C.C_C_B, true);
 						C.conv_B_T.push_back(C.C_C_T);
 						break;
@@ -718,28 +716,28 @@ int main()
 						{
 						case 1:
 						{
-							num_d[++D.C_D_T] = new dama(verificar_ascenso[0], 8, 1, ++D.C_D_N, false, true);
+							num_d[++D.C_D_T] = new Dama(verificar_ascenso[0], 8, 1, ++D.C_D_N, false, true);
 							num_p[num]->transductor_peon_a_premio(verificar_ascenso[1], D.C_D_N, false);
 							D.conv_N_T.push_back(D.C_D_T);
 							break;
 						}
 						case 2:
 						{
-							num_t[++T.C_T_T] = new torre(verificar_ascenso[0], 8, 2, ++T.C_T_N, false, true);
+							num_t[++T.C_T_T] = new Torre(verificar_ascenso[0], 8, 2, ++T.C_T_N, false, true);
 							num_p[num]->transductor_peon_a_premio(verificar_ascenso[1], T.C_T_N, false);
 							T.conv_N_T.push_back(T.C_T_T);
 							break;
 						}
 						case 3:
 						{
-							num_a[++A.C_A_T] = new alfil(verificar_ascenso[0], 8, 3, ++A.C_A_N, false, true);
+							num_a[++A.C_A_T] = new Alfil(verificar_ascenso[0], 8, 3, ++A.C_A_N, false, true);
 							num_p[num]->transductor_peon_a_premio(verificar_ascenso[1], A.C_A_N, false);
 							A.conv_N_T.push_back(A.C_A_T);
 							break;
 						}
 						case 4:
 						{
-							num_c[++C.C_C_T] = new caballo(verificar_ascenso[0], 8, 4, ++C.C_C_N, false, true);
+							num_c[++C.C_C_T] = new Caballo(verificar_ascenso[0], 8, 4, ++C.C_C_N, false, true);
 							num_p[num]->transductor_peon_a_premio(verificar_ascenso[1], C.C_C_N, false);
 							C.conv_N_T.push_back(C.C_C_T);
 							break;
