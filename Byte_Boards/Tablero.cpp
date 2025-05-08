@@ -49,7 +49,14 @@ void Tablero::dibujar() {
 }
 
 void Tablero::dibujar_terminal() {
+	cout << endl << "    ";
+	for (int x = 0; x < largura; ++x) {
+		cout << x << "  ";
+	}
+	cout << endl;
 	for (int y = 0; y < altura; ++y) {
+		cout << " " << y << " ";
+
 		for (int x = 0; x < largura; ++x) {
 			int index = largura * y + x;
 			Pieza pieza = lista_piezas[index];
@@ -58,8 +65,49 @@ void Tablero::dibujar_terminal() {
 				cout << "__ "; // vazio
 			}
 			else {
-				cout << pieza.ver_tipo() << pieza.ver_color() << " ";
+				if (pieza.ver_color() == 'N')
+					cout << "\033[34m" << pieza.ver_tipo() << "N\033[0m ";
+				else cout << pieza.ver_tipo() << "B ";
+				
 			}
+		}
+		cout << endl;
+	}
+}
+
+
+// Selection overload
+void Tablero::dibujar_terminal(const vector<pair<int, int>>& selecionados) {
+	cout << endl << "    ";
+	for (int x = 0; x < largura; ++x) {
+		cout << x << "  ";
+	}
+	cout << endl;
+
+	for (int y = 0; y < altura; ++y) {
+		cout << " " << y << " ";
+
+		for (int x = 0; x < largura; ++x) {
+			int index = largura * y + x;
+			Pieza pieza = lista_piezas[index];
+
+			bool selecionado = find(selecionados.begin(), selecionados.end(), make_pair(x, y)) != selecionados.end();
+
+			if (selecionado) cout << "\033[100m";
+
+			if (pieza.ver_tipo() == '0') {
+				cout << "__"; // vazio
+			}
+			else {
+				if (pieza.ver_color() == 'N')
+					cout << "\033[34m" << pieza.ver_tipo() << "N\033[0m";
+				else cout << pieza.ver_tipo() << "B";
+
+			}
+			if (selecionado)
+				cout << "\033[0m";
+
+			cout << " ";
 		}
 		cout << endl;
 	}
@@ -71,6 +119,13 @@ void Tablero::colocar_pieza(int pos_x, int pos_y, char tipo, char color) {
 
 void Tablero::retirar_pieza(int pos_x, int pos_y) {
 	lista_piezas[largura * pos_y + pos_x] = Pieza('0', '0'); // Pieza vazia
+}
+
+void Tablero::mover_pieza(int de_x, int de_y, int para_x, int para_y) {
+	Pieza pieza = lista_piezas[largura * de_y + de_x];
+
+	colocar_pieza(para_x, para_y, pieza.ver_tipo(), pieza.ver_color());
+	retirar_pieza(de_x, de_y);
 }
 
 bool Tablero::verificar_movimiento(int posicion_x, int posicion_y, int next_posicion_x, int next_posicion_y) {
@@ -118,14 +173,27 @@ vector<Pieza> Tablero::listar_piezas() {
 	return lista_piezas;
 }
 
-// Apenas para terminal
 int Tablero::ver_altura() {
 	return altura;
 }
 
-
-// Apenas para terminal
 int Tablero::ver_largura() {
 	return largura;
 }
 
+vector<pair<int, int>> Tablero::listar_movimientos_validos(int position_x, int position_y) {
+	vector<pair<int, int>> movimientos_validos;
+	for (int x = 0; x < ver_largura(); ++x) {
+		for (int y = 0; y < ver_altura(); ++y) {
+			if (verificar_movimiento(position_x, position_y, x, y)) {
+				movimientos_validos.emplace_back(x, y);
+			}
+		}
+	}
+	cout << "Movimientos validos: ";
+	for (int i = 0; i < movimientos_validos.size(); i++)
+		cout << "(" << movimientos_validos[i].first << ", " << movimientos_validos[i].second << ") ";
+	cout << endl;
+
+	return movimientos_validos;
+}
