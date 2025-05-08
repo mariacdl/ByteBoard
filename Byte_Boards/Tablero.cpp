@@ -190,10 +190,10 @@ vector<pair<int, int>> Tablero::listar_movimientos_validos(int position_x, int p
 			}
 		}
 	}
-	cout << "Movimientos validos: ";
-	for (int i = 0; i < movimientos_validos.size(); i++)
-		cout << "(" << movimientos_validos[i].first << ", " << movimientos_validos[i].second << ") ";
-	cout << endl;
+	//cout << "Movimientos validos: ";
+	//for (int i = 0; i < movimientos_validos.size(); i++)
+	//	cout << "(" << movimientos_validos[i].first << ", " << movimientos_validos[i].second << ") ";
+	//cout << endl;
 
 	return movimientos_validos;
 }
