@@ -1,14 +1,10 @@
 #include <iostream>
 #include "Partida.h"
+#include "Menu.h"
 
 using namespace std;
 
 int main() {
-    Partida partida(8, 8);
-
-    while (true) {
-        partida.dibujar_terminal();
-        partida.mover_terminal();
-        partida.alternar_turno();
-    }
+    Menu menu;
+    menu.dibujar_terminal();
 }

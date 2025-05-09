@@ -4,8 +4,9 @@
 
 using namespace std;
 
-Partida::Partida(int altura, int largura) : tablero(altura, largura) {
-    turno_actual = 'B'; // Empieza con blanco
+Partida::Partida(int altura, int largura, char oponente, char turno_actual) : tablero(altura, largura) {
+    this->turno_actual = turno_actual;
+    this->oponente = oponente;
 }
 
 void Partida::dibujar_terminal() {
@@ -55,4 +56,12 @@ void Partida::alternar_turno() {
 
 char Partida::ver_turno() const {
     return turno_actual;
+}
+
+void Partida::jugar()  {
+    while (true) {
+        dibujar_terminal();
+        mover_terminal();
+        alternar_turno();
+    }
 }
