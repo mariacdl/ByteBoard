@@ -43,7 +43,7 @@ void Menu::dibujar_terminal() {
 	while (true) {
 		cout << endl;
 		cout << "1. Jugar contra jugador" << endl;
-		cout << "2. Jugar contra IA" << endl;
+		cout << "2. Jugar contra IA (WORK IN PROGRESS)" << endl;
 		cout << "0. Salir" << endl;
 		cout << "Escojer opcion: ";
 		cin >> modo;

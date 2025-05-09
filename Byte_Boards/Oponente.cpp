@@ -1,11 +1,11 @@
 #include "Oponente.h"
 #include "Pieza.h"
+#include <vector>
 #include <cstdlib> // Para randomizacion
-#include <ctime>
 
-int Oponente::puntuar_jugada(Partida& partida, pair<int, int> origen, pair<int, int> destino) {
-    vector<Pieza> piezas = partida.tablero.listar_piezas();
-    int largura = partida.tablero.ver_largura();
+int Oponente::puntuar_jugada(Tablero& tablero, pair<int, int> origen, pair<int, int> destino) {
+    vector<Pieza> piezas = tablero.listar_piezas();
+    int largura = tablero.ver_largura();
     int index_destino = destino.second * largura + destino.first;
     Pieza objetivo = piezas[index_destino];
 
@@ -21,12 +21,12 @@ int Oponente::puntuar_jugada(Partida& partida, pair<int, int> origen, pair<int, 
     }
 }
 
-pair<pair<int, int>, pair<int, int>> Oponente::elegir_proxima_jugada(Partida& partida) {
+pair<pair<int, int>, pair<int, int>> Oponente::elegir_proxima_jugada(Tablero& tablero) {
     vector<pair<pair<int, int>, pair<int, int>>> todas_las_jugadas;
 
-    vector<Pieza> piezas = partida.tablero.listar_piezas();
-    int largura = partida.tablero.ver_largura();
-    int altura = partida.tablero.ver_altura();
+    vector<Pieza> piezas = tablero.listar_piezas();
+    int largura = tablero.ver_largura();
+    int altura = tablero.ver_altura();
 
     int mejor_puntaje = -1;
     pair<pair<int, int>, pair<int, int>> mejor_jugada = { {-1, -1}, {-1, -1} };
@@ -35,9 +35,9 @@ pair<pair<int, int>, pair<int, int>> Oponente::elegir_proxima_jugada(Partida& pa
         for (int x = 0; x < largura; ++x) {
             Pieza pieza = piezas[y * largura + x];
             if (pieza.ver_color() == color) {
-                auto movimientos = partida.tablero.listar_movimientos_validos(x, y);
+                auto movimientos = tablero.listar_movimientos_validos(x, y);
                 for (auto& destino : movimientos) {
-                    int puntaje = puntuar_jugada(partida, { x, y }, destino);
+                    int puntaje = puntuar_jugada(tablero, { x, y }, destino);
                     if (puntaje > mejor_puntaje) {
                         mejor_puntaje = puntaje;
                         mejor_jugada = { {x, y}, destino };

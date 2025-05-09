@@ -15,7 +15,9 @@ private:
 public:
     Partida(int altura = 8, int largura = 8, char oponente = 'J', char turno_actual = 'B');
     void dibujar_terminal();
-    void mover_terminal();
+    void jugar_terminal();
+    void mover_jugador();
+    void mover_oponente();
     void alternar_turno();
     char ver_turno() const;
     void jugar();

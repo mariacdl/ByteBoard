@@ -2,6 +2,7 @@
 
 class Pieza {
 	char tipo, color;
+	int numero_movimiento = 0; // Para "En passant" del peon y "Enroque" del rey
 
 public:
 	Pieza() : tipo('0'), color('0') {}

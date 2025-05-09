@@ -128,17 +128,17 @@ void Tablero::mover_pieza(int de_x, int de_y, int para_x, int para_y) {
 	retirar_pieza(de_x, de_y);
 }
 
-bool Tablero::verificar_movimiento(int posicion_x, int posicion_y, int next_posicion_x, int next_posicion_y) {
-	Pieza pieza = lista_piezas[largura * posicion_y + posicion_x];
-	Pieza destino = lista_piezas[largura * next_posicion_y + next_posicion_x]; // Hipotetico, puede estar libre
+bool Tablero::verificar_movimiento(int de_x, int de_y, int para_x, int para_y) {
+	Pieza pieza = lista_piezas[largura * de_y + de_x];
+	Pieza destino = lista_piezas[largura * para_y + para_x]; // Hipotetico, puede estar libre
 
 	// Verificar si movimiento está dentro del tablero
-	if (next_posicion_x < 0 || next_posicion_x >= largura || next_posicion_y < 0 || next_posicion_y >= altura) {
+	if (para_x < 0 || para_x >= largura || para_y < 0 || para_y >= altura) {
 		return false;
 	}
 
 	// Verificar si movimiento es para la misma cedula
-	if (next_posicion_x == posicion_x && next_posicion_y == posicion_y) {
+	if (para_x == de_x && para_y == de_y) {
 		return false;
 	}
 
@@ -147,24 +147,96 @@ bool Tablero::verificar_movimiento(int posicion_x, int posicion_y, int next_posi
 		return false;
 	}
 
+	int dx = para_x - de_x;
+	int dy = para_y - de_y;
+
 	// Verificar si movimiento es valido para la pieza
 	switch (pieza.ver_tipo()) {
-	case 'A':
-	case 'C':
-		if (!((abs(posicion_x - next_posicion_x) == 2 && abs(posicion_y - next_posicion_y) == 1) ||
-			(abs(posicion_x - next_posicion_x) == 1 && abs(posicion_y - next_posicion_y) == 2)))
+	case 'A': // Alfil
+		if (abs(dx) != abs(dy))
+			return false;
+		{
+			int paso_x = dx / abs(dx);
+			int paso_y = dy / abs(dy);
+			int x = de_x + paso_x;
+			int y = de_y + paso_y;
+			while (x != para_x && y != para_y) {
+				if (lista_piezas[y * largura + x].ver_tipo() != '0') return false; // Obstáculo
+				x += paso_x;
+				y += paso_y;
+			}
+		}
+		break;
+
+	case 'C': // Caballo
+		if (!((abs(dx) == 2 && abs(dy) == 1) || (abs(dx) == 1 && abs(dy) == 2)))
 			return false;
 		break;
-	case 'D':
-	case 'P':
-		if (!(posicion_x == next_posicion_x || abs(posicion_y - next_posicion_y) > 1)) return false;
+
+	case 'T': // Torre
+		if (dx != 0 && dy != 0)
+			return false;
+		{
+			int paso_x = (dx == 0) ? 0 : dx / abs(dx);
+			int paso_y = (dy == 0) ? 0 : dy / abs(dy);
+			int x = de_x + paso_x;
+			int y = de_y + paso_y;
+			while (x != para_x || y != para_y) {
+				if (lista_piezas[y * largura + x].ver_tipo() != '0') return false;
+				x += paso_x;
+				y += paso_y;
+			}
+		}
 		break;
-	case 'R':
-	case 'T':
-		if (!(posicion_x == next_posicion_x || posicion_y == next_posicion_y)) return false;
+
+	case 'D': // Dama
+		if (!(dx == 0 || dy == 0 || abs(dx) == abs(dy)))
+			return false;
+		{
+			int paso_x = (dx == 0) ? 0 : dx / abs(dx);
+			int paso_y = (dy == 0) ? 0 : dy / abs(dy);
+			int x = de_x + paso_x;
+			int y = de_y + paso_y;
+			while (x != para_x || y != para_y) {
+				if (lista_piezas[y * largura + x].ver_tipo() != '0') return false;
+				x += paso_x;
+				y += paso_y;
+			}
+		}
 		break;
+
+	case 'R': // Rey
+		if (abs(dx) > 1 || abs(dy) > 1)
+			return false;
+		break;
+
+	case 'P': { // Peón
+		int direccion = (pieza.ver_color() == 'B') ? 1 : -1;
+		int fila_inicial = (pieza.ver_color() == 'B') ? 1 : altura - 2;
+
+		// Movimiento simple hacia adelante
+		if (dx == 0 && dy == direccion && destino.ver_tipo() == '0') return true;
+
+		// Movimiento doble desde la fila inicial
+		if (dx == 0 && dy == 2 * direccion &&
+			de_y == fila_inicial &&
+			destino.ver_tipo() == '0') {
+
+			// Verificar que la celda intermedia también esté vacía
+			int y_intermedia = de_y + direccion;
+			if (lista_piezas[y_intermedia * largura + de_x].ver_tipo() == '0')
+				return true;
+		}
+
+		// Captura en diagonal
+		if (abs(dx) == 1 && dy == direccion && destino.ver_tipo() != '0')
+			return true;
+
+		return false;
+		break;
+		}
 	default:
-		break;
+		return false;
 	}
 	return true;
 }
