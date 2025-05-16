@@ -1,5 +1,6 @@
 #include "Menu.h"
 #include "freeglut.h"
+#include "etsidi.h"
 #include <iostream>
 
 
@@ -23,7 +24,7 @@ void dibujarCuadro(int centroX, int y, int alto, const char* texto,
 {
     int len = strlen(texto);
     int textWidth = len * 9;
-    // Ancho del bot髇 con margen horizontal adicional
+    // Ancho del bot贸n con margen horizontal adicional
     int paddingHorizontal = 40;
     int ancho = textWidth + paddingHorizontal;
     // Marco exterior
@@ -47,111 +48,118 @@ void Menu::dibujarMenu(int ancho, int alto) {
 
     glDisable(GL_DEPTH_TEST);
     glMatrixMode(GL_PROJECTION);
-    glPushMatrix();             
+    glPushMatrix();
     glLoadIdentity();
     gluOrtho2D(0, ancho, alto, 0);
 
-    glMatrixMode(GL_MODELVIEW);
-    glPushMatrix();            
-    glLoadIdentity();
-
-    int centroX = ancho / 2;
-    int centroY = alto / 2;
-
-    if (estado == MENU_TABLERO) 
+    if (estado == MENU_TABLERO)
     {
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D,
+            ETSIDI::getTexture("imagenes/menu_1.png").id);
         glDisable(GL_LIGHTING);
+        glBegin(GL_POLYGON);
         glColor3f(1, 1, 1);
-        glRasterPos2f(centroX - 100, centroY - 150);
-        const char* titulo = "ELEGIR TIPO DE JUEGO:";
-        for (const char* c = titulo; *c; c++)
-            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
+        glTexCoord2f(0, 1); glVertex2f(0, alto);
+        glTexCoord2f(1, 1); glVertex2f(ancho, alto);
+        glTexCoord2f(1, 0); glVertex2f(ancho, 0);
+        glTexCoord2f(0, 0); glVertex2f(0, 0);
+        glEnd();
         glEnable(GL_LIGHTING);
-        dibujarCuadro(centroX, centroY-50, 50, "Ajedrez 4x5 (un peon)", 0.2, 0.2, 0.6);
-        dibujarCuadro(centroX, centroY+50, 50, "Speed Chess", 0.2, 0.2, 0.6);
+        glDisable(GL_TEXTURE_2D);
     }
     else if (estado == MENU_MODO_JUEGO) {
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D,
+            ETSIDI::getTexture("imagenes/menu_2.png").id);
         glDisable(GL_LIGHTING);
+        glBegin(GL_POLYGON);
         glColor3f(1, 1, 1);
-        glRasterPos2f(centroX - 100, centroY - 150);
-        const char* titulo = "ELEGIR CONTRINCANTE:";
-        for (const char* c = titulo; *c; c++)
-            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
+        glTexCoord2f(0, 1); glVertex2f(0, alto);
+        glTexCoord2f(1, 1); glVertex2f(ancho, alto);
+        glTexCoord2f(1, 0); glVertex2f(ancho, 0);
+        glTexCoord2f(0, 0); glVertex2f(0, 0);
+        glEnd();
         glEnable(GL_LIGHTING);
-        dibujarCuadro(centroX , centroY - 50, 50, "Blancas VS Negras", 0.3, 0.2, 0.2);
-        dibujarCuadro(centroX , centroY + 50, 50, "VS IA", 0.3, 0.2, 0.2);
-        dibujarCuadro(centroX-300, centroY - 200, 40, "Volver", 0.5, 0.2, 0.2);
+        glDisable(GL_TEXTURE_2D);
     }
     else if (estado == PAUSA) {
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D,
+            ETSIDI::getTexture("imagenes/pausa.png").id);
         glDisable(GL_LIGHTING);
+        glBegin(GL_POLYGON);
         glColor3f(1, 1, 1);
-        glRasterPos2f(centroX - 100, centroY - 150);
-        const char* titulo = "PAUSA";
-        for (const char* c = titulo; *c; ++c)
-            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
+        glTexCoord2f(0, 1); glVertex2f(0, alto);
+        glTexCoord2f(1, 1); glVertex2f(ancho, alto);
+        glTexCoord2f(1, 0); glVertex2f(ancho, 0);
+        glTexCoord2f(0, 0); glVertex2f(0, 0);
+        glEnd();
         glEnable(GL_LIGHTING);
-        dibujarCuadro(centroX, centroY-50, 50, "Reanudar", 0.2, 0.5, 0.2);
-        dibujarCuadro(centroX-300, centroY-200 , 50, "Volver al inicio", 0.5, 0.2, 0.2);
+        glDisable(GL_TEXTURE_2D);
     }
-    glPopMatrix();               
+    glPopMatrix();
     glMatrixMode(GL_PROJECTION);
     glEnable(GL_DEPTH_TEST);
 }
 
 void Menu::procesarClick(int x, int y, int ancho, int alto) {
-    int centroX = ancho / 2;
     int centroY = alto / 2;
     if (estado == MENU_TABLERO) {
-        //醨ea clic para elegir tablero un pe髇
-        int y_inicio_op1 = centroY-70;
-        int y_fin_op1 = centroY-20;
-        //醨ea clic para elegir tablero speed chess
-        int y_inicio_op2 = centroY-10;
-        int y_fin_op2 = centroY+60;
-
-        if (y >= y_inicio_op1 && y <= y_fin_op1) {
+        //谩rea clic para elegir tablero 4x5
+        int y_inicio_4x5 = centroY - 60;
+        int y_fin_4x5 = centroY + 30;
+        //谩rea clic para elegir tablero speed chess
+        int y_inicio_speed = centroY + 50;
+        int y_fin_speed = centroY + 160;
+        //bot贸n 4x5
+        if (y >= y_inicio_4x5 && y <= y_fin_4x5) {
             modoSeleccionado = 1;
             estado = MENU_MODO_JUEGO;
         }
-        else if (y >= y_inicio_op2 && y <= y_fin_op2) {
+        //bot贸n speed chess
+        else if (y >= y_inicio_speed && y <= y_fin_speed) {
             modoSeleccionado = 2;
             estado = MENU_MODO_JUEGO;
         }
     }
     else if (estado == MENU_MODO_JUEGO) {
-        int y_inicio_op1 = centroY-70;
-        int y_fin_op1 = centroY-20;
-        int y_inicio_op2 = centroY-10;
-        int y_fin_op2 = centroY+60;
-        int y_inicio_volver = centroY -220;
-        int y_fin_volver = centroY -180;
-        int x_inicio_volver = centroX - 320;
-        int x_fin_volver = centroX - 280;
-        if (y >= y_inicio_op1 && y <= y_fin_op1) {
+        //diferentes 谩reas de clic
+        int y_inicio_2player = centroY - 60;
+        int y_fin_2player = centroY + 30;
+        int y_inicio_IA = centroY + 50;
+        int y_fin_IA = centroY + 170;
+        int y_inicio_volver = centroY - 280;
+        int y_fin_volver = centroY - 170;
+        //bot贸n ciencias vs letras
+        if (y >= y_inicio_2player && y <= y_fin_2player) {
             tipoJuego = 1;
             estado = EN_JUEGO;
         }
-        else if (y >= y_inicio_op2 && y <= y_fin_op2) {
+        //bot贸n vs IA
+        else if (y >= y_inicio_IA && y <= y_fin_IA) {
             tipoJuego = 2;
             estado = EN_JUEGO;
         }
+        //bot贸n para volver
         else if (y >= y_inicio_volver && y <= y_fin_volver) {
             estado = MENU_TABLERO;
         }
     }
-    else if (estado == PAUSA){
-        int y_inicio_volver = centroY - 220;
-        int y_fin_volver = centroY - 180;
-        int x_inicio_volver = centroX - 320;
-        int x_fin_volver = centroX - 280;
-        int y_inicio_op1 = centroY - 70;
-        int y_fin_op1 = centroY - 20;
-        if (y >= y_inicio_op1 && y <= y_fin_op1) {
+    else if (estado == PAUSA) {
+        //diferentes 谩reas de clic
+        int y_inicio_renaudar = centroY - 40;
+        int y_fin_renaudar = centroY + 50;
+        int y_inicio_salir = centroY + 70;
+        int y_fin_salir = centroY + 200;
+        //bot贸n para salir
+        if (y >= y_inicio_salir && y <= y_fin_salir) {
             tipoJuego = 1;
-            estado = EN_JUEGO;
-        }
-        else if (y >= y_inicio_volver && y <= y_fin_volver) {
             estado = MENU_TABLERO;
+        }
+        //bot贸n renaudar
+        else if (y >= y_inicio_renaudar && y <= y_fin_renaudar) {
+            estado = EN_JUEGO;
         }
     }
 }
