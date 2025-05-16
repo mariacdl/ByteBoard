@@ -15,15 +15,16 @@ NEGRAS=2
 Jugador jugador_activo = BLANCAS;
 int modo = 1;//para elegir un tablero u otro
 
-void OnDraw(void);
-void OnMouseClick(int button, int state, int x, int y);
-void OnKeyboard(unsigned char key, int x, int y);
+void OnDraw(void);//esta funcion sera llamada para dibujar
+void OnMouseClick(int button, int state, int x, int y);//cuando se pulse un click
+void OnKeyboard(unsigned char key, int x, int y);//cuando se pulse una tecla
+void OnTimer(int value);//esta funcion sera llamada cuando transcurra una temporizacion
 
 int main(int argc, char* argv[])
 {
     glutInit(&argc, argv);
     glutInitWindowSize(800, 600);
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH | GLUT_MULTISAMPLE);
     glutCreateWindow("Ajedrez");
 
     glEnable(GL_LIGHT0);
@@ -36,6 +37,7 @@ int main(int argc, char* argv[])
     glutDisplayFunc(OnDraw);
     glutMouseFunc(OnMouseClick);
     glutKeyboardFunc(OnKeyboard);
+    glutTimerFunc(25, OnTimer, 0);//llamar en 25ms
     glutMainLoop();
     return 0;
 }
@@ -64,7 +66,7 @@ void OnDraw(void)
                 0, 0, 0,
                 0, 1, 0);
         }
-        GLfloat luzPos[] = { 0.0f, 10.0f, 10.0f, 0.0f }; // PosiciÛn relativa a la c·mara
+        GLfloat luzPos[] = { 0.0f, 10.0f, 10.0f, 0.0f }; // Posici√≥n relativa a la c√°mara
         glLightfv(GL_LIGHT0, GL_POSITION, luzPos);
         if (menu.getModoSeleccionado() == 1)
             tablero_unico.dibujar();
@@ -95,4 +97,8 @@ void OnKeyboard(unsigned char key, int x, int y) {
             menu.setEstado(EN_JUEGO);
         glutPostRedisplay();
     }
+}
+void OnTimer(int value) {             
+    glutTimerFunc(25, OnTimer, 0);    
+    glutPostRedisplay();
 }
