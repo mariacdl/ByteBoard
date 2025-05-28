@@ -1,6 +1,5 @@
 #include "Partida.h"
 #include "Oponente.h"
-#include "Configuracion.h"
 #include <iostream>
 #include <vector>
 #include <cstdlib>
@@ -8,7 +7,7 @@
 
 using namespace std;
 
-Partida::Partida(char modalidad, Configuracion& config, char color_jugador1 = 'B'):tablero(Tablero(0,0)) {
+Partida::Partida(char modalidad, Configuracion& config, char color_jugador1):tablero(Tablero(0,0)) {
     this->color_jugador1 = color_jugador1;
     tablero=config.genTablero(modalidad);
 }

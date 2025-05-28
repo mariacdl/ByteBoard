@@ -1,5 +1,5 @@
 #pragma once
-#include "Tablero.h"
+#include "Configuracion.h"
 
 class Oponente; // Para evitar loop infinito de includes
 
@@ -9,11 +9,9 @@ class Partida {
 private:
     Tablero tablero;
     char turno_actual='B'; // 'B' o 'N'
-    char color_jugador1;
+    char color_jugador1; //'B' o 'N'
     char modalidad; //'P' o 'S'
     pair<int,int> peon_passant={-1,-1};
-
-    friend class Oponente;
 
     bool verificar_movimiento(int de_x, int de_y, int para_x, int para_y);
     bool det_passant(int de_x, int de_y, int para_x, int para_y);
@@ -30,9 +28,10 @@ public:
     bool det_jaque_mate(char color);
     bool det_fin();
     char ver_turno() const;
+
+    
     /*void jugar();
     void dibujar_terminal();
     void jugar_terminal();
     */
-    
 };

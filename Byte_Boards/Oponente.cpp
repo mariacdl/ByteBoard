@@ -1,11 +1,11 @@
-#include "Oponente.h"
+/*#include "Oponente.h"
 #include "Pieza.h"
 #include <vector>
 #include <cstdlib> // Para randomizacion
 
 int Oponente::puntuar_jugada(Tablero& tablero, pair<int, int> origen, pair<int, int> destino) {
     vector<Pieza> piezas = tablero.listar_piezas();
-    int largura = tablero.ver_largura();
+    int largura = tablero.ver_ancho();
     int index_destino = destino.second * largura + destino.first;
     Pieza objetivo = piezas[index_destino];
 
@@ -25,8 +25,8 @@ pair<pair<int, int>, pair<int, int>> Oponente::elegir_proxima_jugada(Tablero& ta
     vector<pair<pair<int, int>, pair<int, int>>> todas_las_jugadas;
 
     vector<Pieza> piezas = tablero.listar_piezas();
-    int largura = tablero.ver_largura();
-    int altura = tablero.ver_altura();
+    int largura = tablero.ver_ancho();
+    int altura = tablero.ver_largo();
 
     int mejor_puntaje = -1;
     pair<pair<int, int>, pair<int, int>> mejor_jugada = { {-1, -1}, {-1, -1} };
@@ -48,8 +48,8 @@ pair<pair<int, int>, pair<int, int>> Oponente::elegir_proxima_jugada(Tablero& ta
     }
 
     if (todas_las_jugadas.empty()) {
-        return { {-1, -1}, {-1, -1} }; // No hay jugadas válidas
+        return { {-1, -1}, {-1, -1} }; // No hay jugadas vï¿½lidas
     }
 
     return mejor_jugada;
-}
+}*/

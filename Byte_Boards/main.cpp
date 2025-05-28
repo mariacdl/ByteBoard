@@ -5,6 +5,7 @@
 using namespace std;
 
 int main() {
-    Menu menu;
-    menu.dibujar_terminal();
+    /*Menu menu;
+    menu.dibujar_terminal();*/
+    return 0;
 }

@@ -1,4 +1,4 @@
-#include <iostream>
+/*#include <iostream>
 #include "Menu.h"
 #include "Partida.h"
 
@@ -53,7 +53,7 @@ void Menu::dibujar_terminal() {
 			break;
 		}
 		else {
-			std::cout << "Opción fuera de rango. Intente nuevamente.\n";
+			std::cout << "Opciï¿½n fuera de rango. Intente nuevamente.\n";
 		}
 	}
-}
+}*/
