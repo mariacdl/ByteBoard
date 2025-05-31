@@ -1,24 +1,231 @@
-#include "freeglut.h"
-#include "tablero.h"
+﻿#include "freeglut.h"
+#include "DTablero.h"
 #include <iostream>
-#include "Menu.h"
+#include "DMenu.h"
+#include"DFichas.h"
+#include "Partida.h"
 
-//dos modos de tablero
-Tablero tablero_unico(5,4,1.5);
-Tablero tablero_speed(6,5,1.3);
-Menu menu;
+//Creación de las clases principales
+DTablero tablero(0,0,0);
+DMenu menu;
+Partida partida('0','0');
 
-enum Jugador {
-BLANCAS = 1,
-NEGRAS=2
-};
-Jugador jugador_activo = BLANCAS;
-int modo = 1;//para elegir un tablero u otro
+// Para manejar selección
+bool fichasInicializadas = false;
+bool fichaSeleccionada = false;
+bool mostrarPlanoSeleccion = false;
+int filaSeleccionada = -1;
+int columnaSeleccionada = -1;
 
-void OnDraw(void);//esta funcion sera llamada para dibujar
-void OnMouseClick(int button, int state, int x, int y);//cuando se pulse un click
-void OnKeyboard(unsigned char key, int x, int y);//cuando se pulse una tecla
-void OnTimer(int value);//esta funcion sera llamada cuando transcurra una temporizacion
+void OnDraw(void)
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();
+
+    EstadoJuego estado = menu.getEstado();
+
+    if (estado == MENU_TABLERO || estado == MENU_MODO_JUEGO || estado == PAUSA||estado==PROMOCION_SPEED||estado==PROMOCION_4x5||estado == VICTORIA_CIENCIAS || estado == VICTORIA_LETRAS) {
+        menu.dibujarMenu(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
+    }
+    else if (estado == EN_JUEGO) {
+        gluPerspective(40.0, glutGet(GLUT_WINDOW_WIDTH) / (float)glutGet(GLUT_WINDOW_HEIGHT), 0.1, 150.0);
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+
+        if (partida.ver_turno() == 'N') {
+            gluLookAt(0, 10, -10,
+                0, 0, 0,
+                0, 1, 0);
+            GLfloat luzPos[] = { 1.0f, 10.0f, -10.0f, 0.0f }; // luz desde detrás del jugador
+            glLightfv(GL_LIGHT0, GL_POSITION, luzPos);
+        }
+        else {
+            gluLookAt(0, 10, 10,
+                0, 0, 0,
+                0, 1, 0);
+            GLfloat luzPos[] = { 1.0f, 10.0f, 10.0f, 0.0f }; // luz desde detrás del jugador
+            glLightfv(GL_LIGHT0, GL_POSITION, luzPos);
+        }
+        tablero.dibujar();
+
+        //  Dibujar todas las fichas
+        for (int x = 0;x<tablero.getColumnas();x++) {
+            for (int y = 0; y < tablero.getFilas(); y++) {
+                Pieza pieza = partida.ver_tablero().getPieza(x, y);
+                if (pieza.ver_tipo() == 'P') {
+                    DFichas* dibujante_pieza=(pieza.ver_color()=='B') ? static_cast<DFichas*>(new PeonCiencias(x,y,true)) : static_cast<DFichas*>(new PeonLetras(x, y, true));
+                    dibujante_pieza->dibujar(tablero);
+                }
+                else if (pieza.ver_tipo() == 'T') {
+                    DFichas* dibujante_pieza = (pieza.ver_color() == 'B') ? static_cast<DFichas*>(new TorreCiencias(x, y, true)) : static_cast<DFichas*>(new TorreLetras(x, y, true));
+                    dibujante_pieza->dibujar(tablero);
+                }
+                else if (pieza.ver_tipo() == 'C') {
+                    DFichas* dibujante_pieza = (pieza.ver_color() == 'B') ? static_cast<DFichas*>(new CaballoCiencias(x, y, true)) : static_cast<DFichas*>(new CaballoLetras(x, y, true));
+                    dibujante_pieza->dibujar(tablero);
+                }
+                else if (pieza.ver_tipo() == 'A') {
+                    DFichas* dibujante_pieza = (pieza.ver_color() == 'B') ? static_cast<DFichas*>(new AlfilCiencias(x, y, true)) : static_cast<DFichas*>(new AlfilLetras(x, y, true));
+                    dibujante_pieza->dibujar(tablero);
+                }
+                else if (pieza.ver_tipo() == 'R') {
+                    DFichas* dibujante_pieza = (pieza.ver_color() == 'B') ? static_cast<DFichas*>(new ReyCiencias(x, y, true)) : static_cast<DFichas*>(new ReyLetras(x, y, true));
+                    dibujante_pieza->dibujar(tablero);
+                }
+                else if (pieza.ver_tipo() == 'D') {
+                    DFichas* dibujante_pieza = (pieza.ver_color() == 'B') ? static_cast<DFichas*>(new ReinaCiencias(x, y, true)) : static_cast<DFichas*>(new ReinaLetras(x, y, true));
+                    dibujante_pieza->dibujar(tablero);
+                }
+            }
+        }
+
+        if (mostrarPlanoSeleccion) {
+            tablero.dibujarSeleccion(filaSeleccionada, columnaSeleccionada);
+        }   
+    }
+
+    glutSwapBuffers();
+}
+
+void OnMouseClick(int button, int state, int x, int y) {
+    static bool inicio_juego = true;
+    char prom = '0';
+
+    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+        menu.procesarClick(x, y, glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT), &prom);
+        EstadoJuego estado = menu.getEstado();
+
+        if (prom != '0') {
+            if (partida.promocionar(prom)) {
+                menu.setEstado(EN_JUEGO);
+                //Detectar fin de la partida
+                char fin = partida.det_fin();
+
+                if (fin == 'B') {
+                    cout << "letras" << endl;
+                    menu.setEstado(VICTORIA_LETRAS);
+                }
+                else if (fin == 'N') {
+                    cout << "ciencias" << endl;
+                    menu.setEstado(VICTORIA_CIENCIAS);
+                }
+                else if (fin == 'T') {
+                    cout << "tablas" << endl;
+                    menu.setEstado(TABLAS);
+                }
+            }
+        }
+        if (estado == EN_JUEGO) {
+            if (inicio_juego) {
+                partida = Partida(menu.getModoSeleccionado(), 'B');
+                tablero = (menu.getModoSeleccionado() == 'P') ? DTablero(5, 4, 1.5) : DTablero(6, 5, 1.3);
+                inicio_juego = false;
+                cout << "Partida inciada"<<endl;
+                return;
+            }
+
+            //  Gestión del clic en el tablero
+            GLint viewport[4];
+            GLdouble modelview[16], projection[16];
+            GLfloat winX, winY, winZ;
+            GLdouble posX, posY, posZ;
+
+            glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
+            glGetDoublev(GL_PROJECTION_MATRIX, projection);
+            glGetIntegerv(GL_VIEWPORT, viewport);
+
+            winX = (float)x;
+            winY = (float)viewport[3] - (float)y;
+            glReadPixels(x, int(winY), 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &winZ);
+            gluUnProject(winX, winY, winZ, modelview, projection, viewport, &posX, &posY, &posZ);
+
+            int fila = -1, columna = -1;
+
+            float origenX = -((tablero.getColumnas() * tablero.getTam()) / 2.0f);
+            float origenZ = -((tablero.getFilas() * tablero.getTam()) / 2.0f);
+            columna = (int)((posX - origenX) / tablero.getTam());
+            fila = (int)((posZ - origenZ) / tablero.getTam());
+
+            if (fila >= 0 && fila < tablero.getFilas() &&
+                columna >= 0 && columna < tablero.getColumnas()) {
+
+                if (!fichaSeleccionada) {
+                    fichaSeleccionada = true;
+                    columnaSeleccionada = columna;
+                    filaSeleccionada = fila;
+                    mostrarPlanoSeleccion = true;
+                }
+                else {
+                    bool alternar = 0;
+                    Pieza pieza1 = partida.ver_tablero().getPieza(columnaSeleccionada,filaSeleccionada);
+                    Pieza pieza2 = partida.ver_tablero().getPieza(columna, fila);
+
+                    //Enroque
+                    if (pieza1.ver_color() == pieza2.ver_color() && ((pieza1.ver_tipo() == 'R' && pieza2.ver_tipo() == 'T') || (pieza1.ver_tipo() == 'T' && pieza2.ver_tipo() == 'R'))) {
+                        if (partida.jugar(pieza1.ver_color())) {
+                            alternar = 1;
+                        }
+                    }
+                    //Movimiento simple
+                    else {
+                        if (partida.jugar(columnaSeleccionada, filaSeleccionada, columna, fila)) {
+                            alternar = 1;
+                        }
+
+                        if (partida.getPromocion().first != -1) {
+                            menu.setEstado((partida.ver_modalidad()=='P') ? PROMOCION_4x5 : PROMOCION_SPEED);
+                        }
+                    }
+                    if (alternar&&menu.getEstado()==EN_JUEGO) {
+                        //Detectar fin de la partida
+                        char fin = partida.det_fin();
+                        
+                        if (fin == 'B') {
+                            cout << "letras" << endl;
+                            menu.setEstado(VICTORIA_LETRAS);
+                        }
+                        else if (fin == 'N') {
+                            cout << "ciencias" << endl;
+                           menu.setEstado(VICTORIA_CIENCIAS);
+                        }
+                        else if (fin == 'T') {
+                            cout << "tablas" << endl;
+                            menu.setEstado(TABLAS);
+                        }
+                    }
+                    fichaSeleccionada = false;
+                    mostrarPlanoSeleccion = false;
+                    columnaSeleccionada = -1;
+                    filaSeleccionada = -1;
+                }
+            }
+        }
+        if (estado == PAUSA || estado == EN_JUEGO || estado == PROMOCION_SPEED || estado == PROMOCION_4x5) {
+            inicio_juego = false;
+        }
+        else {
+            inicio_juego = true;
+        }
+    }
+    glutPostRedisplay();
+}
+
+
+
+void OnKeyboard(unsigned char key, int x, int y) {
+    if (key == 27) { // 27 = ESC ; pausar en medio del juego
+        if (menu.getEstado() == EN_JUEGO)
+            menu.setEstado(PAUSA);
+        else if (menu.getEstado() == PAUSA)
+            menu.setEstado(EN_JUEGO);
+        glutPostRedisplay();
+    }
+}
+void OnTimer(int value) {
+    glutTimerFunc(25, OnTimer, 0);
+    glutPostRedisplay();
+}
+
 
 int main(int argc, char* argv[])
 {
@@ -40,65 +247,4 @@ int main(int argc, char* argv[])
     glutTimerFunc(25, OnTimer, 0);//llamar en 25ms
     glutMainLoop();
     return 0;
-}
-void OnDraw(void)
-{
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glLoadIdentity();
-
-    EstadoJuego estado = menu.getEstado();
-    
-    if (estado == MENU_TABLERO || estado == MENU_MODO_JUEGO||estado==PAUSA) {
-        menu.dibujarMenu(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
-    }
-    else if (estado == EN_JUEGO) {
-        gluPerspective(40.0, glutGet(GLUT_WINDOW_WIDTH) / (float)glutGet(GLUT_WINDOW_HEIGHT), 0.1, 150.0);
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
-
-        if (jugador_activo == 1) {
-            gluLookAt(0, 10, 10,
-                0, 0, 0,
-                0, 1, 0);
-        }
-        else {
-            gluLookAt(0, 10, -10,
-                0, 0, 0,
-                0, 1, 0);
-        }
-        GLfloat luzPos[] = { 0.0f, 10.0f, 10.0f, 0.0f }; // Posición relativa a la cámara
-        glLightfv(GL_LIGHT0, GL_POSITION, luzPos);
-        if (menu.getModoSeleccionado() == 1)
-            tablero_unico.dibujar();
-        else
-            tablero_speed.dibujar();
-    }
-
-    glutSwapBuffers();
-}
-void cambiarJugador() {
-    jugador_activo = (jugador_activo == BLANCAS) ? NEGRAS : BLANCAS;
-}
-void OnMouseClick(int button, int state, int x, int y) {
-    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
-        menu.procesarClick(x, y, glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
-        glutPostRedisplay();
-    }
-}
-void OnKeyboard(unsigned char key, int x, int y) {
-    if (key == 'c'|| key=='C') { //cambio manual vista del jugador
-        cambiarJugador();
-        glutPostRedisplay();
-    }
-    if (key == 27) { // 27 = ESC ; pausar en medio del juego
-        if (menu.getEstado() == EN_JUEGO)
-            menu.setEstado(PAUSA);
-        else if (menu.getEstado() == PAUSA)
-            menu.setEstado(EN_JUEGO);
-        glutPostRedisplay();
-    }
-}
-void OnTimer(int value) {             
-    glutTimerFunc(25, OnTimer, 0);    
-    glutPostRedisplay();
 }

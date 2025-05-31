@@ -1,14 +1,32 @@
+#pragma once
+#include <iostream>
+#include <vector>
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <math.h>
+#include "Pieza.h"
 
-class Tablero
-{
-	int num=0;//tamaño del tablero
-	double tam=0.0;//tamaño de la casilla
-	int filas;
-	int columnas;
+using namespace std;
 
-public: 
-	Tablero(int filas, int columnas, double tam); //constructor
+class Tablero {
+private:
+    int ancho;
+    int largo;
+    vector<Pieza> lista_piezas;
 
-	void dibujarMarco(float tamCasilla, int filas, int columnas);
-	void dibujar();
+public:
+    Tablero(int altura, int largura);
+    int ver_largo();
+    int ver_ancho();
+    Pieza getPieza(int pos_x,int pos_y);
+    void colocar_pieza(int pos_x, int pos_y, char tipo, char color, int numero_movimiento=0);
+    void retirar_pieza(int pos_x, int pos_y);
+    void mover_pieza(int de_x, int de_y, int para_x, int para_y);
+
+
+    /*
+    void dibujar_terminal();
+    void dibujar_terminal(const vector<pair<int, int>>& selecionados);
+    */
 };
