@@ -8,32 +8,32 @@ void GestorJuego::procesarClick(int x, int y) {
     int centroY = alto / 2;
 
     if (estado == MENU_TABLERO) {
-        //área clic para elegir tablero 4x5
+        //Ã¡rea clic para elegir tablero 4x5
         int y_inicio_4x5 = centroY - 60;
         int y_fin_4x5 = centroY + 30;
-        //área clic para elegir tablero speed chess
+        //Ã¡rea clic para elegir tablero speed chess
         int y_inicio_speed = centroY + 50;
         int y_fin_speed = centroY + 160;
-        //botón 4x5
+        //botÃ³n 4x5
         if (y >= y_inicio_4x5 && y <= y_fin_4x5) {
             modoSeleccionado = 'P';
             estado = MENU_MODO_JUEGO;
         }
-        //botón speed chess
+        //botÃ³n speed chess
         else if (y >= y_inicio_speed && y <= y_fin_speed) {
             modoSeleccionado = 'S';
             estado = MENU_MODO_JUEGO;
         }
     }
     else if (estado == MENU_MODO_JUEGO) {
-        //diferentes áreas de clic
+        //diferentes Ã¡reas de clic
         int y_inicio_2player = centroY - 60;
         int y_fin_2player = centroY + 30;
         int y_inicio_IA = centroY + 50;
         int y_fin_IA = centroY + 170;
         int y_inicio_volver = centroY - 280;
         int y_fin_volver = centroY - 170;
-        //botón ciencias vs letras
+        //botÃ³n ciencias vs letras
         if (y >= y_inicio_2player && y <= y_fin_2player) {
             tipoJuego = 1;
             estado = EN_JUEGO;
@@ -41,34 +41,34 @@ void GestorJuego::procesarClick(int x, int y) {
             dibujantetablero = new DibujanteTablero(partida->ver_tablero(), modoSeleccionado);
             cout << "Partida inciada" << endl;
         }
-        //botón vs IA
+        //botÃ³n vs IA
         else if (y >= y_inicio_IA && y <= y_fin_IA) {
             tipoJuego = 2;
             estado = EN_JUEGO;
         }
-        //botón para volver
+        //botÃ³n para volver
         else if (y >= y_inicio_volver && y <= y_fin_volver) {
             estado = MENU_TABLERO;
         }
     }
     else if (estado == PAUSA) {
-        //diferentes áreas de clic
+        //diferentes Ã¡reas de clic
         int y_inicio_renaudar = centroY - 40;
         int y_fin_renaudar = centroY + 50;
         int y_inicio_salir = centroY + 70;
         int y_fin_salir = centroY + 200;
-        //botón para salir
+        //botÃ³n para salir
         if (y >= y_inicio_salir && y <= y_fin_salir) {
             tipoJuego = 1;
             estado = MENU_TABLERO;
         }
-        //botón renaudar
+        //botÃ³n renaudar
         else if (y >= y_inicio_renaudar && y <= y_fin_renaudar) {
             estado = EN_JUEGO;
         }
     }
     else if (estado == PROMOCION_SPEED) {
-        int yBoton = alto - y;  //invertir Y si el origen está abajo
+        int yBoton = alto - y;  //invertir Y si el origen estÃ¡ abajo
         char prom = '0';
 
         if (x >= 200 && x <= 600) {
@@ -103,7 +103,7 @@ void GestorJuego::procesarClick(int x, int y) {
         }
     }
     else if (estado == PROMOCION_4x5) {
-        int yBoton = alto - y;  // invertir Y si el origen está abajo
+        int yBoton = alto - y;  // invertir Y si el origen estÃ¡ abajo
         char prom = '0';
 
         if (x >= 200 && x <= 600) {
@@ -136,7 +136,7 @@ void GestorJuego::procesarClick(int x, int y) {
         }
     }
     else if (estado == EN_JUEGO) {
-        //  Gestión del clic en el tablero
+        //  GestiÃ³n del clic en el tablero
         GLint viewport[4];
         GLdouble modelview[16], projection[16];
         GLfloat winX, winY, winZ;
@@ -257,28 +257,44 @@ void GestorJuego::dibujar() {
         dibujantemenus.dibujarMenuTablas();
     }
     else if (estado == EN_JUEGO) {
-        gluPerspective(40.0, glutGet(GLUT_WINDOW_WIDTH) / (float)glutGet(GLUT_WINDOW_HEIGHT), 0.1, 150.0);
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
+    gluPerspective(40.0, glutGet(GLUT_WINDOW_WIDTH) / (float)glutGet(GLUT_WINDOW_HEIGHT), 0.1, 150.0);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
 
-        if (partida->ver_turno() == 'N') {
-            gluLookAt(0, 10, -10,
-                0, 0, 0,
-                0, 1, 0);
-            GLfloat luzPos[] = { 1.0f, 10.0f, -10.0f, 0.0f }; // luz desde detrás del jugador
-            glLightfv(GL_LIGHT0, GL_POSITION, luzPos);
+    char turnoActual = partida->ver_turno();//inicia la espera antes de cambiar de turno
+    static char ultimoTurno = turnoActual;
+    if (turnoActual != ultimoTurno) {
+        esperandoGiro = true;
+        framesEspera = 0;
+        ultimoTurno = turnoActual;
+    }
+    if (esperandoGiro) {
+        framesEspera++;
+        if (framesEspera >= delayFrames) {
+            esperandoGiro = false;
         }
-        else {
-            gluLookAt(0, 10, 10,
-                0, 0, 0,
-                0, 1, 0);
-            GLfloat luzPos[] = { 1.0f, 10.0f, 10.0f, 0.0f }; // luz desde detrás del jugador
-            glLightfv(GL_LIGHT0, GL_POSITION, luzPos);
-        }
-        dibujantetablero->dibujarTablero();
+    }
+    if (!esperandoGiro) {
+        anguloCamaraObjetivo = (turnoActual == 'N') ? 180.0f : 0.0f;
+    }
+    if (!esperandoGiro) {
+        float velocidad = 0.05f;
+        anguloCamara += (anguloCamaraObjetivo - anguloCamara) * velocidad;
+    }
 
-        if (mostrarPlanoSeleccion) {
-            dibujantetablero->dibujarSeleccion(filaSeleccionada, columnaSeleccionada);
+    float rad = anguloCamara * 3.14159f / 180.0f; //convertimos grados a radianes
+    float camX = 10.0f * sin(rad);//se define la posicion de la camara
+    float camZ = 10.0f * cos(rad);
+    gluLookAt(camX, 10.0f, camZ,  
+        0.0f, 0.0f, 0.0f,    
+        0.0f, 1.0f, 0.0f);
+
+    GLfloat luzPos[] = { camX, 10.0f, camZ, 0.0f };
+    glLightfv(GL_LIGHT0, GL_POSITION, luzPos);
+    dibujantetablero->dibujarTablero();
+
+    if (mostrarPlanoSeleccion) {
+        dibujantetablero->dibujarSeleccion(filaSeleccionada, columnaSeleccionada);
         }
     }
     glutSwapBuffers();
