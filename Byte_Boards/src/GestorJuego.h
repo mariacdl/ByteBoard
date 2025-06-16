@@ -28,6 +28,13 @@ class GestorJuego {
 	bool mostrarPlanoSeleccion = false;
 	int filaSeleccionada = -1;
 	int columnaSeleccionada = -1;
+
+float anguloCamara = 0.0f;         // ángulo actual
+float anguloCamaraObjetivo = 0.0f; // hacia dónde rotar
+bool esperandoGiro = false;        // indica si está esperando para girar
+int framesEspera = 0;              // contador de frames
+const int delayFrames = 20;        // 0.5 segundo ya que es 25msx20=0.5s
+
 public:
 	~GestorJuego();
 	void dibujar();
