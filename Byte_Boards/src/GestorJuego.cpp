@@ -172,7 +172,10 @@ void GestorJuego::procesarClick(int x, int y) {
                 Pieza pieza2 = partida->ver_tablero().getPieza(columna, fila);
 
                 //Enroque
-                if (pieza1.ver_color() == pieza2.ver_color() && ((pieza1.ver_tipo() == 'R' && pieza2.ver_tipo() == 'T') || (pieza1.ver_tipo() == 'T' && pieza2.ver_tipo() == 'R'))) {
+                if (pieza1.ver_tipo() == 'R' &&
+                    (columna == columnaSeleccionada - 2 || columna == columnaSeleccionada + 2) &&
+                    fila == filaSeleccionada &&
+                    pieza1.ver_color() == partida->ver_turno()) {
                     if (partida->jugar(pieza1.ver_color())) {
                         alternar = true;
                     }
