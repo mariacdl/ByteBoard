@@ -72,13 +72,13 @@ void GestorJuego::procesarClick(int x, int y) {
         char prom = '0';
 
         if (x >= 200 && x <= 600) {
-            if (yBoton >= 400 && yBoton <= 460)
+            if (yBoton >= 400 && yBoton <= 500)
                 prom = 'D';
-            else if (yBoton >= 320 && yBoton <= 380)
+            else if (yBoton >= 300 && yBoton <= 400)
                 prom = 'T';
-            else if (yBoton >= 240 && yBoton <= 300)
+            else if (yBoton >= 200 && yBoton <= 280)
                 prom = 'A';
-            else if (yBoton >= 160 && yBoton <= 220)
+            else if (yBoton >= 100 && yBoton <= 180)
                 prom = 'C';
         }
         if (prom != '0') {
@@ -210,6 +210,10 @@ void GestorJuego::procesarClick(int x, int y) {
                 filaSeleccionada = -1;
             }
         }
+    }
+    else if (estado == VICTORIA_CIENCIAS || estado == VICTORIA_LETRAS || estado == TABLAS) {
+    estado = MENU_TABLERO;
+    return;
     }
     glutPostRedisplay();
 }
