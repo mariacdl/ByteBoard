@@ -1,6 +1,7 @@
 #include <iostream>
 #include "GestorJuego.h"
 #include "freeglut.h"
+#include "Pieza.h"
 
 void GestorJuego::procesarClick(int x, int y) {
     GLdouble ancho = glutGet(GLUT_WINDOW_WIDTH);
@@ -168,15 +169,15 @@ void GestorJuego::procesarClick(int x, int y) {
             }
             else {
                 bool alternar = false;
-                Pieza pieza1 = partida->ver_tablero().getPieza(columnaSeleccionada, filaSeleccionada);
-                Pieza pieza2 = partida->ver_tablero().getPieza(columna, fila);
+                Pieza* pieza1 = partida->ver_tablero().ver_pieza(columnaSeleccionada, filaSeleccionada);
+                Pieza* pieza2 = partida->ver_tablero().ver_pieza(columna, fila);
 
                 //Enroque
-                if (pieza1.ver_tipo() == 'R' &&
+                if (pieza1->ver_tipo() == 'R' &&
                     (columna == columnaSeleccionada - 2 || columna == columnaSeleccionada + 2) &&
                     fila == filaSeleccionada &&
-                    pieza1.ver_color() == partida->ver_turno()) {
-                    if (partida->jugar(pieza1.ver_color())) {
+                    pieza1->ver_color() == partida->ver_turno()) {
+                    if (partida->jugar(pieza1->ver_color())) {
                         alternar = true;
                     }
                 }
@@ -268,7 +269,7 @@ void GestorJuego::dibujar() {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    char turnoActual = partida->ver_turno();//inicia la espera antes de cambiar de turno
+    char turnoActual = partida->ver_turno(); //inicia la espera antes de cambiar de turno
     static char ultimoTurno = turnoActual;
     if (turnoActual != ultimoTurno) {
         esperandoGiro = true;
@@ -298,6 +299,7 @@ void GestorJuego::dibujar() {
 
     GLfloat luzPos[] = { camX, 10.0f, camZ, 0.0f };
     glLightfv(GL_LIGHT0, GL_POSITION, luzPos);
+    dibujantetablero->dibujarTablero();
     dibujantetablero->dibujarTablero();
 
     if (mostrarPlanoSeleccion) {

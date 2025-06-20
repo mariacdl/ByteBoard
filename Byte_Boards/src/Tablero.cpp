@@ -1,30 +1,117 @@
 #include "Tablero.h"
 #include "Pieza.h"
+#include "Peon.h"
+#include "Torre.h"
+#include "Alfil.h"
+#include "Rey.h"
+#include "Caballo.h"
+#include "Dama.h"
 
 using namespace std;
 
-Tablero::Tablero(int ancho,int largo) {
-	this->ancho=ancho;
-	this->largo=largo;
-	lista_piezas.resize(ancho*largo);
+Tablero::Tablero(char modalidad) {
+	this->modalidad = modalidad;
+
+	if (modalidad == 'P') {
+		// Inicializa o tablero con punteros nulos (casillas vacías)
+		lista_piezas.resize(4 * 5, nullptr);
+		this->ancho = 4;
+		this->largo = 5;
+
+		colocar_pieza(0, 0, 'R', 'N');
+		colocar_pieza(1, 0, 'C', 'N');
+		colocar_pieza(2, 0, 'A', 'N');
+		colocar_pieza(3, 0, 'T', 'N');
+		colocar_pieza(0, 1, 'P', 'N');
+
+		colocar_pieza(3, 4, 'R', 'B');
+		colocar_pieza(2, 4, 'C', 'B');
+		colocar_pieza(1, 4, 'A', 'B');
+		colocar_pieza(0, 4, 'T', 'B');
+		colocar_pieza(3, 3, 'P', 'B');
+
+	}
+	else {
+		// Inicializa o tablero con punteros nulos (casillas vacías)
+		lista_piezas.resize(5 * 6, nullptr);
+		this->ancho = 5;
+		this->largo = 6;
+
+		colocar_pieza(0, 0, 'D', 'N');
+		colocar_pieza(1, 0, 'R', 'N');
+		colocar_pieza(2, 0, 'A', 'N');
+		colocar_pieza(3, 0, 'C', 'N');
+		colocar_pieza(4, 0, 'T', 'N');
+		colocar_pieza(0, 1, 'P', 'N');
+		colocar_pieza(1, 1, 'P', 'N');
+		colocar_pieza(2, 1, 'P', 'N');
+		colocar_pieza(3, 1, 'P', 'N');
+		colocar_pieza(4, 1, 'P', 'N');
+
+		colocar_pieza(0, 5, 'T', 'B');
+		colocar_pieza(1, 5, 'C', 'B');
+		colocar_pieza(2, 5, 'A', 'B');
+		colocar_pieza(3, 5, 'R', 'B');
+		colocar_pieza(4, 5, 'D', 'B');
+		colocar_pieza(0, 4, 'P', 'B');
+		colocar_pieza(1, 4, 'P', 'B');
+		colocar_pieza(2, 4, 'P', 'B');
+		colocar_pieza(3, 4, 'P', 'B');
+		colocar_pieza(4, 4, 'P', 'B');
+	}
 }
 
-void Tablero::colocar_pieza(int pos_x, int pos_y, char tipo, char color, int numero_movimiento) {
-	lista_piezas[ancho* pos_y + pos_x] = Pieza(tipo, color, numero_movimiento);
+Tablero::~Tablero() {
+	// Libera la memoria de todas las piezas
+	for (auto pieza : lista_piezas) {
+		delete pieza;
+	}
+}
+
+
+void Tablero::colocar_pieza(int pos_x, int pos_y, char tipo, char color, int numero_movimientos) {
+	int index = ancho * pos_y + pos_x;
+	delete lista_piezas[index]; // evitar memory leak
+
+	Pieza* nueva = nullptr;
+
+	switch (tipo) {
+	case 'P': nueva = new Peon(color); break;
+	case 'T': nueva = new Torre(color); break;
+	case 'A': nueva = new Alfil(color); break;
+	case 'C': nueva = new Caballo(color); break;
+	case 'D': nueva = new Dama(color); break;
+	case 'R': nueva = new Rey(color); break;
+	default: nueva = nullptr; // Casilla vacía
+	}
+	lista_piezas[index] = nueva;
 }
 
 void Tablero::retirar_pieza(int pos_x, int pos_y) {
-	lista_piezas[ancho * pos_y + pos_x] = Pieza('0', '0',0); // Pieza vacía
+	int index = ancho * pos_y + pos_x;
+	delete lista_piezas[index]; // libera memoria
+	lista_piezas[index] = nullptr; // casilla vacía
 }
 
 void Tablero::mover_pieza(int de_x, int de_y, int para_x, int para_y) {
-	Pieza pieza = lista_piezas[ancho * de_y + de_x];
+	int index_origen = ancho * de_y + de_x;
+	int index_destino = ancho * para_y + para_x;
 
-	colocar_pieza(para_x, para_y, pieza.ver_tipo(), pieza.ver_color(), pieza.ver_numero_movimiento()+1);
-	retirar_pieza(de_x, de_y);
+	if (lista_piezas[index_origen]) {
+		// Eliminar cualquier pieza en destino (captura)
+		delete lista_piezas[index_destino];
+		// Mover puntero
+		lista_piezas[index_destino] = lista_piezas[index_origen];
+		lista_piezas[index_origen] = nullptr;
+		lista_piezas[index_destino]->incrementar_movimiento();
+	}
 }
 
-Pieza Tablero::getPieza(int pos_x,int pos_y) const {
+const vector<Pieza*>& Tablero::listar_piezas() const {
+	return lista_piezas;
+}
+
+Pieza* Tablero::ver_pieza(int pos_x, int pos_y) const {
 	return lista_piezas[ancho * pos_y + pos_x];
 }
 
@@ -34,5 +121,9 @@ int Tablero::ver_largo() const {
 
 int Tablero::ver_ancho() const {
 	return ancho;
+}
+
+char Tablero::ver_modalidad() const {
+	return modalidad;
 }
 

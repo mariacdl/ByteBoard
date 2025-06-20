@@ -13,18 +13,15 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Archivos de origen\Piezas">
+      <UniqueIdentifier>{f80dd06c-365c-4185-8ae7-286d96f3527c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Piezas">
+      <UniqueIdentifier>{39925301-673a-464e-8cad-774ff0e2af72}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Partida.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Configuracion.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Pieza.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="src\Tablero.cpp">
@@ -42,15 +39,33 @@
     <ClCompile Include="src\DibujanteTablero.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
+    <ClCompile Include="src\Alfil.cpp">
+      <Filter>Archivos de origen\Piezas</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Caballo.cpp">
+      <Filter>Archivos de origen\Piezas</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Dama.cpp">
+      <Filter>Archivos de origen\Piezas</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Peon.cpp">
+      <Filter>Archivos de origen\Piezas</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Pieza.cpp">
+      <Filter>Archivos de origen\Piezas</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Rey.cpp">
+      <Filter>Archivos de origen\Piezas</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Torre.cpp">
+      <Filter>Archivos de origen\Piezas</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Partida.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Partida.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Configuracion.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Pieza.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="src\Tablero.h">
@@ -68,5 +83,29 @@
     <ClInclude Include="src\DibujanteTablero.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+    <ClInclude Include="src\Torre.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Alfil.h">
+      <Filter>Archivos de encabezado\Piezas</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Caballo.h">
+      <Filter>Archivos de encabezado\Piezas</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Dama.h">
+      <Filter>Archivos de encabezado\Piezas</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Peon.h">
+      <Filter>Archivos de encabezado\Piezas</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Pieza.h">
+      <Filter>Archivos de encabezado\Piezas</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Rey.h">
+      <Filter>Archivos de encabezado\Piezas</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\.DS_Store" />
   </ItemGroup>
 </Project>

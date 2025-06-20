@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -19,25 +19,38 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Configuracion.cpp" />
+    <ClCompile Include="src\Alfil.cpp" />
+    <ClCompile Include="src\Caballo.cpp" />
+    <ClCompile Include="src\Dama.cpp" />
     <ClCompile Include="src\DibujanteMenus.cpp" />
     <ClCompile Include="src\DibujantePiezas.cpp" />
     <ClCompile Include="src\DibujanteTablero.cpp" />
     <ClCompile Include="src\GestorJuego.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Partida.cpp" />
+    <ClCompile Include="src\Peon.cpp" />
     <ClCompile Include="src\Pieza.cpp" />
+    <ClCompile Include="src\Rey.cpp" />
     <ClCompile Include="src\Tablero.cpp" />
+    <ClCompile Include="src\Torre.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Configuracion.h" />
+    <ClInclude Include="src\Alfil.h" />
+    <ClInclude Include="src\Caballo.h" />
+    <ClInclude Include="src\Dama.h" />
     <ClInclude Include="src\DibujanteMenus.h" />
     <ClInclude Include="src\DibujantePiezas.h" />
     <ClInclude Include="src\DibujanteTablero.h" />
     <ClInclude Include="src\GestorJuego.h" />
     <ClInclude Include="src\Partida.h" />
+    <ClInclude Include="src\Peon.h" />
     <ClInclude Include="src\Pieza.h" />
+    <ClInclude Include="src\Rey.h" />
     <ClInclude Include="src\Tablero.h" />
+    <ClInclude Include="src\Torre.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\.DS_Store" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

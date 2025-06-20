@@ -1,61 +1,63 @@
 #include "DibujantePiezas.h"
 #include "freeglut.h"
+#include "Pieza.h"
 
 void DibujantePiezas::dibujar(float tam) {
-	for (int fila = 0; fila < tablero.ver_largo(); fila++)
-	{
-		for (int columna = 0; columna < tablero.ver_ancho(); columna++)
-		{
-			Pieza pieza = tablero.getPieza(columna, fila);
-			switch (pieza.ver_tipo()) {
-			case 'P':
-				if (pieza.ver_color() == 'B') {
-					dibujarPeonCiencias(fila, columna, tam);
+	for (int fila = 0; fila < tablero.ver_largo(); fila++) {
+		for (int columna = 0; columna < tablero.ver_ancho(); columna++) {
+
+			Pieza* pieza = tablero.ver_pieza(columna, fila);
+			if (pieza != nullptr) {
+				switch (pieza->ver_tipo()) {
+				case 'P':
+					if (pieza->ver_color() == 'B') {
+						dibujarPeonCiencias(fila, columna, tam);
+					}
+					else if (pieza->ver_color() == 'N') {
+						dibujarPeonLetras(fila, columna, tam);
+					}
+					break;
+				case 'T':
+					if (pieza->ver_color() == 'B') {
+						dibujarTorreCiencias(fila, columna, tam);
+					}
+					else if (pieza->ver_color() == 'N') {
+						dibujarTorreLetras(fila, columna, tam);
+					}
+					break;
+				case 'C':
+					if (pieza->ver_color() == 'B') {
+						dibujarCaballoCiencias(fila, columna, tam);
+					}
+					else if (pieza->ver_color() == 'N') {
+						dibujarCaballoLetras(fila, columna, tam);
+					}
+					break;
+				case 'A':
+					if (pieza->ver_color() == 'B') {
+						dibujarAlfilCiencias(fila, columna, tam);
+					}
+					else if (pieza->ver_color() == 'N') {
+						dibujarAlfilLetras(fila, columna, tam);
+					}
+					break;
+				case 'R':
+					if (pieza->ver_color() == 'B') {
+						dibujarReyCiencias(fila, columna, tam);
+					}
+					else if (pieza->ver_color() == 'N') {
+						dibujarReyLetras(fila, columna, tam);
+					}
+					break;
+				case 'D':
+					if (pieza->ver_color() == 'B') {
+						dibujarReinaCiencias(fila, columna, tam);
+					}
+					else if (pieza->ver_color() == 'N') {
+						dibujarReinaLetras(fila, columna, tam);
+					}
+					break;
 				}
-				else if (pieza.ver_color() == 'N') {
-					dibujarPeonLetras(fila, columna, tam);
-				}
-				break;
-			case 'T':
-				if (pieza.ver_color() == 'B') {
-					dibujarTorreCiencias(fila, columna, tam);
-				}
-				else if (pieza.ver_color() == 'N') {
-					dibujarTorreLetras(fila, columna, tam);
-				}
-				break;
-			case 'C':
-				if (pieza.ver_color() == 'B') {
-					dibujarCaballoCiencias(fila, columna, tam);
-				}
-				else if (pieza.ver_color() == 'N') {
-					dibujarCaballoLetras(fila, columna, tam);
-				}
-				break;
-			case 'A':
-				if (pieza.ver_color() == 'B') {
-					dibujarAlfilCiencias(fila, columna, tam);
-				}
-				else if (pieza.ver_color() == 'N') {
-					dibujarAlfilLetras(fila, columna, tam);
-				}
-				break;
-			case 'R':
-				if (pieza.ver_color() == 'B') {
-					dibujarReyCiencias(fila, columna, tam);
-				}
-				else if (pieza.ver_color() == 'N') {
-					dibujarReyLetras(fila, columna, tam);
-				}
-				break;
-			case 'D':
-				if (pieza.ver_color() == 'B') {
-					dibujarReinaCiencias(fila, columna, tam);
-				}
-				else if (pieza.ver_color() == 'N') {
-					dibujarReinaLetras(fila, columna, tam);
-				}
-				break;
 			}
 		}
 	}

@@ -15,8 +15,6 @@ void OnMouseClick(int button, int state, int x, int y) {
     }
 }
 
-
-
 void OnKeyboard(unsigned char key, int x, int y) {
     gestor.procesarTecla(key);
 }

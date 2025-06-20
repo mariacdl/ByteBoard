@@ -1,4 +1,6 @@
 #include "Partida.h"
+#include "Tablero.h"
+#include "Pieza.h"
 #include <iostream>
 #include <vector>
 #include <cstdlib>
@@ -6,32 +8,20 @@
 
 using namespace std;
 
-Partida::Partida(char modalidad, char color_jugador1){
-    Configuracion config;
-    this->modalidad = modalidad;
-    this->color_jugador1 = color_jugador1;
-    tablero=config.genTablero(modalidad);
-}
-
 bool Partida::mover(int de_x, int de_y, int para_x, int para_y) {
     if(verificar_movimiento(de_x,de_y,para_x,para_y)){
-        Tablero copia=tablero;
-
-        //Captura al paso
-        if(det_passant(de_x,de_y,para_x,para_y)){
-            tablero.retirar_pieza(para_x,de_y);
-        }
+        Tablero copia = tablero;
 
         tablero.mover_pieza(de_x, de_y, para_x, para_y);
 
         //Si la jugada deja al rey en jaque el movimiento no es válido
-        if(det_jaque(tablero.getPieza(para_x,para_y).ver_color())){
-            tablero=copia;
+        if(det_jaque(tablero.ver_pieza(para_x,para_y)->ver_color())){
+            tablero = copia;
             return false;
         }
         
         //Detecta si hay algún peón que esté disponible para la captura al paso en la siguiente jugada
-        if(tablero.getPieza(para_x,para_y).ver_tipo()=='P' && abs(para_y-de_y)==2){
+        if(tablero.ver_pieza(para_x,para_y)->ver_tipo()=='P' && abs(para_y-de_y)==2){
             peon_passant={para_x,para_y};
         }
         else{
@@ -39,7 +29,7 @@ bool Partida::mover(int de_x, int de_y, int para_x, int para_y) {
         }
 
         int extremo_opuesto;
-        if(tablero.getPieza(para_x,para_y).ver_color()=='B'){
+        if(tablero.ver_pieza(para_x,para_y)->ver_color()=='B'){
             extremo_opuesto=0;
         }
         else{
@@ -47,7 +37,7 @@ bool Partida::mover(int de_x, int de_y, int para_x, int para_y) {
         }
 
         //Promoción del peón
-        if(tablero.getPieza(para_x,para_y).ver_tipo()=='P' && para_y==extremo_opuesto){
+        if(tablero.ver_pieza(para_x,para_y)->ver_tipo()=='P' && para_y==extremo_opuesto){
             promocion={para_x,para_y};
         }
 
@@ -73,11 +63,11 @@ bool Partida::enrocar(char color){
         pos_rey=(color=='B') ? make_pair(3, 5) : make_pair(1, 0);
     }
 
-    Pieza torre=tablero.getPieza(pos_torre.first,pos_torre.second);
-    Pieza rey=tablero.getPieza(pos_rey.first,pos_rey.second);
+    Pieza* torre=tablero.ver_pieza(pos_torre.first,pos_torre.second);
+    Pieza* rey=tablero.ver_pieza(pos_rey.first,pos_rey.second);
 
     //Determinar ni el rey ni la torre se hayan movido durante el juego
-    if(!(torre.ver_tipo()=='T' && torre.ver_numero_movimiento()==0 && rey.ver_tipo()=='R' && rey.ver_numero_movimiento()==0)){
+    if(!(torre->ver_tipo()=='T' && torre->ver_numero_movimientos() == 0 && rey->ver_tipo()=='R' && rey->ver_numero_movimientos() == 0)){
         return false;
     }
 
@@ -90,7 +80,7 @@ bool Partida::enrocar(char color){
     
     //Determinar si hay obstáculos en el camino
     for(int i=1;i<abs(pos_torre.first-pos_rey.first);i++){
-        if(tablero.getPieza(pos_rey.first+i*dir,pos_rey.second).ver_tipo()!='0'){
+        if(tablero.ver_pieza(pos_rey.first+i*dir,pos_rey.second)->ver_tipo() != '0'){
             return false;
         }
     }
@@ -117,118 +107,8 @@ char Partida::ver_turno() const {
 }
 
 bool Partida::verificar_movimiento(int de_x, int de_y, int para_x, int para_y) {
-	Pieza partida = tablero.getPieza(de_x,de_y);
-	Pieza destino = tablero.getPieza(para_x,para_y); // Hipotetico, puede estar libre
-
-	// Verificar si movimiento est� dentro del tablero
-	if (para_x < 0 || para_x >= tablero.ver_ancho() || para_y < 0 || para_y >= tablero.ver_largo()) {
-		return false;
-	}
-
-    //Verificar si en la posición final se encuentra el rey
-    if (destino.ver_tipo() == 'R' && destino.ver_color() == partida.ver_color()) {
-        return false;
-    }
-
-	// Verificar si movimiento es para la misma casilla
-	if (para_x == de_x && para_y == de_y) {
-		return false;
-	}
-
-	int dx = para_x - de_x;
-	int dy = para_y - de_y;
-
-	// Verificar si movimiento es valido para la pieza
-	switch (partida.ver_tipo()) {
-	case 'A': // Alfil
-		if (abs(dx) != abs(dy))
-			return false;
-		{
-			int paso_x = dx / abs(dx);
-			int paso_y = dy / abs(dy);
-			int x = de_x + paso_x;
-			int y = de_y + paso_y;
-			while (x != para_x) {
-				if (tablero.getPieza(x,y).ver_tipo() != '0') return false; // Obst�culo
-				x += paso_x;
-				y += paso_y;
-			}
-		}
-		break;
-
-	case 'C': // Caballo
-		if (!((abs(dx) == 2 && abs(dy) == 1) || (abs(dx) == 1 && abs(dy) == 2)))
-			return false;
-		break;
-
-	case 'T': // Torre
-		if (dx != 0 && dy != 0)
-			return false;
-		{
-			int paso_x = (dx == 0) ? 0 : dx / abs(dx);
-			int paso_y = (dy == 0) ? 0 : dy / abs(dy);
-			int x = de_x + paso_x;
-			int y = de_y + paso_y;
-			while (x != para_x || y != para_y) {
-				if (tablero.getPieza(x,y).ver_tipo() != '0') return false;
-				x += paso_x;
-				y += paso_y;
-			}
-		}
-		break;
-
-	case 'D': // Dama
-		if (!(dx == 0 || dy == 0 || abs(dx) == abs(dy)))
-			return false;
-		{
-			int paso_x = (dx == 0) ? 0 : dx / abs(dx);
-			int paso_y = (dy == 0) ? 0 : dy / abs(dy);
-			int x = de_x + paso_x;
-			int y = de_y + paso_y;
-			while (x != para_x || y != para_y) {
-				if (tablero.getPieza(x,y).ver_tipo() != '0') return false;
-				x += paso_x;
-				y += paso_y;
-			}
-		}
-		break;
-
-	case 'R': // Rey
-		if (abs(dx) > 1 || abs(dy) > 1)
-			return false;
-		break;
-
-	case 'P': { // Pe�n
-		int direccion = (partida.ver_color() == 'B') ? -1 : 1;
-		int fila_inicial = (partida.ver_color() == 'B') ? tablero.ver_largo()-2 :  1;
-
-		// Movimiento simple hacia adelante
-		if (dx == 0 && dy == direccion && destino.ver_tipo() == '0') return true;
-
-		// Movimiento doble desde la fila inicial
-		if (dx == 0 && dy == 2 * direccion && de_y == fila_inicial && destino.ver_tipo() == '0' && modalidad == 'P') {
-			// Verificar que la celda intermedia tambi�n est� vac�a
-			int y_intermedia = de_y + direccion;
-			if (tablero.getPieza(de_x,y_intermedia).ver_tipo() == '0')
-				return true;
-		}
-
-        // Captura en diagonal
-        if (abs(dx) == 1 && dy == direccion && destino.ver_tipo() != '0') {
-            return true;
-        }
-
-        //Captura al paso
-        if(det_passant(de_x,de_y,para_x,para_y)){
-            return true;
-        }
-		return false;
-		break;
-		}
-	default:
-		return false;
-	}
-    return true;
+	Pieza* pieza = tablero.ver_pieza(de_x,de_y);
+    return pieza->validar_movimiento(de_x, de_y, para_x, para_y, tablero);
 }
 
 vector<pair<int, int>> Partida::listar_movimientos_validos(int position_x, int position_y) {
@@ -248,13 +128,13 @@ bool Partida::det_jaque(char color){
 
     for (int x = 0; x < tablero.ver_ancho(); ++x) {
 		for (int y = 0; y < tablero.ver_largo(); ++y) {
-            if(tablero.getPieza(x,y).ver_color()==color_opuesto){
+            if(tablero.ver_pieza(x,y)->ver_color()==color_opuesto){
                 vector<pair<int, int>> movimientos_validos=listar_movimientos_validos(x,y);
 
                 for(int i=0;i<movimientos_validos.size();i++){
-                    Pieza p_final=tablero.getPieza(movimientos_validos[i].first,movimientos_validos[i].second);
+                    Pieza* p_final=tablero.ver_pieza(movimientos_validos[i].first,movimientos_validos[i].second);
 
-                    if(p_final.ver_color()==color && p_final.ver_tipo()=='R'){
+                    if(p_final->ver_color()==color && p_final->ver_tipo()=='R'){
                       return true;
                     }
                 }   
@@ -274,9 +154,9 @@ bool Partida::det_jaque_mate(char color){
 
     for (int x = 0; x < tablero.ver_ancho(); ++x) {
 		for (int y = 0; y < tablero.ver_largo(); ++y) {
-            if(tablero.getPieza(x,y).ver_color()==color){
+            if(tablero.ver_pieza(x,y)->ver_color()==color){
                 vector<pair<int, int>> movimientos_validos=listar_movimientos_validos(x,y);
-                //cout << tablero.getPieza(x, y).ver_tipo() << endl;
+                //cout << tablero.ver_pieza(x, y).ver_tipo() << endl;
                 for(int i=0; i<movimientos_validos.size(); i++){
                     if(mover(x,y,movimientos_validos[i].first,movimientos_validos[i].second)){
                         //cout << movimientos_validos[i].first<<" "<< movimientos_validos[i].second << endl;
@@ -296,15 +176,15 @@ char Partida::det_fin(){
         return turno_actual;
     }
     //Detectar tablas
-    else{
+    else {
        // cout << "Evaluando tablas" << endl;
-        Tablero copia=tablero;
+        Tablero copia = tablero;
         //Decterminar si existen movimientos válidos
         for (int x = 0; x < tablero.ver_ancho(); ++x) {
 		    for (int y = 0; y < tablero.ver_largo(); ++y) {
-                if(tablero.getPieza(x,y).ver_color()==turno_actual){
-                    vector<pair<int, int>> movimientos_validos=listar_movimientos_validos(x,y);
-                    //cout << tablero.getPieza(x, y).ver_tipo()<<endl;
+                if(tablero.ver_pieza(x,y)->ver_color() == turno_actual){
+                    vector<pair<int, int>> movimientos_validos = listar_movimientos_validos(x,y);
+                    //cout << tablero.ver_pieza(x, y).ver_tipo()<<endl;
                     for(int i=0; i<movimientos_validos.size(); i++){
                         if(mover(x,y,movimientos_validos[i].first,movimientos_validos[i].second)){
                             tablero=copia;
@@ -322,26 +202,15 @@ char Partida::det_fin(){
     }
 }
 
-bool Partida::det_passant(int de_x, int de_y, int para_x, int para_y){
-    Pieza pieza=tablero.getPieza(de_x,de_y);
-    int dx = para_x - de_x;
-	int dy = para_y - de_y;
-    int direccion = (pieza.ver_color() == 'B') ? -1 : 1;
-
-    if(abs(dx)==1 && dy==direccion && pieza.ver_tipo()=='P' && para_x==peon_passant.first && de_y==peon_passant.second){
-        return true;
-    }
-    return false;
-}
 
 bool Partida::jugar(int de_x, int de_y, int para_x, int para_y){
-    if(tablero.getPieza(de_x,de_y).ver_color()==turno_actual){
+    if(tablero.ver_pieza(de_x,de_y)->ver_color()==turno_actual){
         if(mover(de_x,de_y,para_x,para_y)){
             alternar_turno();
             return true;
         }
         else{
-            cout << "Movimiento invalido para: " << tablero.getPieza(de_x, de_y).ver_tipo() << endl;
+            cout << "Movimiento invalido para: " << tablero.ver_pieza(de_x, de_y)->ver_tipo() << endl;
             return false;
         }
     }
@@ -370,8 +239,9 @@ pair<int,int> Partida::getPromocion(){
     return promocion;
 }
 bool Partida::promocionar(char tipo){
+    Pieza* pieza = tablero.ver_pieza(promocion.first, promocion.second);
     if(promocion.first!=-1){
-        if (tablero.getPieza(promocion.first, promocion.second).ver_color() == 'B') {
+        if (pieza->ver_color() == 'B') {
             for (int i = 0; i < promocionesB.size(); i++) {
                 if (promocionesB[i] == tipo) {
                     cout << "No se puede promocionar el peon a una pieza a la que ya se ha promocionado otro anteriormente" << endl;
@@ -389,17 +259,19 @@ bool Partida::promocionar(char tipo){
             }
             promocionesN.push_back(tipo);
         }
-        tablero.colocar_pieza(promocion.first,promocion.second,tipo,tablero.getPieza(promocion.first,promocion.second).ver_color(),tablero.getPieza(promocion.first,promocion.second).ver_numero_movimiento());
+        int pos_x = promocion.first;
+        int pos_y = promocion.second;
+        tablero.colocar_pieza(pos_x, pos_y, tipo, pieza->ver_color(), pieza->ver_numero_movimientos());
         promocion={-1,-1};
         return true;
     }
     return false;
 }
 
-const Tablero& Partida::ver_tablero() {
+const Tablero& Partida::ver_tablero() const {
     return tablero;
 }
 
-char Partida::ver_modalidad() {
+char Partida::ver_modalidad() const {
     return modalidad;
 }
