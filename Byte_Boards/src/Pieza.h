@@ -7,7 +7,7 @@ protected:
     int numero_movimientos;
 
 public:
-    Pieza(char c,int n = 0) : color(color), numero_movimientos(n) {};
+    Pieza(char c, int n = 0) : color(c), numero_movimientos(n) {};
     virtual ~Pieza() {}
 
     char ver_color() const;

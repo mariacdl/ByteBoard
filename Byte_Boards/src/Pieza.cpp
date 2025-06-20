@@ -1,5 +1,6 @@
 #include "Pieza.h"
 
+
 int Pieza::ver_numero_movimientos() const {
 	return numero_movimientos;
 }
