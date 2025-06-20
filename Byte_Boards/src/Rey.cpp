@@ -43,7 +43,7 @@ bool Rey::validar_movimiento(int de_x, int de_y, int para_x, int para_y, const T
 bool Rey::verificar_enroque(int de_x, int de_y, int para_x, int para_y, const Tablero& tablero) const {
 
 	// Enroque lado izquierdo
-	if (para_x == de_x - 2) {
+	if (para_x == de_x - 2  && de_y == para_y) {
 		// Verificar si hay piezas en el camino del rey
 		if (tablero.ver_pieza(de_x - 1, de_y) != nullptr || tablero.ver_pieza(de_x - 2, de_y) != nullptr)
 			return false;
@@ -66,7 +66,7 @@ bool Rey::verificar_enroque(int de_x, int de_y, int para_x, int para_y, const Ta
 	}
 
 	// Enroque lado izquierdo
-	if (para_x == de_x + 2) {
+	if (para_x == de_x + 2 && de_y == para_y) {
 		// Verificar si hay piezas en el camino del rey
 		if (tablero.ver_pieza(de_x + 1, de_y) != nullptr || tablero.ver_pieza(de_x + 2, de_y) != nullptr)
 			return false;
