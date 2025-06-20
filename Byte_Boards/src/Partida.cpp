@@ -8,6 +8,45 @@
 
 using namespace std;
 
+const Tablero& Partida::ver_tablero() const {
+    return tablero;
+}
+
+char Partida::ver_modalidad() const {
+    return modalidad;
+}
+
+void Partida::alternar_turno() {
+    turno_actual = (turno_actual == 'B') ? 'N' : 'B';
+}
+
+char Partida::ver_turno() const {
+    return turno_actual;
+}
+
+bool Partida::verificar_movimiento(int de_x, int de_y, int para_x, int para_y) {
+    return tablero.validar_movimiento(de_x, de_y, para_x, para_y);
+}
+
+vector<pair<int, int>> Partida::listar_movimientos_validos(int position_x, int position_y) {
+    return tablero.listar_movimientos_validos(position_x, position_y);
+}
+
+bool Partida::jugar(int de_x, int de_y, int para_x, int para_y) {
+    if (tablero.ver_pieza(de_x, de_y)->ver_color() == turno_actual) {
+        if (mover(de_x, de_y, para_x, para_y)) {
+            alternar_turno();
+            return true;
+        }
+        else {
+            cout << "Movimiento invalido para: " << tablero.ver_pieza(de_x, de_y)->ver_tipo() << endl;
+            return false;
+        }
+    }
+    cout << "Esta intentando mover una pieza que no es tuya" << endl;
+    return false;
+}
+
 bool Partida::mover(int de_x, int de_y, int para_x, int para_y) {
     if(verificar_movimiento(de_x,de_y,para_x,para_y)){
         Tablero copia = tablero;
@@ -98,30 +137,7 @@ bool Partida::enrocar(char color){
     return true;
 }
 
-void Partida::alternar_turno() {
-    turno_actual = (turno_actual == 'B') ? 'N' : 'B';
-}
 
-char Partida::ver_turno() const {
-    return turno_actual;
-}
-
-bool Partida::verificar_movimiento(int de_x, int de_y, int para_x, int para_y) {
-	Pieza* pieza = tablero.ver_pieza(de_x,de_y);
-    return pieza->validar_movimiento(de_x, de_y, para_x, para_y, tablero);
-}
-
-vector<pair<int, int>> Partida::listar_movimientos_validos(int position_x, int position_y) {
-	vector<pair<int, int>> movimientos_validos;
-	for (int x = 0; x < tablero.ver_ancho(); ++x) {
-		for (int y = 0; y < tablero.ver_largo(); ++y) {
-			if (verificar_movimiento(position_x, position_y, x, y)) {
-				movimientos_validos.emplace_back(x, y);
-			}
-		}
-	}
-	return movimientos_validos;
-}
 
 bool Partida::det_jaque(char color){
     char color_opuesto= (color=='B') ? 'N' : 'B';
@@ -203,20 +219,7 @@ char Partida::det_fin(){
 }
 
 
-bool Partida::jugar(int de_x, int de_y, int para_x, int para_y){
-    if(tablero.ver_pieza(de_x,de_y)->ver_color()==turno_actual){
-        if(mover(de_x,de_y,para_x,para_y)){
-            alternar_turno();
-            return true;
-        }
-        else{
-            cout << "Movimiento invalido para: " << tablero.ver_pieza(de_x, de_y)->ver_tipo() << endl;
-            return false;
-        }
-    }
-    cout << "Esta intentando mover una pieza que no es suya" << endl;
-    return false;
-}
+
 
 //Sobrecarga para enroque
 bool Partida::jugar(char color){
@@ -268,10 +271,3 @@ bool Partida::promocionar(char tipo){
     return false;
 }
 
-const Tablero& Partida::ver_tablero() const {
-    return tablero;
-}
-
-char Partida::ver_modalidad() const {
-    return modalidad;
-}

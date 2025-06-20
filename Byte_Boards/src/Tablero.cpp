@@ -68,6 +68,21 @@ Tablero::~Tablero() {
 	}
 }
 
+int Tablero::ver_largo() const {
+	return largo;
+}
+
+int Tablero::ver_ancho() const {
+	return ancho;
+}
+
+char Tablero::ver_modalidad() const {
+	return modalidad;
+}
+
+Pieza* Tablero::ver_pieza(int pos_x, int pos_y) const {
+	return lista_piezas[ancho * pos_y + pos_x];
+}
 
 void Tablero::colocar_pieza(int pos_x, int pos_y, char tipo, char color, int numero_movimientos) {
 	int index = ancho * pos_y + pos_x;
@@ -110,20 +125,20 @@ void Tablero::mover_pieza(int de_x, int de_y, int para_x, int para_y) {
 const vector<Pieza*>& Tablero::listar_piezas() const {
 	return lista_piezas;
 }
-
-Pieza* Tablero::ver_pieza(int pos_x, int pos_y) const {
-	return lista_piezas[ancho * pos_y + pos_x];
+bool Tablero::validar_movimiento(int de_x, int de_y, int para_x, int para_y) const {
+	Pieza* pieza = ver_pieza(de_x, de_y);
+	return pieza->validar_movimiento(de_x, de_y, para_x, para_y, *this);
 }
 
-int Tablero::ver_largo() const {
-	return largo;
-}
-
-int Tablero::ver_ancho() const {
-	return ancho;
-}
-
-char Tablero::ver_modalidad() const {
-	return modalidad;
+vector<pair<int, int>> Tablero::listar_movimientos_validos(int position_x, int position_y) const{
+	vector<pair<int, int>> movimientos_validos;
+	for (int x = 0; x < ancho; ++x) {
+		for (int y = 0; y < largo; ++y) {
+			if (validar_movimiento(position_x, position_y, x, y)) {
+				movimientos_validos.emplace_back(x, y);
+			}
+		}
+	}
+	return movimientos_validos;
 }
 

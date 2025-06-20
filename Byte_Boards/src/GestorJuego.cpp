@@ -304,6 +304,7 @@ void GestorJuego::dibujar() {
 
     if (mostrarPlanoSeleccion) {
         dibujantetablero->dibujarSeleccion(filaSeleccionada, columnaSeleccionada);
+        dibujantetablero->dibujarMovimientos(filaSeleccionada, columnaSeleccionada);
         }
     }
     glutSwapBuffers();

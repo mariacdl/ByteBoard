@@ -70,7 +70,7 @@ void DibujanteTablero::dibujarMarco() {
     glEnd();
 }
 
-void DibujanteTablero::dibujarSeleccion(int fila, int columna) {
+void DibujanteTablero::dibujarSeleccion(int fila, int columna, GLfloat r, GLfloat g, GLfloat b) {
     float origenX = -((tablero.ver_ancho() * tam) / 2.0f);
     float origenZ = -((tablero.ver_largo() * tam) / 2.0f);
 
@@ -79,9 +79,9 @@ void DibujanteTablero::dibujarSeleccion(int fila, int columna) {
 
     glPushMatrix();
     glTranslatef(posX + tam / 2.0f, 0.01f, posZ + tam / 2.0f);  // posicionar el plano por encima del tablero
-    glColor3f(0.0f, 1.0f, 0.0f);
+    glColor3f(r, g, b);
 
-    glBegin(GL_QUADS);//plano con tamaño de casilla
+    glBegin(GL_QUADS); //plano con tamaño de casilla
     glVertex3f(-tam / 2.0f, 0.0f, -tam / 2.0f);
     glVertex3f(-tam / 2.0f, 0.0f, tam / 2.0f);
     glVertex3f(tam / 2.0f, 0.0f, tam / 2.0f);
@@ -89,6 +89,13 @@ void DibujanteTablero::dibujarSeleccion(int fila, int columna) {
     glEnd();
 
     glPopMatrix();
+}
+
+void DibujanteTablero::dibujarMovimientos(int fila, int columna) {
+    const vector<pair<int, int>>& lista_jugadas_validas = tablero.listar_movimientos_validos(columna, fila);
+    for (const auto& jugada_valida : lista_jugadas_validas) {
+        dibujarSeleccion(jugada_valida.second, jugada_valida.first, 1.0f, 1.0f, 0.0f);
+    }
 }
 
 float DibujanteTablero::getTam() const {
