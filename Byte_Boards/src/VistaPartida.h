@@ -1,5 +1,5 @@
 #pragma once
-
+#include <Estados.h>
 
 class VistaPartida {
 
@@ -9,9 +9,9 @@ class VistaPartida {
 	int frames_espera = 0;              // contador de frames
 	const int delay_frames = 20;        // 0.5 segundo ya que es 25msx20=0.5s
 
-	char ultimo_turno = 'B';
+	EstadoTurno ultimo_turno = BLANCO;
 
 public:
-	void actualizar_camara(char turno_actual);
+	void actualizar_camara(EstadoTurno turno_actual);
 };
 

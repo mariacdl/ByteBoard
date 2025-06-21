@@ -3,6 +3,7 @@
 #include <utility>
 #include <vector>
 #include <VistaPartida.h>
+#include <Estados.h>
 
 using namespace std;
 
@@ -11,9 +12,9 @@ private:
     VistaPartida* vista_partida;
     Tablero* tablero;
     int numero_turnos = 0;
-    char turno_actual='B'; // 'B' o 'N'
-    char color_jugador1; //'B' o 'N'
-    char modalidad; //'P' o 'S'
+    EstadoTurno turno_actual; 
+    EstadoTurno color_jugador1;
+    TipoJuego modalidad; 
 
     pair<int, int> promocion = { -1,-1 };
     pair<int, int> peon_passant = { -1,-1 };
@@ -26,7 +27,7 @@ private:
     vector<pair<int, int>> listar_movimientos_validos(pair<int, int> casilla);
     void alternar_turno();
 public:
-    Partida(char m = 'P', char c = 'B');
+    Partida(TipoJuego m = JUEGO_4x5, EstadoTurno c = BLANCO);
     ~Partida();
 
     void dibujar();

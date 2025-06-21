@@ -12,7 +12,7 @@ bool Alfil::validar_movimiento(int de_x, int de_y, int para_x, int para_y, const
 	int dy = para_y - de_y;
 
 	// Verificar si movimiento esta dentro del tablero
-	if (para_x < 0 || para_x >= tablero.ver_ancho() || para_y < 0 || para_y >= tablero.ver_largo()) 
+	if (para_x < 0 || para_x >= tablero.ver_largura() || para_y < 0 || para_y >= tablero.ver_altura()) 
 		return false;
 	
 	// Verificar si movimiento es valido para la pieza
@@ -39,8 +39,13 @@ bool Alfil::validar_movimiento(int de_x, int de_y, int para_x, int para_y, const
 	if (destino != nullptr) {
 		// Verificar si en la posición final se encuentra el rey
 		// No es posible matar al rey
-		if (destino->ver_tipo() == 'R' && destino->ver_color() == color)
+		if (destino->ver_tipo() == 'R')
 			return false;
+
+		// Verificar si hay aliado
+		if (destino->ver_color() == color) {
+			return false; // No puede capturar pieza aliada
+		}
 	}
 
 	return true;

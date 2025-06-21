@@ -3,8 +3,8 @@
 #include "Pieza.h"
 
 void VistaPiezas::dibujar(float tam, const Tablero& tablero) {
-	for (int fila = 0; fila < tablero.ver_largo(); fila++) {
-		for (int columna = 0; columna < tablero.ver_ancho(); columna++) {
+	for (int fila = 0; fila < tablero.ver_altura(); fila++) {
+		for (int columna = 0; columna < tablero.ver_largura(); columna++) {
 
 			Pieza* pieza = tablero.ver_pieza(make_pair(columna, fila));
 			if (pieza != nullptr) {
@@ -64,8 +64,8 @@ void VistaPiezas::dibujar(float tam, const Tablero& tablero) {
 }
 
 void VistaPiezas::dibujarPeonCiencias(int fila, int columna,float tam, const Tablero& tablero) {
-	float offsetX = -((tablero.ver_ancho() * tam) / 2.0f);
-	float offsetZ = -((tablero.ver_largo() * tam) / 2.0f);
+	float offsetX = -((tablero.ver_largura() * tam) / 2.0f);
+	float offsetZ = -((tablero.ver_altura() * tam) / 2.0f);
 
 	float x = offsetX + columna * tam + tam / 2.0f;
 	float z = offsetZ + fila * tam + tam / 2.0f;
@@ -105,8 +105,8 @@ void VistaPiezas::dibujarPeonCiencias(int fila, int columna,float tam, const Tab
 }
 
 void VistaPiezas::dibujarTorreCiencias(int fila, int columna, float tam, const Tablero& tablero) {
-	float offsetX = -((tablero.ver_ancho() * tam) / 2.0f);
-	float offsetZ = -((tablero.ver_largo() * tam) / 2.0f);
+	float offsetX = -((tablero.ver_largura() * tam) / 2.0f);
+	float offsetZ = -((tablero.ver_altura() * tam) / 2.0f);
 
 	float x = offsetX + columna * tam + tam / 2.0f;
 	float z = offsetZ + fila * tam + tam / 2.0f;
@@ -151,8 +151,8 @@ void VistaPiezas::dibujarTorreCiencias(int fila, int columna, float tam, const T
 }
 
 void VistaPiezas::dibujarCaballoCiencias(int fila, int columna, float tam, const Tablero& tablero) {
-	float offsetX = -((tablero.ver_ancho() * tam) / 2.0f);
-	float offsetZ = -((tablero.ver_largo() * tam) / 2.0f);
+	float offsetX = -((tablero.ver_largura() * tam) / 2.0f);
+	float offsetZ = -((tablero.ver_altura() * tam) / 2.0f);
 
 	float x = offsetX + columna * tam + tam / 2.0f;
 	float z = offsetZ + fila * tam + tam / 2.0f;
@@ -220,8 +220,8 @@ void VistaPiezas::dibujarCaballoCiencias(int fila, int columna, float tam, const
 }
 
 void VistaPiezas::dibujarAlfilCiencias(int fila, int columna, float tam, const Tablero& tablero) {
-	float offsetX = -((tablero.ver_ancho() * tam) / 2.0f);
-	float offsetZ = -((tablero.ver_largo() * tam) / 2.0f);
+	float offsetX = -((tablero.ver_largura() * tam) / 2.0f);
+	float offsetZ = -((tablero.ver_altura() * tam) / 2.0f);
 
 	float x = offsetX + columna * tam + tam / 2.0f;
 	float z = offsetZ + fila * tam + tam / 2.0f;
@@ -277,8 +277,8 @@ void VistaPiezas::dibujarAlfilCiencias(int fila, int columna, float tam, const T
 }
 
 void VistaPiezas::dibujarReyCiencias(int fila, int columna, float tam, const Tablero& tablero) {
-	float offsetX = -((tablero.ver_ancho() * tam) / 2.0f);
-	float offsetZ = -((tablero.ver_largo() * tam) / 2.0f);
+	float offsetX = -((tablero.ver_largura() * tam) / 2.0f);
+	float offsetZ = -((tablero.ver_altura() * tam) / 2.0f);
 
 	float x = offsetX + columna * tam + tam / 2.0f;
 	float z = offsetZ + fila * tam + tam / 2.0f;
@@ -296,8 +296,8 @@ void VistaPiezas::dibujarReyCiencias(int fila, int columna, float tam, const Tab
 }
 
 void VistaPiezas::dibujarReinaCiencias(int fila, int columna, float tam, const Tablero& tablero) {
-	float offsetX = -((tablero.ver_ancho() * tam) / 2.0f);
-	float offsetZ = -((tablero.ver_largo() * tam) / 2.0f);
+	float offsetX = -((tablero.ver_largura() * tam) / 2.0f);
+	float offsetZ = -((tablero.ver_altura() * tam) / 2.0f);
 
 	float x = offsetX + columna * tam + tam / 2.0f;
 	float z = offsetZ + fila * tam + tam / 2.0f;
@@ -338,8 +338,8 @@ void VistaPiezas::dibujarReinaCiencias(int fila, int columna, float tam, const T
 }
 
 void VistaPiezas::dibujarPeonLetras(int fila, int columna, float tam, const Tablero& tablero) {
-	float offsetX = -((tablero.ver_ancho() * tam) / 2.0f);
-	float offsetZ = -((tablero.ver_largo() * tam) / 2.0f);
+	float offsetX = -((tablero.ver_largura() * tam) / 2.0f);
+	float offsetZ = -((tablero.ver_altura() * tam) / 2.0f);
 
 	float xPos = offsetX + columna * tam + tam / 2.0f; // centro casilla en X
 	float zPos = offsetZ + fila * tam + tam / 2.0f;   // centro casilla en Z
@@ -384,8 +384,8 @@ void VistaPiezas::dibujarPeonLetras(int fila, int columna, float tam, const Tabl
 }
 
 void VistaPiezas::dibujarTorreLetras(int fila, int columna, float tam, const Tablero& tablero) {
-	float offsetX = -((tablero.ver_ancho() * tam) / 2.0f);
-	float offsetZ = -((tablero.ver_largo() * tam) / 2.0f);
+	float offsetX = -((tablero.ver_largura() * tam) / 2.0f);
+	float offsetZ = -((tablero.ver_altura() * tam) / 2.0f);
 
 	float x = offsetX + columna * tam + tam / 2.0f;
 	float z = offsetZ + fila * tam + tam / 2.0f;
@@ -420,8 +420,8 @@ void VistaPiezas::dibujarTorreLetras(int fila, int columna, float tam, const Tab
 }
 
 void VistaPiezas::dibujarCaballoLetras(int fila, int columna, float tam, const Tablero& tablero) {
-	float offsetX = -((tablero.ver_ancho() * tam) / 2.0f);
-	float offsetZ = -((tablero.ver_largo() * tam) / 2.0f);
+	float offsetX = -((tablero.ver_largura() * tam) / 2.0f);
+	float offsetZ = -((tablero.ver_altura() * tam) / 2.0f);
 
 	float x = offsetX + columna * tam + tam / 2.0f; // Centrar en el eje X
 	float z = offsetZ + fila * tam + tam / 2.0f;    // Centrar en el eje Z
@@ -464,8 +464,8 @@ void VistaPiezas::dibujarCaballoLetras(int fila, int columna, float tam, const T
 }
 
 void VistaPiezas::dibujarAlfilLetras(int fila, int columna, float tam, const Tablero& tablero) {
-	float offsetX = -((tablero.ver_ancho() * tam) / 2.0f);
-	float offsetZ = -((tablero.ver_largo() * tam) / 2.0f);
+	float offsetX = -((tablero.ver_largura() * tam) / 2.0f);
+	float offsetZ = -((tablero.ver_altura() * tam) / 2.0f);
 
 	float x = offsetX + columna * tam + tam / 2.0f;
 	float z = offsetZ + fila * tam + tam / 2.0f;
@@ -506,8 +506,8 @@ void VistaPiezas::dibujarAlfilLetras(int fila, int columna, float tam, const Tab
 }
 
 void VistaPiezas::dibujarReyLetras(int fila, int columna, float tam, const Tablero& tablero) {
-	float offsetX = -((tablero.ver_ancho() * tam) / 2.0f);
-	float offsetZ = -((tablero.ver_largo() * tam) / 2.0f);
+	float offsetX = -((tablero.ver_largura() * tam) / 2.0f);
+	float offsetZ = -((tablero.ver_altura() * tam) / 2.0f);
 
 	float xPos = offsetX + columna * tam + tam / 2.0f;
 	float zPos = offsetZ + fila * tam + tam / 2.0f;
@@ -542,8 +542,8 @@ void VistaPiezas::dibujarReyLetras(int fila, int columna, float tam, const Table
 }
 
 void VistaPiezas::dibujarReinaLetras(int fila, int columna, float tam, const Tablero& tablero) {
-	float offsetX = -((tablero.ver_ancho() * tam) / 2.0f);
-	float offsetZ = -((tablero.ver_largo() * tam) / 2.0f);
+	float offsetX = -((tablero.ver_largura() * tam) / 2.0f);
+	float offsetZ = -((tablero.ver_altura() * tam) / 2.0f);
 
 	float xPos = offsetX + columna * tam + tam / 2.0f;
 	float zPos = offsetZ + fila * tam + tam / 2.0f;

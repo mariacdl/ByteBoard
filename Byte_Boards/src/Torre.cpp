@@ -12,7 +12,7 @@ bool Torre::validar_movimiento(int de_x, int de_y, int para_x, int para_y, const
 	int dy = para_y - de_y;
 
 	// Verificar si movimiento está dentro del tablero
-	if (para_x < 0 || para_x >= tablero.ver_ancho() || para_y < 0 || para_y >= tablero.ver_largo())
+	if (para_x < 0 || para_x >= tablero.ver_largura() || para_y < 0 || para_y >= tablero.ver_altura())
 		return false;
 
 	// Verificar si no hay movimiento

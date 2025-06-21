@@ -1,6 +1,7 @@
 #include "Partida.h"
 #include "Tablero.h"
 #include "Pieza.h"
+#include "Estados.h"
 #include <iostream>
 #include <vector>
 #include <cstdlib>
@@ -8,7 +9,7 @@
 
 using namespace std;
 
-Partida::Partida(char m, char c) : modalidad(m), color_jugador1(c) {
+Partida::Partida(TipoJuego m, EstadoTurno c) : modalidad(m), color_jugador1(c) {
     vista_partida = new VistaPartida();
     tablero = new Tablero(m);
     vista_partida->actualizar_camara(c);
@@ -23,7 +24,7 @@ char Partida::ver_modalidad() const {
 }
 
 void Partida::alternar_turno() {
-    turno_actual = turno_actual == 'B' ? 'N' : 'B';
+    turno_actual = (turno_actual == BLANCO) ? NEGRO : BLANCO;
     vista_partida->actualizar_camara(turno_actual);
     numero_turnos++;
 }
@@ -58,7 +59,8 @@ void Partida::actualizar_casilla(pair<int, int> casilla_nueva) {
         casilla_seleccionada = casilla_nueva;
 
     tablero->dibujar(casilla_seleccionada);
-    cout << "(" << casilla_seleccionada.first << ", " << casilla_seleccionada.second << ")" << endl;
+    cout << "(" << casilla_seleccionada.first << ", " << casilla_seleccionada.second << ") ";
+    cout << casilla_seleccionada.first * tablero->ver_largura() + casilla_seleccionada.second << endl;
 }
 
 bool Partida::jugar(pair<int, int> desde, pair<int, int> para) {
@@ -117,8 +119,8 @@ bool Partida::mover(pair<int, int> desde, pair<int, int> para) {
 bool Partida::determinar_jaque(char color) {
     char color_opuesto = (color == 'B') ? 'N' : 'B';
 
-    for (int x = 0; x < tablero->ver_ancho(); ++x) {
-        for (int y = 0; y < tablero->ver_largo(); ++y) {
+    for (int x = 0; x < tablero->ver_largura(); ++x) {
+        for (int y = 0; y < tablero->ver_altura(); ++y) {
             Pieza* p = tablero->ver_pieza({ x, y });
             if (p != nullptr && p->ver_color() == color_opuesto) {
                 vector<pair<int, int>> movimientos = listar_movimientos_validos({ x, y });
@@ -136,8 +138,8 @@ bool Partida::determinar_jaque(char color) {
 
 bool Partida::sin_movimientos_validos(char color) {
     Tablero copia = *tablero;
-    for (int x = 0; x < tablero->ver_ancho(); ++x) {
-        for (int y = 0; y < tablero->ver_largo(); ++y) {
+    for (int x = 0; x < tablero->ver_largura(); ++x) {
+        for (int y = 0; y < tablero->ver_altura(); ++y) {
             Pieza* p = tablero->ver_pieza({ x, y });
             if (p != nullptr && p->ver_color() == color) {
                 vector<pair<int, int>> movimientos = listar_movimientos_validos({ x, y });

@@ -4,7 +4,7 @@
 #include <cmath> 
 
 
-void VistaPartida::actualizar_camara(char turno_actual) {
+void VistaPartida::actualizar_camara(EstadoTurno turno_actual) {
     if (turno_actual != ultimo_turno) {
         esperando_giro = true;
         frames_espera = 0;
@@ -18,7 +18,7 @@ void VistaPartida::actualizar_camara(char turno_actual) {
         }
     }
     else { 
-        angulo_camara_objetivo = (turno_actual == 'N') ? 180.0f : 0.0f;
+        angulo_camara_objetivo = (turno_actual == NEGRO) ? 180.0f : 0.0f;
         float velocidad = 0.05f;
         angulo_camara += (angulo_camara_objetivo - angulo_camara) * velocidad;
     }

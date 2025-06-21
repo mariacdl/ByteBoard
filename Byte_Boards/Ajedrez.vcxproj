@@ -36,6 +36,7 @@
     <ClCompile Include="src\VistaPartida.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Estados.h" />
     <ClInclude Include="src\Alfil.h" />
     <ClInclude Include="src\Caballo.h" />
     <ClInclude Include="src\Dama.h" />

@@ -5,7 +5,7 @@ int Pieza::ver_numero_movimientos() const {
 	return numero_movimientos;
 }
 
-char Pieza::ver_color() const {
+EstadoTurno Pieza::ver_color() const {
 	return color;
 }
 

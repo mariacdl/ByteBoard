@@ -6,39 +6,40 @@
 #include "Rey.h"
 #include "Caballo.h"
 #include "Dama.h"
+#include "Estados.h"
 #include <iostream>
 
 using namespace std;
 
-Tablero::Tablero(char m) : modalidad(m), ancho((m == 'P') ? 4 : 5), largo((m == 'P') ? 5 : 6) {
+Tablero::Tablero(TipoJuego m) : modalidad(m), largura((m == JUEGO_4x5) ? 4 : 5), altura((m == JUEGO_4x5) ? 5 : 6) {
     vista_tablero = new VistaTablero(m);
-    lista_piezas.resize(ancho * largo, nullptr); // Inicializa con punteros nulos
+    lista_piezas.resize(largura * altura, nullptr); // Inicializa con punteros nulos
 
-    if (modalidad == 'P') {
-        colocar_pieza({ 0, 0 }, 'R', 'N');
-        colocar_pieza({ 1, 0 }, 'C', 'N');
-        colocar_pieza({ 2, 0 }, 'A', 'N');
-        colocar_pieza({ 3, 0 }, 'T', 'N');
-        colocar_pieza({ 0, 1 }, 'P', 'N');
+    if (modalidad == JUEGO_4x5) {
+        colocar_pieza({ 0, 0 }, 'R', NEGRO);
+        colocar_pieza({ 1, 0 }, 'C', NEGRO);
+        colocar_pieza({ 2, 0 }, 'A', NEGRO);
+        colocar_pieza({ 3, 0 }, 'T', NEGRO);
+        colocar_pieza({ 0, 1 }, 'P', NEGRO);
 
-        colocar_pieza({ 3, 4 }, 'R', 'B');
-        colocar_pieza({ 0, 4 }, 'T', 'B');
-        colocar_pieza({ 3, 3 }, 'P', 'B');
+        colocar_pieza({ 3, 4 }, 'R', BLANCO);
+        colocar_pieza({ 0, 4 }, 'T', BLANCO);
+        colocar_pieza({ 3, 3 }, 'P', BLANCO);
     }
     else {
-        colocar_pieza({ 0, 0 }, 'D', 'N');
-        colocar_pieza({ 1, 0 }, 'R', 'N');
-        colocar_pieza({ 2, 0 }, 'A', 'N');
-        colocar_pieza({ 3, 0 }, 'C', 'N');
-        colocar_pieza({ 4, 0 }, 'T', 'N');
-        for (int i = 0; i < 5; i++) colocar_pieza({ i, 1 }, 'P', 'N');
+        colocar_pieza({ 0, 0 }, 'D', NEGRO);
+        colocar_pieza({ 1, 0 }, 'R', NEGRO);
+        colocar_pieza({ 2, 0 }, 'A', NEGRO);
+        colocar_pieza({ 3, 0 }, 'C', NEGRO);
+        colocar_pieza({ 4, 0 }, 'T', NEGRO);
+        for (int i = 0; i < 5; i++) colocar_pieza({ i, 1 }, 'P', NEGRO);
 
-        colocar_pieza({ 0, 5 }, 'T', 'B');
-        colocar_pieza({ 1, 5 }, 'C', 'B');
-        colocar_pieza({ 2, 5 }, 'A', 'B');
-        colocar_pieza({ 3, 5 }, 'R', 'B');
-        colocar_pieza({ 4, 5 }, 'D', 'B');
-        for (int i = 0; i < 5; i++) colocar_pieza({ i, 4 }, 'P', 'B');
+        //colocar_pieza({ 0, 5 }, 'T', BLANCO);
+        //colocar_pieza({ 1, 5 }, 'C', BLANCO);
+        //colocar_pieza({ 2, 5 }, 'A', BLANCO);
+        //colocar_pieza({ 3, 5 }, 'R', BLANCO);
+        colocar_pieza({ 3, 3 }, 'D', BLANCO);  // 4 5
+        //for (int i = 0; i < 5; i++) colocar_pieza({ i, 4 }, 'P', BLANCO);
     }
 }
 
@@ -54,16 +55,16 @@ void Tablero::dibujar(pair<int, int> casilla_seleccionada) {
 }
 
 const VistaTablero& Tablero::ver_vista_tablero() const { return *vista_tablero; }
-int Tablero::ver_largo() const { return largo; }
-int Tablero::ver_ancho() const { return ancho; }
+int Tablero::ver_altura() const { return altura; }
+int Tablero::ver_largura() const { return largura; }
 char Tablero::ver_modalidad() const { return modalidad; }
 
 Pieza* Tablero::ver_pieza(pair<int, int> pos) const {
-    return lista_piezas[ancho * pos.second + pos.first];
+    return lista_piezas[largura * pos.first + pos.second];
 }
 
-void Tablero::colocar_pieza(pair<int, int> pos, char tipo, char color, int numero_movimientos) {
-    int index = ancho * pos.second + pos.first;
+void Tablero::colocar_pieza(pair<int, int> pos, char tipo, EstadoTurno color, int numero_movimientos) {
+    int index = largura * pos.first + pos.second;
     delete lista_piezas[index]; // evita memory leak
 
     Pieza* nueva = nullptr;
@@ -80,14 +81,14 @@ void Tablero::colocar_pieza(pair<int, int> pos, char tipo, char color, int numer
 }
 
 void Tablero::retirar_pieza(pair<int, int> pos) {
-    int index = ancho * pos.second + pos.first;
+    int index = largura * pos.first + pos.second;
     delete lista_piezas[index];
     lista_piezas[index] = nullptr;
 }
 
 void Tablero::mover_pieza(pair<int, int> origen, pair<int, int> destino) {
-    int index_origen = ancho * origen.second + origen.first;
-    int index_destino = ancho * destino.second + destino.first;
+    int index_origen = largura * origen.first + origen.second;
+    int index_destino = largura * destino.first + destino.second;
 
     if (lista_piezas[index_origen]) {
         delete lista_piezas[index_destino]; // capturar si hay
@@ -104,12 +105,17 @@ bool Tablero::validar_movimiento(pair<int, int> origen, pair<int, int> destino) 
 
 vector<pair<int, int>> Tablero::listar_movimientos_validos(pair<int, int> casilla) const {
     vector<pair<int, int>> movimientos_validos;
-    for (int x = 0; x < ancho; ++x) {
-        for (int y = 0; y < largo; ++y) {
+    for (int x = 0; x < altura; ++x) {
+        for (int y = 0; y < largura; ++y) {
             if (validar_movimiento(casilla, { x, y })) {
                 movimientos_validos.emplace_back(x, y);
             }
         }
+    }
+    cout << modalidad << "     ";
+    for (auto mov : movimientos_validos) {
+        cout << "   (" << mov.first << ", " << mov.second << ") ";
+        cout << mov.first * largura + mov.second << endl;
     }
     return movimientos_validos;
 }

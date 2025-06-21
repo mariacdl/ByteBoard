@@ -173,15 +173,15 @@ void GestorJuego::seleccionar_casilla(int cursor_x, int cursor_y) {
     gluUnProject(winX, winY, winZ, modelview, projection, viewport, &posX, &posY, &posZ);
 
     float tam = partida->ver_tablero().ver_vista_tablero().getTam();
-    float origenX = -((partida->ver_tablero().ver_ancho() * tam) / 2.0f);
-    float origenZ = -((partida->ver_tablero().ver_largo() * tam) / 2.0f);
+    float origenX = -((partida->ver_tablero().ver_largura() * tam) / 2.0f);
+    float origenZ = -((partida->ver_tablero().ver_altura() * tam) / 2.0f);
 
     int columna = static_cast<int>((posX - origenX) / tam);
     int fila = static_cast<int>((posZ - origenZ) / tam);
 
     // Verifica si la posición calculada está dentro del tablero
-    if (fila >= 0 && fila < partida->ver_tablero().ver_largo() &&
-        columna >= 0 && columna < partida->ver_tablero().ver_ancho()) {
+    if (fila >= 0 && fila < partida->ver_tablero().ver_altura() &&
+        columna >= 0 && columna < partida->ver_tablero().ver_largura()) {
         casilla_seleccionada = { fila, columna };
     }
     else {
@@ -327,18 +327,8 @@ void GestorJuego::iniciar_partida() {
         delete partida;
         partida = nullptr; 
     }
-    else if (tipo_oponente == JUEGO_4x5) {
-        if (tipo_oponente == JUGADOR)
-            partida = new Partida('P', 'J');
-        else
-            partida = new Partida('P', 'B');
-    }
-    else if (tipo_oponente == JUEGO_SPEED) {
-        if (tipo_oponente == JUGADOR)
-            partida = new Partida('S', 'J');
-        else
-            partida = new Partida('S', 'B');
-    }
+    else if (tipo_oponente != SIN_OPONENTE && tipo_juego != NO_DECIDIDO) 
+        partida = new Partida(tipo_juego, BLANCO);
     else
         partida = nullptr;
     

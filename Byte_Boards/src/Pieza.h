@@ -1,16 +1,18 @@
 #pragma once
 #include "Tablero.h"
+#include <Estados.h>
+
 
 class Pieza {
 protected:
-    char color; // 'B' o 'N'
+    EstadoTurno color; 
     int numero_movimientos;
 
 public:
-    Pieza(char c, int n = 0) : color(c), numero_movimientos(n) {};
+    Pieza(EstadoTurno c, int n = 0) : color(c), numero_movimientos(n) {};
     virtual ~Pieza() {}
 
-    char ver_color() const;
+    EstadoTurno ver_color() const;
     int ver_numero_movimientos() const;
     void incrementar_movimiento();
 
