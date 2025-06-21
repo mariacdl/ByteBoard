@@ -4,74 +4,89 @@ char Peon::ver_tipo() const {
 	return 'P';
 }
 
-bool Peon::validar_movimiento(int de_x, int de_y, int para_x, int para_y, const Tablero& tablero) const {
-	Pieza* destino = tablero.ver_pieza(make_pair(para_y, para_x));
+bool Peon::validar_movimiento(pair<int, int> desde, pair<int, int> para, const Tablero& tablero) const {
+	Pieza* destino = tablero.ver_pieza(para);
 
-	int dy = para_x - de_x; // invertido
-	int dx = para_y - de_y; // invertido
+	int desde_y = desde.first;
+	int desde_x = desde.second;
+	int para_y = para.first;
+	int para_x = para.second;
 
-	// Definir dirección de movimiento según color
-	int direccion = (color == 'B') ? -1 : 1;
-	int fila_inicial = (color == 'B') ? tablero.ver_altura() - 2 : 1;
+	int delta_x = para_x - desde_x;
+	int delta_y = para_y - desde_y;
 
-	// Verificar si movimiento está dentro del tablero
-	if (para_y < 0 || para_y >= tablero.ver_largura() || para_x < 0 || para_x >= tablero.ver_altura())
+	int direccion = (color == BLANCO) ? -1 : 1;
+	int fila_inicial = (color == BLANCO) ? tablero.ver_altura() - 2 : 1;
+
+	// Verificar límites del tablero
+	if (para_x < 0 || para_x >= tablero.ver_largura() || para_y < 0 || para_y >= tablero.ver_altura())
 		return false;
 
-	// Verificar si no hay movimiento
-	if (para_x == de_x && para_y == de_y)
+	// Sin movimiento
+	if (delta_x == 0 && delta_y == 0)
 		return false;
 
-	// Verificar si intenta capturar su propio rey
+	// No puede capturar su propio rey
 	if (destino != nullptr && destino->ver_tipo() == 'R' && destino->ver_color() == color)
 		return false;
 
-	// Movimiento de avance simple
-	if (dx == 0 && dy == direccion && destino == nullptr)
+	// Avance simple
+	if (delta_x == 0 && delta_y == direccion && destino == nullptr)
 		return true;
 
-	// Movimiento de avance doble desde la fila inicial
-	if (validar_avance_doble(de_x, de_y, para_x, para_y, tablero))
+	// Avance doble
+	if (validar_avance_doble(desde, para, tablero))
 		return true;
 
-	// Movimiento de captura normal (diagonal)
-	if (abs(dx) == 1 && dy == direccion && destino != nullptr && destino->ver_color() != color)
+	// Captura diagonal
+	if (abs(delta_x) == 1 && delta_y == direccion && destino != nullptr && destino->ver_color() != color)
 		return true;
 
-	// Validar en passant
-	if (validar_en_passant(de_x, de_y, para_x, para_y, tablero))
+	// En passant
+	if (validar_en_passant(desde, para, tablero))
 		return true;
 
-	// Movimiento inválido
 	return false;
 }
 
-bool Peon::validar_avance_doble(int de_x, int de_y, int para_x, int para_y, const Tablero& tablero) const {
-	Pieza* destino = tablero.ver_pieza(make_pair(para_y, para_x));
-	int direccion = (color == 'B') ? -1 : 1;
-	int fila_inicial = (color == 'B') ? tablero.ver_altura() - 2 : 1;
+bool Peon::validar_avance_doble(pair<int, int> desde, pair<int, int> para, const Tablero& tablero) const {
+	Pieza* destino = tablero.ver_pieza(para);
 
-	int dy = para_x - de_x; // invertido
-	int dx = para_y - de_y; // invertido
+	int desde_y = desde.first;
+	int desde_x = desde.second;
+	int para_y = para.first;
+	int para_x = para.second;
 
-	if (dx == 0 && dy == 2 * direccion && de_x == fila_inicial && destino == nullptr) {
-		int x_intermedia = de_x + direccion;
-		if (tablero.ver_pieza(make_pair(de_y, x_intermedia)) == nullptr)
+	int delta_x = para_x - desde_x;
+	int delta_y = para_y - desde_y;
+
+	int direccion = (color == BLANCO) ? -1 : 1;
+	int fila_inicial = (color == BLANCO) ? tablero.ver_altura() - 2 : 1;
+
+	if (delta_x == 0 && delta_y == 2 * direccion && desde_y == fila_inicial && destino == nullptr) {
+		// Casilla intermedia libre
+		if (tablero.ver_pieza(make_pair(desde_y + direccion, desde_x)) == nullptr)
 			return true;
 	}
 	return false;
 }
 
-bool Peon::validar_en_passant(int de_x, int de_y, int para_x, int para_y, const Tablero& tablero) const {
-	Pieza* destino = tablero.ver_pieza(make_pair(para_y, para_x));
-	int direccion = (color == 'B') ? -1 : 1;
+bool Peon::validar_en_passant(pair<int, int> desde, pair<int, int> para, const Tablero& tablero) const {
+	int desde_y = desde.first;
+	int desde_x = desde.second;
+	int para_y = para.first;
+	int para_x = para.second;
 
-	int dy = para_x - de_x; // invertido
-	int dx = para_y - de_y; // invertido
+	int delta_x = para_x - desde_x;
+	int delta_y = para_y - desde_y;
 
-	if (abs(dx) == 1 && dy == direccion && destino == nullptr) {
-		int peon_x = para_x - direccion;
-		int peon_y = para_y;
+	int direccion = (color == BLANCO) ? -1 : 1;
+
+	Pieza* destino = tablero.ver_pieza(para);
+
+	if (abs(delta_x) == 1 && delta_y == direccion && destino == nullptr) {
+		int peon_y = desde_y;
+		int peon_x = para_x;
 
 		Pieza* posible_peon = tablero.ver_pieza(make_pair(peon_y, peon_x));
 
@@ -80,9 +95,10 @@ bool Peon::validar_en_passant(int de_x, int de_y, int para_x, int para_y, const 
 			posible_peon->ver_color() != color &&
 			posible_peon->ver_numero_movimientos() == 1) {
 
-			// Verificar si el peón rival hizo un movimiento doble desde su fila inicial
-			int fila_ini_peon = (posible_peon->ver_color() == 'B') ? tablero.ver_altura() - 2 : 1;
-			if (peon_x == fila_ini_peon + 2 * ((posible_peon->ver_color() == 'B') ? -1 : 1))
+			int fila_ini_peon = (posible_peon->ver_color() == BLANCO) ? tablero.ver_altura() - 2 : 1;
+			int esperado_y = fila_ini_peon + 2 * ((posible_peon->ver_color() == BLANCO) ? -1 : 1);
+
+			if (peon_y == esperado_y)
 				return true;
 		}
 	}

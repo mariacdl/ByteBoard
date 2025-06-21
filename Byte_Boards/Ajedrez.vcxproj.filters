@@ -98,12 +98,6 @@
     <ClInclude Include="src\Pieza.h">
       <Filter>Archivos de encabezado\Piezas</Filter>
     </ClInclude>
-    <ClInclude Include="src\Rey.h">
-      <Filter>Archivos de encabezado\Piezas</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Torre.h">
-      <Filter>Archivos de encabezado\Piezas</Filter>
-    </ClInclude>
     <ClInclude Include="src\VistaPartida.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
@@ -112,6 +106,12 @@
     </ClInclude>
     <ClInclude Include="src\Estados.h">
       <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Rey.h">
+      <Filter>Archivos de encabezado\Piezas</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Torre.h">
+      <Filter>Archivos de encabezado\Piezas</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

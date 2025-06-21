@@ -1,22 +1,26 @@
 #include "Torre.h"
 
-
 char Torre::ver_tipo() const {
 	return 'T';
 }
 
-bool Torre::validar_movimiento(int de_x, int de_y, int para_x, int para_y, const Tablero& tablero) const {
-	Pieza* destino = tablero.ver_pieza(make_pair(para_x, para_y));
+bool Torre::validar_movimiento(pair<int, int> desde, pair<int, int> para, const Tablero& tablero) const {
+	Pieza* destino = tablero.ver_pieza(para); // first = y, second = x
 
-	int dx = para_x - de_x;
-	int dy = para_y - de_y;
+	int desde_y = desde.first;
+	int desde_x = desde.second;
+	int para_y = para.first;
+	int para_x = para.second;
 
-	// Verificar si movimiento está dentro del tablero
+	int delta_x = para_x - desde_x;
+	int delta_y = para_y - desde_y;
+
+	// Verificar si el movimiento está dentro del tablero
 	if (para_x < 0 || para_x >= tablero.ver_largura() || para_y < 0 || para_y >= tablero.ver_altura())
 		return false;
 
 	// Verificar si no hay movimiento
-	if (para_x == de_x && para_y == de_y)
+	if (delta_x == 0 && delta_y == 0)
 		return false;
 
 	// Verificar si intenta capturar su propio rey
@@ -24,26 +28,26 @@ bool Torre::validar_movimiento(int de_x, int de_y, int para_x, int para_y, const
 		return false;
 
 	// Verificar si el movimiento es solo en línea recta (horizontal o vertical)
-	if (dx != 0 && dy != 0)
+	if (delta_x != 0 && delta_y != 0)
 		return false;
 
 	// Verificar si hay piezas en el camino
-	if (dx == 0) { // Movimiento vertical
-		int paso = (dy > 0) ? 1 : -1;
-		for (int y = de_y + paso; y != para_y; y += paso) {
-			if (tablero.ver_pieza(make_pair(de_x, y)) != nullptr)
+	if (delta_x == 0) { // Movimiento vertical
+		int paso = (delta_y > 0) ? 1 : -1;
+		for (int y = desde_y + paso; y != para_y; y += paso) {
+			if (tablero.ver_pieza(make_pair(y, desde_x)) != nullptr)
 				return false;
 		}
 	}
 	else { // Movimiento horizontal
-		int paso = (dx > 0) ? 1 : -1;
-		for (int x = de_x + paso; x != para_x; x += paso) {
-			if (tablero.ver_pieza(make_pair(x, de_y)) != nullptr)
+		int paso = (delta_x > 0) ? 1 : -1;
+		for (int x = desde_x + paso; x != para_x; x += paso) {
+			if (tablero.ver_pieza(make_pair(desde_y, x)) != nullptr)
 				return false;
 		}
 	}
 
-	// Si la casilla de destino contiene una pieza del mismo color, el movimiento es inválido
+	// Verificar si hay una pieza aliada en el destino
 	if (destino != nullptr && destino->ver_color() == color)
 		return false;
 

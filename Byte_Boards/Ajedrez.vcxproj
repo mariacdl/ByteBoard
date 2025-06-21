@@ -36,6 +36,7 @@
     <ClCompile Include="src\VistaPartida.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Rey.h" />
     <ClInclude Include="src\Estados.h" />
     <ClInclude Include="src\Alfil.h" />
     <ClInclude Include="src\Caballo.h" />
@@ -47,10 +48,9 @@
     <ClInclude Include="src\Partida.h" />
     <ClInclude Include="src\Peon.h" />
     <ClInclude Include="src\Pieza.h" />
-    <ClInclude Include="src\Rey.h" />
     <ClInclude Include="src\Tablero.h" />
-    <ClInclude Include="src\Torre.h" />
     <ClInclude Include="src\VistaPartida.h" />
+    <ClInclude Include="src\Torre.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\.DS_Store" />

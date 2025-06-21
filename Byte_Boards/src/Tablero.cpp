@@ -102,7 +102,7 @@ void Tablero::mover_pieza(pair<int, int> origen, pair<int, int> destino) {
 
 bool Tablero::validar_movimiento(pair<int, int> origen, pair<int, int> destino) const {
     Pieza* pieza = ver_pieza(origen);
-    return pieza && pieza->validar_movimiento(origen.first, origen.second, destino.first, destino.second, *this);
+    return pieza && pieza->validar_movimiento(origen, destino, *this);
 }
 
 vector<pair<int, int>> Tablero::listar_movimientos_validos(pair<int, int> casilla) const {
