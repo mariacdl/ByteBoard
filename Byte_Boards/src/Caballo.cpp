@@ -6,8 +6,7 @@ char Caballo::ver_tipo() const {
 }
 
 bool Caballo::validar_movimiento(int de_x, int de_y, int para_x, int para_y, const Tablero& tablero) const {
-	Pieza* empiece = tablero.ver_pieza(de_x, de_y);
-	Pieza* destino = tablero.ver_pieza(para_x, para_y); // Hipotetico, puede estar libre
+	Pieza* destino = tablero.ver_pieza(make_pair(para_x, para_y)); // Hipotetico, puede estar libre
 
 	int dx = para_x - de_x;
 	int dy = para_y - de_y;
@@ -28,7 +27,7 @@ bool Caballo::validar_movimiento(int de_x, int de_y, int para_x, int para_y, con
 	if(destino != nullptr) {
 		//Verificar si en la posición final se encuentra el rey
 		// No es posible matar al rey
-		if (destino->ver_tipo() == 'R' && destino->ver_color() == empiece->ver_color()) 
+		if (destino->ver_tipo() == 'R' && destino->ver_color() == color) 
 			return false;
 	}
 

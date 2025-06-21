@@ -22,9 +22,9 @@
     <ClCompile Include="src\Alfil.cpp" />
     <ClCompile Include="src\Caballo.cpp" />
     <ClCompile Include="src\Dama.cpp" />
-    <ClCompile Include="src\DibujanteMenus.cpp" />
-    <ClCompile Include="src\DibujantePiezas.cpp" />
-    <ClCompile Include="src\DibujanteTablero.cpp" />
+    <ClCompile Include="src\VistaJuego.cpp" />
+    <ClCompile Include="src\VistaPiezas.cpp" />
+    <ClCompile Include="src\VistaTablero.cpp" />
     <ClCompile Include="src\GestorJuego.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Partida.cpp" />
@@ -33,14 +33,15 @@
     <ClCompile Include="src\Rey.cpp" />
     <ClCompile Include="src\Tablero.cpp" />
     <ClCompile Include="src\Torre.cpp" />
+    <ClCompile Include="src\VistaPartida.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Alfil.h" />
     <ClInclude Include="src\Caballo.h" />
     <ClInclude Include="src\Dama.h" />
-    <ClInclude Include="src\DibujanteMenus.h" />
-    <ClInclude Include="src\DibujantePiezas.h" />
-    <ClInclude Include="src\DibujanteTablero.h" />
+    <ClInclude Include="src\VistaJuego.h" />
+    <ClInclude Include="src\VistaPiezas.h" />
+    <ClInclude Include="src\VistaTablero.h" />
     <ClInclude Include="src\GestorJuego.h" />
     <ClInclude Include="src\Partida.h" />
     <ClInclude Include="src\Peon.h" />
@@ -48,6 +49,7 @@
     <ClInclude Include="src\Rey.h" />
     <ClInclude Include="src\Tablero.h" />
     <ClInclude Include="src\Torre.h" />
+    <ClInclude Include="src\VistaPartida.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\.DS_Store" />

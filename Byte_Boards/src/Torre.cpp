@@ -6,7 +6,7 @@ char Torre::ver_tipo() const {
 }
 
 bool Torre::validar_movimiento(int de_x, int de_y, int para_x, int para_y, const Tablero& tablero) const {
-	Pieza* destino = tablero.ver_pieza(para_x, para_y);
+	Pieza* destino = tablero.ver_pieza(make_pair(para_x, para_y));
 
 	int dx = para_x - de_x;
 	int dy = para_y - de_y;
@@ -31,14 +31,14 @@ bool Torre::validar_movimiento(int de_x, int de_y, int para_x, int para_y, const
 	if (dx == 0) { // Movimiento vertical
 		int paso = (dy > 0) ? 1 : -1;
 		for (int y = de_y + paso; y != para_y; y += paso) {
-			if (tablero.ver_pieza(de_x, y) != nullptr)
+			if (tablero.ver_pieza(make_pair(de_x, y)) != nullptr)
 				return false;
 		}
 	}
 	else { // Movimiento horizontal
 		int paso = (dx > 0) ? 1 : -1;
 		for (int x = de_x + paso; x != para_x; x += paso) {
-			if (tablero.ver_pieza(x, de_y) != nullptr)
+			if (tablero.ver_pieza(make_pair(x, de_y)) != nullptr)
 				return false;
 		}
 	}

@@ -30,13 +30,10 @@
     <ClCompile Include="src\GestorJuego.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="src\DibujanteMenus.cpp">
+    <ClCompile Include="src\VistaPiezas.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="src\DibujantePiezas.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="src\DibujanteTablero.cpp">
+    <ClCompile Include="src\VistaTablero.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="src\Alfil.cpp">
@@ -63,6 +60,12 @@
     <ClCompile Include="src\Partida.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
+    <ClCompile Include="src\VistaPartida.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VistaJuego.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Partida.h">
@@ -74,16 +77,10 @@
     <ClInclude Include="src\GestorJuego.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="src\DibujanteMenus.h">
+    <ClInclude Include="src\VistaPiezas.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="src\DibujantePiezas.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\DibujanteTablero.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Torre.h">
+    <ClInclude Include="src\VistaTablero.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="src\Alfil.h">
@@ -103,6 +100,15 @@
     </ClInclude>
     <ClInclude Include="src\Rey.h">
       <Filter>Archivos de encabezado\Piezas</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Torre.h">
+      <Filter>Archivos de encabezado\Piezas</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VistaPartida.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VistaJuego.h">
+      <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

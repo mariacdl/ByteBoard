@@ -1,22 +1,20 @@
 ﻿#include "freeglut.h"
 #include "GestorJuego.h"
 
-//Creación de las clases principales
-GestorJuego gestor;
+GestorJuego gestor_juego;
 
-void OnDraw(void)
-{
-    gestor.dibujar();
+void OnDraw(void) {
+    gestor_juego.dibujar();
 }
 
 void OnMouseClick(int button, int state, int x, int y) {
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
-        gestor.procesarClick(x, y);
+        gestor_juego.interactuar(x, y);
     }
 }
 
 void OnKeyboard(unsigned char key, int x, int y) {
-    gestor.procesarTecla(key);
+    gestor_juego.procesar_tecla(key);
 }
 
 void OnTimer(int value) {
@@ -25,12 +23,11 @@ void OnTimer(int value) {
 }
 
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
     glutInit(&argc, argv);
     glutInitWindowSize(800, 600);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH | GLUT_MULTISAMPLE);
-    glutCreateWindow("Ajedrez");
+    glutCreateWindow("ByteBoard");
 
     glEnable(GL_LIGHT0);
     glEnable(GL_LIGHTING);
@@ -42,7 +39,7 @@ int main(int argc, char* argv[])
     glutDisplayFunc(OnDraw);
     glutMouseFunc(OnMouseClick);
     glutKeyboardFunc(OnKeyboard);
-    glutTimerFunc(25, OnTimer, 0);//llamar en 25ms
+    glutTimerFunc(25, OnTimer, 0); // llamar en 25ms
     glutMainLoop();
     return 0;
 }

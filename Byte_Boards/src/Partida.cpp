@@ -8,8 +8,14 @@
 
 using namespace std;
 
+Partida::Partida(char m, char c) : modalidad(m), color_jugador1(c) {
+    vista_partida = new VistaPartida();
+    tablero = new Tablero(m);
+    vista_partida->actualizar_camara(c);
+};
+
 const Tablero& Partida::ver_tablero() const {
-    return tablero;
+    return *tablero;
 }
 
 char Partida::ver_modalidad() const {
@@ -17,29 +23,52 @@ char Partida::ver_modalidad() const {
 }
 
 void Partida::alternar_turno() {
-    turno_actual = (turno_actual == 'B') ? 'N' : 'B';
+    turno_actual = turno_actual == 'B' ? 'N' : 'B';
+    vista_partida->actualizar_camara(turno_actual);
+    numero_turnos++;
 }
 
 char Partida::ver_turno() const {
     return turno_actual;
 }
 
-bool Partida::verificar_movimiento(int de_x, int de_y, int para_x, int para_y) {
-    return tablero.validar_movimiento(de_x, de_y, para_x, para_y);
+int Partida::ver_numero_turnos() const {
+    return numero_turnos;
 }
 
-vector<pair<int, int>> Partida::listar_movimientos_validos(int position_x, int position_y) {
-    return tablero.listar_movimientos_validos(position_x, position_y);
+bool Partida::verificar_movimiento(pair<int, int> desde, pair<int, int> para) {
+    return tablero->validar_movimiento(desde, para);
 }
 
-bool Partida::jugar(int de_x, int de_y, int para_x, int para_y) {
-    if (tablero.ver_pieza(de_x, de_y)->ver_color() == turno_actual) {
-        if (mover(de_x, de_y, para_x, para_y)) {
+vector<pair<int, int>> Partida::listar_movimientos_validos(pair<int, int> casilla) {
+    return tablero->listar_movimientos_validos(casilla);
+}
+
+Partida::~Partida() {
+    delete vista_partida;
+    delete tablero;
+}
+
+void Partida::dibujar() {
+    vista_partida->actualizar_camara(turno_actual);
+}
+
+void Partida::actualizar_casilla(pair<int, int> casilla_nueva) {
+    if (casilla_nueva != casilla_seleccionada)
+        casilla_seleccionada = casilla_nueva;
+
+    tablero->dibujar(casilla_seleccionada);
+    cout << "(" << casilla_seleccionada.first << ", " << casilla_seleccionada.second << ")" << endl;
+}
+
+bool Partida::jugar(pair<int, int> desde, pair<int, int> para) {
+    if (tablero->ver_pieza(desde)->ver_color() == turno_actual) {
+        if (mover(desde, para)) {
             alternar_turno();
             return true;
         }
         else {
-            cout << "Movimiento invalido para: " << tablero.ver_pieza(de_x, de_y)->ver_tipo() << endl;
+            cout << "Movimiento invalido para: " << tablero->ver_pieza(desde)->ver_tipo() << endl;
             return false;
         }
     }
@@ -47,37 +76,37 @@ bool Partida::jugar(int de_x, int de_y, int para_x, int para_y) {
     return false;
 }
 
-bool Partida::mover(int de_x, int de_y, int para_x, int para_y) {
-    if(verificar_movimiento(de_x,de_y,para_x,para_y)){
-        Tablero copia = tablero;
+bool Partida::mover(pair<int, int> desde, pair<int, int> para) {
+    if (verificar_movimiento(desde, para)) {
+        Tablero copia = *tablero;
 
-        tablero.mover_pieza(de_x, de_y, para_x, para_y);
+        tablero->mover_pieza(desde, para);
 
-        //Si la jugada deja al rey en jaque el movimiento no es válido
-        if(det_jaque(tablero.ver_pieza(para_x,para_y)->ver_color())){
-            tablero = copia;
+        // Si la jugada deja al rey en jaque, no es válida
+        if (determinar_jaque(tablero->ver_pieza(para)->ver_color())) {
+            *tablero = copia;
             return false;
         }
-        
-        //Detecta si hay algún peón que esté disponible para la captura al paso en la siguiente jugada
-        if(tablero.ver_pieza(para_x,para_y)->ver_tipo()=='P' && abs(para_y-de_y)==2){
-            peon_passant={para_x,para_y};
+
+        // Detectar peon para captura al paso
+        if (tablero->ver_pieza(para)->ver_tipo() == 'P' && abs(para.second - desde.second) == 2) {
+            peon_passant = para;
         }
-        else{
-            peon_passant={-1,-1};
+        else {
+            peon_passant = { -1, -1 };
         }
 
         int extremo_opuesto;
-        if(tablero.ver_pieza(para_x,para_y)->ver_color()=='B'){
-            extremo_opuesto=0;
+        if (tablero->ver_pieza(para)->ver_color() == 'B') {
+            extremo_opuesto = 0;
         }
-        else{
-            extremo_opuesto=(modalidad=='P') ? 4 : 5;
+        else {
+            extremo_opuesto = (modalidad == 'P') ? 4 : 5;
         }
 
-        //Promoción del peón
-        if(tablero.ver_pieza(para_x,para_y)->ver_tipo()=='P' && para_y==extremo_opuesto){
-            promocion={para_x,para_y};
+        // Promoción
+        if (tablero->ver_pieza(para)->ver_tipo() == 'P' && para.second == extremo_opuesto) {
+            promocion = para;
         }
 
         return true;
@@ -85,151 +114,111 @@ bool Partida::mover(int de_x, int de_y, int para_x, int para_y) {
     return false;
 }
 
-bool Partida::enrocar(char color){
-    pair<int,int> pos_torre;
-    pair<int,int> pos_rey;
+bool Partida::determinar_jaque(char color) {
+    char color_opuesto = (color == 'B') ? 'N' : 'B';
 
-    if(color=='0'){
-        return false;
-    }
-
-    if(modalidad=='P'){
-        pos_torre=(color=='B') ? make_pair(0, 4) : make_pair(3, 0);
-        pos_rey=(color=='B') ? make_pair(3, 4) : make_pair(0, 0);
-    }
-    else{
-        pos_torre=(color=='B') ? make_pair(0, 5) : make_pair(4, 0);
-        pos_rey=(color=='B') ? make_pair(3, 5) : make_pair(1, 0);
-    }
-
-    Pieza* torre=tablero.ver_pieza(pos_torre.first,pos_torre.second);
-    Pieza* rey=tablero.ver_pieza(pos_rey.first,pos_rey.second);
-
-    //Determinar ni el rey ni la torre se hayan movido durante el juego
-    if(!(torre->ver_tipo()=='T' && torre->ver_numero_movimientos() == 0 && rey->ver_tipo()=='R' && rey->ver_numero_movimientos() == 0)){
-        return false;
-    }
-
-    //Determinar si el rey está en jaque
-    if(det_jaque(color)){
-        return false;
-    }
-
-    int dir=(pos_torre.first-pos_rey.first)/abs(pos_torre.first-pos_rey.first);
-    
-    //Determinar si hay obstáculos en el camino
-    for(int i=1;i<abs(pos_torre.first-pos_rey.first);i++){
-        if(tablero.ver_pieza(pos_rey.first+i*dir,pos_rey.second)->ver_tipo() != '0'){
-            return false;
-        }
-    }
-
-    Tablero copia=tablero;
-
-    tablero.mover_pieza(pos_rey.first,pos_rey.second,pos_rey.first+2*dir,pos_rey.second);
-    tablero.mover_pieza(pos_torre.first,pos_torre.second,pos_rey.first+dir,pos_rey.second);
-
-    //Determinar si el rey queda en jaque tras el enroque
-    if(det_jaque(color)){
-        tablero=copia;
-        return false;
-    }
-    return true;
-}
-
-
-
-bool Partida::det_jaque(char color){
-    char color_opuesto= (color=='B') ? 'N' : 'B';
-
-    for (int x = 0; x < tablero.ver_ancho(); ++x) {
-		for (int y = 0; y < tablero.ver_largo(); ++y) {
-            if(tablero.ver_pieza(x,y)->ver_color()==color_opuesto){
-                vector<pair<int, int>> movimientos_validos=listar_movimientos_validos(x,y);
-
-                for(int i=0;i<movimientos_validos.size();i++){
-                    Pieza* p_final=tablero.ver_pieza(movimientos_validos[i].first,movimientos_validos[i].second);
-
-                    if(p_final->ver_color()==color && p_final->ver_tipo()=='R'){
-                      return true;
+    for (int x = 0; x < tablero->ver_ancho(); ++x) {
+        for (int y = 0; y < tablero->ver_largo(); ++y) {
+            Pieza* p = tablero->ver_pieza({ x, y });
+            if (p != nullptr && p->ver_color() == color_opuesto) {
+                vector<pair<int, int>> movimientos = listar_movimientos_validos({ x, y });
+                for (const auto& mov : movimientos) {
+                    Pieza* destino = tablero->ver_pieza(mov);
+                    if (destino != nullptr && destino->ver_color() == color && destino->ver_tipo() == 'R') {
+                        return true;
                     }
-                }   
+                }
             }
         }
     }
     return false;
 }
 
-bool Partida::det_jaque_mate(char color){
-    //cout << "Evaluando jaque mate" << endl;
-    Tablero copia=tablero;
-
-    if(!det_jaque(color)){
-        return false;
-    }
-
-    for (int x = 0; x < tablero.ver_ancho(); ++x) {
-		for (int y = 0; y < tablero.ver_largo(); ++y) {
-            if(tablero.ver_pieza(x,y)->ver_color()==color){
-                vector<pair<int, int>> movimientos_validos=listar_movimientos_validos(x,y);
-                //cout << tablero.ver_pieza(x, y).ver_tipo() << endl;
-                for(int i=0; i<movimientos_validos.size(); i++){
-                    if(mover(x,y,movimientos_validos[i].first,movimientos_validos[i].second)){
-                        //cout << movimientos_validos[i].first<<" "<< movimientos_validos[i].second << endl;
-                        tablero=copia;
+bool Partida::sin_movimientos_validos(char color) {
+    Tablero copia = *tablero;
+    for (int x = 0; x < tablero->ver_ancho(); ++x) {
+        for (int y = 0; y < tablero->ver_largo(); ++y) {
+            Pieza* p = tablero->ver_pieza({ x, y });
+            if (p != nullptr && p->ver_color() == color) {
+                vector<pair<int, int>> movimientos = listar_movimientos_validos({ x, y });
+                for (const auto& mov : movimientos) {
+                    if (mover({ x, y }, mov)) {
+                        *tablero = copia;
                         return false;
                     }
                 }
-            } 
+            }
         }
     }
     return true;
 }
 
-char Partida::det_fin(){
-    //Detectar jaque mate
-    if(det_jaque_mate(turno_actual)){
-        return turno_actual;
-    }
-    //Detectar tablas
-    else {
-       // cout << "Evaluando tablas" << endl;
-        Tablero copia = tablero;
-        //Decterminar si existen movimientos válidos
-        for (int x = 0; x < tablero.ver_ancho(); ++x) {
-		    for (int y = 0; y < tablero.ver_largo(); ++y) {
-                if(tablero.ver_pieza(x,y)->ver_color() == turno_actual){
-                    vector<pair<int, int>> movimientos_validos = listar_movimientos_validos(x,y);
-                    //cout << tablero.ver_pieza(x, y).ver_tipo()<<endl;
-                    for(int i=0; i<movimientos_validos.size(); i++){
-                        if(mover(x,y,movimientos_validos[i].first,movimientos_validos[i].second)){
-                            tablero=copia;
-                            return '0';
-                        }
-                    }
-                } 
-            }
-        }
-        if(enrocar(turno_actual)){
-            tablero=copia;
-            return '0';
-        }
-        return 'T';
-    }
+bool Partida::determinar_jaque_mate(char color) {
+    return determinar_jaque(color) && sin_movimientos_validos(color);
 }
 
+char Partida::determinar_fin() {
+    if (determinar_jaque_mate(turno_actual))
+        return turno_actual;
+    if (sin_movimientos_validos(turno_actual))
+        return 'T';
+    return '0';
+}
 
+bool Partida::enrocar(char color) {
+    pair<int, int> pos_torre;
+    pair<int, int> pos_rey;
 
+    if (color == '0') return false;
 
-//Sobrecarga para enroque
-bool Partida::jugar(char color){
-    if(color==turno_actual){
-        if(enrocar(color)){
-            peon_passant={-1,-1};
+    if (modalidad == 'P') {
+        pos_torre = (color == 'B') ? make_pair(0, 4) : make_pair(3, 0);
+        pos_rey = (color == 'B') ? make_pair(3, 4) : make_pair(0, 0);
+    }
+    else {
+        pos_torre = (color == 'B') ? make_pair(0, 5) : make_pair(4, 0);
+        pos_rey = (color == 'B') ? make_pair(3, 5) : make_pair(1, 0);
+    }
+
+    Pieza* torre = tablero->ver_pieza(pos_torre);
+    Pieza* rey = tablero->ver_pieza(pos_rey);
+
+    if (!(torre->ver_tipo() == 'T' && torre->ver_numero_movimientos() == 0 && rey->ver_tipo() == 'R' && rey->ver_numero_movimientos() == 0)) {
+        return false;
+    }
+
+    if (determinar_jaque(color)) {
+        return false;
+    }
+
+    int dir = (pos_torre.first - pos_rey.first) / abs(pos_torre.first - pos_rey.first);
+
+    for (int i = 1; i < abs(pos_torre.first - pos_rey.first); i++) {
+        if (tablero->ver_pieza({ pos_rey.first + i * dir, pos_rey.second })->ver_tipo() != '0') {
+            return false;
+        }
+    }
+
+    Tablero copia = *tablero;
+
+    tablero->mover_pieza(pos_rey, { pos_rey.first + 2 * dir, pos_rey.second });
+    tablero->mover_pieza(pos_torre, { pos_rey.first + dir, pos_rey.second });
+
+    if (determinar_jaque(color)) {
+        *tablero = copia;
+        return false;
+    }
+    return true;
+}
+
+bool Partida::jugar(char color) {
+    if (color == turno_actual) {
+        if (enrocar(color)) {
+            peon_passant = { -1, -1 };
             alternar_turno();
             return true;
         }
-        else{
+        else {
             cout << "Intento de enroque invalido" << endl;
             return false;
         }
@@ -238,15 +227,16 @@ bool Partida::jugar(char color){
     return false;
 }
 
-pair<int,int> Partida::getPromocion(){
+pair<int, int> Partida::getPromocion() {
     return promocion;
 }
-bool Partida::promocionar(char tipo){
-    Pieza* pieza = tablero.ver_pieza(promocion.first, promocion.second);
-    if(promocion.first!=-1){
+
+bool Partida::promocionar(char tipo) {
+    Pieza* pieza = tablero->ver_pieza(promocion);
+    if (promocion.first != -1) {
         if (pieza->ver_color() == 'B') {
-            for (int i = 0; i < promocionesB.size(); i++) {
-                if (promocionesB[i] == tipo) {
+            for (char t : promocionesB) {
+                if (t == tipo) {
                     cout << "No se puede promocionar el peon a una pieza a la que ya se ha promocionado otro anteriormente" << endl;
                     return false;
                 }
@@ -254,20 +244,18 @@ bool Partida::promocionar(char tipo){
             promocionesB.push_back(tipo);
         }
         else {
-            for (int i = 0; i < promocionesN.size(); i++) {
-                if (promocionesN[i] == tipo) {
+            for (char t : promocionesN) {
+                if (t == tipo) {
                     cout << "No se puede promocionar el peon a una pieza a la que ya se ha promocionado otro anteriormente" << endl;
                     return false;
                 }
             }
             promocionesN.push_back(tipo);
         }
-        int pos_x = promocion.first;
-        int pos_y = promocion.second;
-        tablero.colocar_pieza(pos_x, pos_y, tipo, pieza->ver_color(), pieza->ver_numero_movimientos());
-        promocion={-1,-1};
+
+        tablero->colocar_pieza(promocion, tipo, pieza->ver_color(), pieza->ver_numero_movimientos());
+        promocion = { -1, -1 };
         return true;
     }
     return false;
 }
-

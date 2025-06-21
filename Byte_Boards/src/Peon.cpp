@@ -6,7 +6,7 @@ char Peon::ver_tipo() const {
 }
 
 bool Peon::validar_movimiento(int de_x, int de_y, int para_x, int para_y, const Tablero& tablero) const {
-	Pieza* destino = tablero.ver_pieza(para_x, para_y);
+	Pieza* destino = tablero.ver_pieza(make_pair(para_x, para_y));
 
 	int dx = para_x - de_x;
 	int dy = para_y - de_y;
@@ -48,7 +48,7 @@ bool Peon::validar_movimiento(int de_x, int de_y, int para_x, int para_y, const 
 }
 
 bool Peon::validar_avance_doble(int de_x, int de_y, int para_x, int para_y, const Tablero& tablero) const {
-	Pieza* destino = tablero.ver_pieza(para_x, para_y);
+	Pieza* destino = tablero.ver_pieza(make_pair(para_x, para_y));
 	int direccion = (color == 'B') ? -1 : 1;
 	int fila_inicial = (color == 'B') ? tablero.ver_largo() - 2 : 1;
 
@@ -57,7 +57,7 @@ bool Peon::validar_avance_doble(int de_x, int de_y, int para_x, int para_y, cons
 
 	if (dx == 0 && dy == 2 * direccion && de_y == fila_inicial && destino == nullptr) {
 		int y_intermedia = de_y + direccion;
-		if (tablero.ver_pieza(de_x, y_intermedia) == nullptr)
+		if (tablero.ver_pieza(make_pair(de_x, y_intermedia)) == nullptr)
 			return true;
 	}
 	return false;
@@ -65,7 +65,7 @@ bool Peon::validar_avance_doble(int de_x, int de_y, int para_x, int para_y, cons
 
 
 bool Peon::validar_en_passant(int de_x, int de_y, int para_x, int para_y, const Tablero& tablero) const{
-	Pieza* destino = tablero.ver_pieza(para_x, para_y);
+	Pieza* destino = tablero.ver_pieza(make_pair(para_x, para_y));
 	int direccion = (color == 'B') ? -1 : 1;
 
 	int dx = para_x - de_x;
@@ -75,7 +75,7 @@ bool Peon::validar_en_passant(int de_x, int de_y, int para_x, int para_y, const 
 		int peon_x = para_x;
 		int peon_y = para_y - direccion;
 
-		Pieza* posible_peon = tablero.ver_pieza(peon_x, peon_y);
+		Pieza* posible_peon = tablero.ver_pieza(make_pair(peon_x, peon_y));
 
 		if (posible_peon != nullptr &&
 			posible_peon->ver_tipo() == 'P' &&

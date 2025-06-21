@@ -6,8 +6,7 @@ char Rey::ver_tipo() const {
 }
 
 bool Rey::validar_movimiento(int de_x, int de_y, int para_x, int para_y, const Tablero& tablero) const {
-	Pieza* destino = tablero.ver_pieza(para_x, para_y); // Hipotetico, puede estar libre
-
+	Pieza* destino = tablero.ver_pieza(make_pair(para_x, para_y)); // Hipotetico, puede estar libre
 	int dx = para_x - de_x;
 	int dy = para_y - de_y;
 
@@ -45,11 +44,11 @@ bool Rey::verificar_enroque(int de_x, int de_y, int para_x, int para_y, const Ta
 	// Enroque lado izquierdo
 	if (para_x == de_x - 2  && de_y == para_y) {
 		// Verificar si hay piezas en el camino del rey
-		if (tablero.ver_pieza(de_x - 1, de_y) != nullptr || tablero.ver_pieza(de_x - 2, de_y) != nullptr)
+		if (tablero.ver_pieza(make_pair(de_x - 1, de_y)) != nullptr || tablero.ver_pieza(make_pair(de_x - 2, de_y)) != nullptr)
 			return false;
 
 		// Enroque corto
-		Pieza* torre = tablero.ver_pieza(de_x - 3, de_y);
+		Pieza* torre = tablero.ver_pieza(make_pair(de_x - 3, de_y));
 		if (torre != nullptr) {
 			bool es_torre_aliada = torre && torre->ver_tipo() == 'T' && torre->ver_color() == color;
 			if (es_torre_aliada)
@@ -57,10 +56,10 @@ bool Rey::verificar_enroque(int de_x, int de_y, int para_x, int para_y, const Ta
 		}
 
 		// Enroque largo
-		torre = tablero.ver_pieza(de_x - 4, de_y);
+		torre = tablero.ver_pieza(make_pair(de_x - 4, de_y));
 		if (torre != nullptr) {
 			bool es_torre_aliada = torre && torre->ver_tipo() == 'T' && torre->ver_color() == color;
-			if (es_torre_aliada && tablero.ver_pieza(de_x - 3, de_y) == nullptr)
+			if (es_torre_aliada && tablero.ver_pieza(make_pair(de_x - 3, de_y)) == nullptr)
 				return true;
 		}
 	}
@@ -68,11 +67,11 @@ bool Rey::verificar_enroque(int de_x, int de_y, int para_x, int para_y, const Ta
 	// Enroque lado izquierdo
 	if (para_x == de_x + 2 && de_y == para_y) {
 		// Verificar si hay piezas en el camino del rey
-		if (tablero.ver_pieza(de_x + 1, de_y) != nullptr || tablero.ver_pieza(de_x + 2, de_y) != nullptr)
+		if (tablero.ver_pieza(make_pair(de_x + 1, de_y)) != nullptr || tablero.ver_pieza(make_pair(de_x + 2, de_y)) != nullptr)
 			return false;
 
 		// Enroque corto
-		Pieza* torre = tablero.ver_pieza(de_x + 3, de_y);
+		Pieza* torre = tablero.ver_pieza(make_pair(de_x + 3, de_y));
 		if (torre != nullptr) {
 			bool es_torre_aliada = torre && torre->ver_tipo() == 'T' && torre->ver_color() == color;
 			if (es_torre_aliada)
@@ -80,10 +79,10 @@ bool Rey::verificar_enroque(int de_x, int de_y, int para_x, int para_y, const Ta
 		}
 
 		// Enroque largo
-		torre = tablero.ver_pieza(de_x + 4, de_y);
+		torre = tablero.ver_pieza(make_pair(de_x + 4, de_y));
 		if (torre != nullptr) {
 			bool es_torre_aliada = torre && torre->ver_tipo() == 'T' && torre->ver_color() == color;
-			if (es_torre_aliada && tablero.ver_pieza(de_x + 3, de_y) == nullptr)
+			if (es_torre_aliada && tablero.ver_pieza(make_pair(de_x + 3, de_y)) == nullptr)
 				return true;
 		}
 	}

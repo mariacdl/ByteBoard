@@ -6,8 +6,7 @@ char Alfil::ver_tipo() const {
 }
 
 bool Alfil::validar_movimiento(int de_x, int de_y, int para_x, int para_y, const Tablero& tablero) const {
-	Pieza* empiece = tablero.ver_pieza(de_x, de_y);
-	Pieza* destino = tablero.ver_pieza(para_x, para_y); // Hipotetico, puede estar libre
+	Pieza* destino = tablero.ver_pieza(make_pair(para_x, para_y)); // Hipotetico, puede estar libre
 
 	int dx = para_x - de_x;
 	int dy = para_y - de_y;
@@ -31,7 +30,7 @@ bool Alfil::validar_movimiento(int de_x, int de_y, int para_x, int para_y, const
 	int x = de_x + paso_x;
 	int y = de_y + paso_y;
 	while (x != para_x) {
-		if (tablero.ver_pieza(x, y) != nullptr) return false; // Obstaculo
+		if (tablero.ver_pieza(make_pair(x, y)) != nullptr) return false; // Obstaculo
 		x += paso_x;
 		y += paso_y;
 	}
@@ -40,7 +39,7 @@ bool Alfil::validar_movimiento(int de_x, int de_y, int para_x, int para_y, const
 	if (destino != nullptr) {
 		// Verificar si en la posición final se encuentra el rey
 		// No es posible matar al rey
-		if (destino->ver_tipo() == 'R' && destino->ver_color() == empiece->ver_color())
+		if (destino->ver_tipo() == 'R' && destino->ver_color() == color)
 			return false;
 	}
 
