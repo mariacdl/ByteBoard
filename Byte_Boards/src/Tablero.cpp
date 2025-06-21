@@ -17,29 +17,31 @@ Tablero::Tablero(TipoJuego m) : modalidad(m), largura((m == JUEGO_4x5) ? 4 : 5),
 
     if (modalidad == JUEGO_4x5) {
         colocar_pieza({ 0, 0 }, 'R', NEGRO);
-        colocar_pieza({ 1, 0 }, 'C', NEGRO);
-        colocar_pieza({ 2, 0 }, 'A', NEGRO);
-        colocar_pieza({ 3, 0 }, 'T', NEGRO);
-        colocar_pieza({ 0, 1 }, 'P', NEGRO);
+        colocar_pieza({ 0, 1 }, 'C', NEGRO);
+        colocar_pieza({ 0, 2 }, 'A', NEGRO);
+        colocar_pieza({ 0, 3 }, 'T', NEGRO);
+        colocar_pieza({ 1, 0 }, 'P', NEGRO);
 
-        colocar_pieza({ 3, 4 }, 'R', BLANCO);
-        colocar_pieza({ 0, 4 }, 'T', BLANCO);
+        colocar_pieza({ 4, 3 }, 'R', BLANCO);
+        colocar_pieza({ 4, 2 }, 'C', BLANCO);
+        colocar_pieza({ 4, 1 }, 'A', BLANCO);
+        colocar_pieza({ 4, 0 }, 'T', BLANCO);
         colocar_pieza({ 3, 3 }, 'P', BLANCO);
     }
     else {
         colocar_pieza({ 0, 0 }, 'D', NEGRO);
-        colocar_pieza({ 1, 0 }, 'R', NEGRO);
-        colocar_pieza({ 2, 0 }, 'A', NEGRO);
-        colocar_pieza({ 3, 0 }, 'C', NEGRO);
-        colocar_pieza({ 4, 0 }, 'T', NEGRO);
-        for (int i = 0; i < 5; i++) colocar_pieza({ i, 1 }, 'P', NEGRO);
+        colocar_pieza({ 0, 1 }, 'R', NEGRO);
+        colocar_pieza({ 0, 2 }, 'A', NEGRO);
+        colocar_pieza({ 0, 3 }, 'C', NEGRO);
+        colocar_pieza({ 0, 4 }, 'T', NEGRO);
+        for (int i = 0; i < 5; i++) colocar_pieza({ 1, i }, 'P', NEGRO);
 
-        //colocar_pieza({ 0, 5 }, 'T', BLANCO);
-        //colocar_pieza({ 1, 5 }, 'C', BLANCO);
-        //colocar_pieza({ 2, 5 }, 'A', BLANCO);
-        //colocar_pieza({ 3, 5 }, 'R', BLANCO);
-        colocar_pieza({ 3, 3 }, 'D', BLANCO);  // 4 5
-        //for (int i = 0; i < 5; i++) colocar_pieza({ i, 4 }, 'P', BLANCO);
+        colocar_pieza({ 5, 0 }, 'T', BLANCO);
+        colocar_pieza({ 5, 1 }, 'C', BLANCO);
+        colocar_pieza({ 5, 2 }, 'A', BLANCO);
+        colocar_pieza({ 5, 3 }, 'R', BLANCO);
+        colocar_pieza({ 5, 4 }, 'D', BLANCO);  // 4 5
+        for (int i = 0; i < 5; i++) colocar_pieza({ 4, i }, 'P', BLANCO);
     }
 }
 

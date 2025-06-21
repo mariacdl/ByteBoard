@@ -30,7 +30,7 @@ void VistaTablero::dibujar_tablero(const Tablero& tablero) {
     }
     glPopMatrix();
 
-    vista_piezas->dibujar(tam, tablero);
+    vista_piezas->dibujar_piezas(tam, tablero);
 }
 
 void VistaTablero::dibujar_marco(const Tablero& tablero) const {

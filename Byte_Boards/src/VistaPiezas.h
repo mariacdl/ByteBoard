@@ -1,21 +1,24 @@
 #pragma once
+#include <utility>
 
+using namespace std;
 class Tablero;
 
 class VistaPiezas {
 
-	void dibujarPeonCiencias(int fila,int columna, float tam, const Tablero& tablero);
-	void dibujarTorreCiencias(int fila, int columna, float tam, const Tablero& tablero);
-	void dibujarCaballoCiencias(int fila, int columna, float tam, const Tablero& tablero);
-	void dibujarAlfilCiencias(int fila, int columna, float tam, const Tablero& tablero);
-	void dibujarReyCiencias(int fila, int columna, float tam, const Tablero& tablero);
-	void dibujarReinaCiencias(int fila, int columna, float tam, const Tablero& tablero);
-	void dibujarPeonLetras(int fila, int columna, float tam, const Tablero& tablero);
-	void dibujarTorreLetras(int fila, int columna, float tam, const Tablero& tablero);
-	void dibujarCaballoLetras(int fila, int columna, float tam, const Tablero& tablero);
-	void dibujarAlfilLetras(int fila, int columna, float tam, const Tablero& tablero);
-	void dibujarReyLetras(int fila, int columna, float tam, const Tablero& tablero);
-	void dibujarReinaLetras(int fila, int columna, float tam, const Tablero& tablero);
+	void dibujar_peon_blanco(pair<int, int> pos, float tam, const Tablero& tablero);
+	void dibujar_torre_blanco(pair<int, int> pos, float tam, const Tablero& tablero);
+	void dibujar_caballo_blanco(pair<int, int> pos, float tam, const Tablero& tablero);
+	void dibujar_alfil_blanco(pair<int, int> pos, float tam, const Tablero& tablero);
+	void dibujar_rey_blanco(pair<int, int> pos, float tam, const Tablero& tablero);
+	void dibujar_dama_blanco(pair<int, int> pos, float tam, const Tablero& tablero);
+
+	void dibujar_peon_negro(pair<int, int> pos, float tam, const Tablero& tablero);
+	void dibujar_torre_negro(pair<int, int> pos, float tam, const Tablero& tablero);
+	void dibujar_caballo_negro(pair<int, int> pos, float tam, const Tablero& tablero);
+	void dibujar_alfil_negro(pair<int, int> pos, float tam, const Tablero& tablero);
+	void dibujar_rey_negro(pair<int, int> pos, float tam, const Tablero& tablero);
+	void dibujar_dama_negro(pair<int, int> pos, float tam, const Tablero& tablero);
 public:
-	void dibujar(float tam, const Tablero& tablero);
+	void dibujar_piezas(float tam, const Tablero& tablero);
 };

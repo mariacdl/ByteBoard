@@ -2,60 +2,48 @@
 #include "freeglut.h"
 #include "Pieza.h"
 
-void VistaPiezas::dibujar(float tam, const Tablero& tablero) {
-	for (int fila = 0; fila < tablero.ver_altura(); fila++) {
-		for (int columna = 0; columna < tablero.ver_largura(); columna++) {
-
-			Pieza* pieza = tablero.ver_pieza(make_pair(columna, fila));
+void VistaPiezas::dibujar_piezas(float tam, const Tablero& tablero) {
+	for (int indice_x = 0; indice_x < tablero.ver_altura(); indice_x++) {
+		for (int indice_y = 0; indice_y < tablero.ver_largura(); indice_y++) {
+			pair<int, int> pos = make_pair(indice_x, indice_y);
+			Pieza* pieza = tablero.ver_pieza(pos);
 			if (pieza != nullptr) {
 				switch (pieza->ver_tipo()) {
 				case 'P':
-					if (pieza->ver_color() == 'B') {
-						dibujarPeonCiencias(fila, columna, tam, tablero);
-					}
-					else if (pieza->ver_color() == 'N') {
-						dibujarPeonLetras(fila, columna, tam, tablero);
-					}
+					if (pieza->ver_color() == BLANCO)
+						dibujar_peon_blanco(pos, tam, tablero);
+					else
+						dibujar_peon_negro(pos, tam, tablero);
 					break;
 				case 'T':
-					if (pieza->ver_color() == 'B') {
-						dibujarTorreCiencias(fila, columna, tam, tablero);
-					}
-					else if (pieza->ver_color() == 'N') {
-						dibujarTorreLetras(fila, columna, tam, tablero);
-					}
+					if (pieza->ver_color() == BLANCO)
+						dibujar_torre_blanco(pos, tam, tablero);
+					else
+						dibujar_torre_negro(pos, tam, tablero);
 					break;
 				case 'C':
-					if (pieza->ver_color() == 'B') {
-						dibujarCaballoCiencias(fila, columna, tam, tablero);
-					}
-					else if (pieza->ver_color() == 'N') {
-						dibujarCaballoLetras(fila, columna, tam, tablero);
-					}
+					if (pieza->ver_color() == BLANCO)
+						dibujar_caballo_blanco(pos, tam, tablero);
+					else
+						dibujar_caballo_negro(pos, tam, tablero);
 					break;
 				case 'A':
-					if (pieza->ver_color() == 'B') {
-						dibujarAlfilCiencias(fila, columna, tam, tablero);
-					}
-					else if (pieza->ver_color() == 'N') {
-						dibujarAlfilLetras(fila, columna, tam, tablero);
-					}
+					if (pieza->ver_color() == BLANCO)
+						dibujar_alfil_blanco(pos, tam, tablero);
+					else
+						dibujar_alfil_negro(pos, tam, tablero);
 					break;
 				case 'R':
-					if (pieza->ver_color() == 'B') {
-						dibujarReyCiencias(fila, columna, tam, tablero);
-					}
-					else if (pieza->ver_color() == 'N') {
-						dibujarReyLetras(fila, columna, tam, tablero);
-					}
+					if (pieza->ver_color() == BLANCO)
+						dibujar_rey_blanco(pos, tam, tablero);
+					else
+						dibujar_rey_negro(pos, tam, tablero);
 					break;
 				case 'D':
-					if (pieza->ver_color() == 'B') {
-						dibujarReinaCiencias(fila, columna, tam, tablero);
-					}
-					else if (pieza->ver_color() == 'N') {
-						dibujarReinaLetras(fila, columna, tam, tablero);
-					}
+					if (pieza->ver_color() == BLANCO)
+						dibujar_dama_blanco(pos, tam, tablero);
+					else
+						dibujar_dama_negro(pos, tam, tablero);
 					break;
 				}
 			}
@@ -63,12 +51,12 @@ void VistaPiezas::dibujar(float tam, const Tablero& tablero) {
 	}
 }
 
-void VistaPiezas::dibujarPeonCiencias(int fila, int columna,float tam, const Tablero& tablero) {
+void VistaPiezas::dibujar_peon_blanco(pair<int, int> pos, float tam, const Tablero& tablero) {
 	float offsetX = -((tablero.ver_largura() * tam) / 2.0f);
 	float offsetZ = -((tablero.ver_altura() * tam) / 2.0f);
 
-	float x = offsetX + columna * tam + tam / 2.0f;
-	float z = offsetZ + fila * tam + tam / 2.0f;
+	float z = offsetZ + pos.first * tam + tam / 2.0f;
+	float x = offsetX + pos.second * tam + tam / 2.0f;
 	float y = tam * 0.15f; // altura base
 
 	glPushMatrix();
@@ -104,12 +92,12 @@ void VistaPiezas::dibujarPeonCiencias(int fila, int columna,float tam, const Tab
 	glPopMatrix();
 }
 
-void VistaPiezas::dibujarTorreCiencias(int fila, int columna, float tam, const Tablero& tablero) {
+void VistaPiezas::dibujar_torre_blanco(pair<int, int> pos, float tam, const Tablero& tablero) {
 	float offsetX = -((tablero.ver_largura() * tam) / 2.0f);
 	float offsetZ = -((tablero.ver_altura() * tam) / 2.0f);
 
-	float x = offsetX + columna * tam + tam / 2.0f;
-	float z = offsetZ + fila * tam + tam / 2.0f;
+	float z = offsetZ + pos.first * tam + tam / 2.0f;
+	float x = offsetX + pos.second * tam + tam / 2.0f;
 
 	glPushMatrix();
 	glTranslatef(x, 0.0f, z);
@@ -150,12 +138,12 @@ void VistaPiezas::dibujarTorreCiencias(int fila, int columna, float tam, const T
 	glPopMatrix();
 }
 
-void VistaPiezas::dibujarCaballoCiencias(int fila, int columna, float tam, const Tablero& tablero) {
+void VistaPiezas::dibujar_caballo_blanco(pair<int, int> pos, float tam, const Tablero& tablero) {
 	float offsetX = -((tablero.ver_largura() * tam) / 2.0f);
 	float offsetZ = -((tablero.ver_altura() * tam) / 2.0f);
 
-	float x = offsetX + columna * tam + tam / 2.0f;
-	float z = offsetZ + fila * tam + tam / 2.0f;
+	float z = offsetZ + pos.first * tam + tam / 2.0f;
+	float x = offsetX + pos.second * tam + tam / 2.0f;
 
 
 	glPushMatrix();
@@ -219,12 +207,12 @@ void VistaPiezas::dibujarCaballoCiencias(int fila, int columna, float tam, const
 	glPopMatrix();
 }
 
-void VistaPiezas::dibujarAlfilCiencias(int fila, int columna, float tam, const Tablero& tablero) {
+void VistaPiezas::dibujar_alfil_blanco(pair<int, int> pos, float tam, const Tablero& tablero) {
 	float offsetX = -((tablero.ver_largura() * tam) / 2.0f);
 	float offsetZ = -((tablero.ver_altura() * tam) / 2.0f);
 
-	float x = offsetX + columna * tam + tam / 2.0f;
-	float z = offsetZ + fila * tam + tam / 2.0f;
+	float z = offsetZ + pos.first * tam + tam / 2.0f;
+	float x = offsetX + pos.second * tam + tam / 2.0f;
 
 	glPushMatrix();
 	glTranslatef(x, 0.0f, z);
@@ -276,12 +264,12 @@ void VistaPiezas::dibujarAlfilCiencias(int fila, int columna, float tam, const T
 	glPopMatrix();
 }
 
-void VistaPiezas::dibujarReyCiencias(int fila, int columna, float tam, const Tablero& tablero) {
+void VistaPiezas::dibujar_rey_blanco(pair<int, int> pos, float tam, const Tablero& tablero) {
 	float offsetX = -((tablero.ver_largura() * tam) / 2.0f);
 	float offsetZ = -((tablero.ver_altura() * tam) / 2.0f);
 
-	float x = offsetX + columna * tam + tam / 2.0f;
-	float z = offsetZ + fila * tam + tam / 2.0f;
+	float z = offsetZ + pos.first * tam + tam / 2.0f;
+	float x = offsetX + pos.second * tam + tam / 2.0f;
 
 	glPushMatrix();
 	glTranslatef(x, 0.30f, z); // Posición en el tablero
@@ -295,12 +283,12 @@ void VistaPiezas::dibujarReyCiencias(int fila, int columna, float tam, const Tab
 	glPopMatrix();
 }
 
-void VistaPiezas::dibujarReinaCiencias(int fila, int columna, float tam, const Tablero& tablero) {
+void VistaPiezas::dibujar_dama_blanco(pair<int, int> pos, float tam, const Tablero& tablero) {
 	float offsetX = -((tablero.ver_largura() * tam) / 2.0f);
 	float offsetZ = -((tablero.ver_altura() * tam) / 2.0f);
 
-	float x = offsetX + columna * tam + tam / 2.0f;
-	float z = offsetZ + fila * tam + tam / 2.0f;
+	float z = offsetZ + pos.first * tam + tam / 2.0f;
+	float x = offsetX + pos.second * tam + tam / 2.0f;
 
 	glPushMatrix();
 	glTranslatef(x, 0.0f, z);
@@ -337,13 +325,13 @@ void VistaPiezas::dibujarReinaCiencias(int fila, int columna, float tam, const T
 	glPopMatrix();
 }
 
-void VistaPiezas::dibujarPeonLetras(int fila, int columna, float tam, const Tablero& tablero) {
+void VistaPiezas::dibujar_peon_negro(pair<int, int> pos, float tam, const Tablero& tablero) {
 	float offsetX = -((tablero.ver_largura() * tam) / 2.0f);
 	float offsetZ = -((tablero.ver_altura() * tam) / 2.0f);
 
-	float xPos = offsetX + columna * tam + tam / 2.0f; // centro casilla en X
-	float zPos = offsetZ + fila * tam + tam / 2.0f;   // centro casilla en Z
-	float yPos = tam * 0.15f;                         // altura base
+	float zPos = offsetZ + pos.first * tam + tam / 2.0f;
+	float xPos = offsetX + pos.second * tam + tam / 2.0f;
+	float yPos = tam * 0.15f;   
 
 	float x = 0.15f; // tamaño de los cubos
 
@@ -383,12 +371,12 @@ void VistaPiezas::dibujarPeonLetras(int fila, int columna, float tam, const Tabl
 	glPopMatrix();
 }
 
-void VistaPiezas::dibujarTorreLetras(int fila, int columna, float tam, const Tablero& tablero) {
+void VistaPiezas::dibujar_torre_negro(pair<int, int> pos, float tam, const Tablero& tablero) {
 	float offsetX = -((tablero.ver_largura() * tam) / 2.0f);
 	float offsetZ = -((tablero.ver_altura() * tam) / 2.0f);
 
-	float x = offsetX + columna * tam + tam / 2.0f;
-	float z = offsetZ + fila * tam + tam / 2.0f;
+	float z = offsetZ + pos.first * tam + tam / 2.0f;
+	float x = offsetX + pos.second * tam + tam / 2.0f;
 	float y = tam * 0.15f; // altura base
 
 	float cuboTam = 0.2f;  // tamaño cubo de la torre
@@ -419,12 +407,12 @@ void VistaPiezas::dibujarTorreLetras(int fila, int columna, float tam, const Tab
 	glPopMatrix();
 }
 
-void VistaPiezas::dibujarCaballoLetras(int fila, int columna, float tam, const Tablero& tablero) {
+void VistaPiezas::dibujar_caballo_negro(pair<int, int> pos, float tam, const Tablero& tablero) {
 	float offsetX = -((tablero.ver_largura() * tam) / 2.0f);
 	float offsetZ = -((tablero.ver_altura() * tam) / 2.0f);
 
-	float x = offsetX + columna * tam + tam / 2.0f; // Centrar en el eje X
-	float z = offsetZ + fila * tam + tam / 2.0f;    // Centrar en el eje Z
+	float z = offsetZ + pos.first * tam + tam / 2.0f;
+	float x = offsetX + pos.second * tam + tam / 2.0f;
 	float y = tam * 0.15f;
 
 	float cuboTam = 0.2f;
@@ -463,12 +451,12 @@ void VistaPiezas::dibujarCaballoLetras(int fila, int columna, float tam, const T
 	glPopMatrix();
 }
 
-void VistaPiezas::dibujarAlfilLetras(int fila, int columna, float tam, const Tablero& tablero) {
+void VistaPiezas::dibujar_alfil_negro(pair<int, int> pos, float tam, const Tablero& tablero) {
 	float offsetX = -((tablero.ver_largura() * tam) / 2.0f);
 	float offsetZ = -((tablero.ver_altura() * tam) / 2.0f);
 
-	float x = offsetX + columna * tam + tam / 2.0f;
-	float z = offsetZ + fila * tam + tam / 2.0f;
+	float z = offsetZ + pos.first * tam + tam / 2.0f;
+	float x = offsetX + pos.second * tam + tam / 2.0f;
 	float y = tam * 0.5f;
 
 	float tam1 = 0.2f;  // tamaño de cubo
@@ -505,12 +493,12 @@ void VistaPiezas::dibujarAlfilLetras(int fila, int columna, float tam, const Tab
 	glPopMatrix();
 }
 
-void VistaPiezas::dibujarReyLetras(int fila, int columna, float tam, const Tablero& tablero) {
+void VistaPiezas::dibujar_rey_negro(pair<int, int> pos, float tam, const Tablero& tablero) {
 	float offsetX = -((tablero.ver_largura() * tam) / 2.0f);
 	float offsetZ = -((tablero.ver_altura() * tam) / 2.0f);
 
-	float xPos = offsetX + columna * tam + tam / 2.0f;
-	float zPos = offsetZ + fila * tam + tam / 2.0f;
+	float zPos = offsetZ + pos.first * tam + tam / 2.0f;
+	float xPos = offsetX + pos.second * tam + tam / 2.0f;
 	float yPos = tam * 0.15f;
 
 	float x = 0.2f;
@@ -541,12 +529,12 @@ void VistaPiezas::dibujarReyLetras(int fila, int columna, float tam, const Table
 	glPopMatrix();
 }
 
-void VistaPiezas::dibujarReinaLetras(int fila, int columna, float tam, const Tablero& tablero) {
+void VistaPiezas::dibujar_dama_negro(pair<int, int> pos, float tam, const Tablero& tablero) {
 	float offsetX = -((tablero.ver_largura() * tam) / 2.0f);
 	float offsetZ = -((tablero.ver_altura() * tam) / 2.0f);
 
-	float xPos = offsetX + columna * tam + tam / 2.0f;
-	float zPos = offsetZ + fila * tam + tam / 2.0f;
+	float zPos = offsetZ + pos.first * tam + tam / 2.0f;
+	float xPos = offsetX + pos.second * tam + tam / 2.0f;
 	float yPos = tam * 0.15f;
 
 	float x = 0.2f;

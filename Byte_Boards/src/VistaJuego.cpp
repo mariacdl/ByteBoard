@@ -1,235 +1,66 @@
 #include "VistaJuego.h"
 #include "freeglut.h"
-#include "etsidi.h"
+#include "etsidi.h" 
 
-void VistaJuego::dibujar_menu_tablero() {
+
+void VistaJuego::dibujar_textura(const char* ruta_imagen) {
     GLdouble ancho = glutGet(GLUT_WINDOW_WIDTH);
     GLdouble alto = glutGet(GLUT_WINDOW_HEIGHT);
 
     glDisable(GL_DEPTH_TEST);
     glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
+    glPushMatrix(); // Guarda la matriz de proyección actual
     glLoadIdentity();
-    gluOrtho2D(0, glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT), 0);
+    gluOrtho2D(0, ancho, alto, 0); // Configura una proyección 2D
 
     glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D,
-        ETSIDI::getTexture("imagenes/menu_1.png").id);
-    glDisable(GL_LIGHTING);
+    glBindTexture(GL_TEXTURE_2D, ETSIDI::getTexture(ruta_imagen).id);
+    glDisable(GL_LIGHTING); // Deshabilita la iluminación para texturas 2D planas
+
     glBegin(GL_POLYGON);
-    glColor3f(1, 1, 1);
-    glTexCoord2f(0, 1); glVertex2f(0, glutGet(GLUT_WINDOW_HEIGHT));
-    glTexCoord2f(1, 1); glVertex2f(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
-    glTexCoord2f(1, 0); glVertex2f(glutGet(GLUT_WINDOW_WIDTH), 0);
+    glColor3f(1, 1, 1); // Asegura que la textura no sea "teñida" por un color
+    glTexCoord2f(0, 1); glVertex2f(0, alto);
+    glTexCoord2f(1, 1); glVertex2f(ancho, alto);
+    glTexCoord2f(1, 0); glVertex2f(ancho, 0);
     glTexCoord2f(0, 0); glVertex2f(0, 0);
     glEnd();
-    glEnable(GL_LIGHTING);
+
+    glEnable(GL_LIGHTING); // Habilita la iluminación de nuevo para el resto de la escena 3D
     glDisable(GL_TEXTURE_2D);
 
-    glPopMatrix();
-    glMatrixMode(GL_PROJECTION);
-    glEnable(GL_DEPTH_TEST);
+    glPopMatrix(); // Restaura la matriz de proyección guardada
+    glMatrixMode(GL_MODELVIEW); 
+    glEnable(GL_DEPTH_TEST); // Habilita el test de profundidad de nuevo
+}
+
+void VistaJuego::dibujar_menu_tablero() {
+    dibujar_textura("imagenes/menu_1.png");
 }
 
 void VistaJuego::dibujar_menu_oponente() {
-    GLdouble ancho = glutGet(GLUT_WINDOW_WIDTH);
-    GLdouble alto = glutGet(GLUT_WINDOW_HEIGHT);
-
-    glDisable(GL_DEPTH_TEST);
-    glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
-    glLoadIdentity();
-    gluOrtho2D(0, glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT), 0);
-
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D,
-        ETSIDI::getTexture("imagenes/menu_2.png").id);
-    glDisable(GL_LIGHTING);
-    glBegin(GL_POLYGON);
-    glColor3f(1, 1, 1);
-    glTexCoord2f(0, 1); glVertex2f(0, alto);
-    glTexCoord2f(1, 1); glVertex2f(ancho, alto);
-    glTexCoord2f(1, 0); glVertex2f(ancho, 0);
-    glTexCoord2f(0, 0); glVertex2f(0, 0);
-    glEnd();
-    glEnable(GL_LIGHTING);
-    glDisable(GL_TEXTURE_2D);
-
-    glPopMatrix();
-    glMatrixMode(GL_PROJECTION);
-    glEnable(GL_DEPTH_TEST);
+    dibujar_textura("imagenes/menu_2.png");
 }
 
 void VistaJuego::dibujar_pausa() {
-    GLdouble ancho = glutGet(GLUT_WINDOW_WIDTH);
-    GLdouble alto = glutGet(GLUT_WINDOW_HEIGHT);
-
-    glDisable(GL_DEPTH_TEST);
-    glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
-    glLoadIdentity();
-    gluOrtho2D(0, glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT), 0);
-
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D,
-        ETSIDI::getTexture("imagenes/pausa.png").id);
-    glDisable(GL_LIGHTING);
-    glBegin(GL_POLYGON);
-    glColor3f(1, 1, 1);
-    glTexCoord2f(0, 1); glVertex2f(0, alto);
-    glTexCoord2f(1, 1); glVertex2f(ancho, alto);
-    glTexCoord2f(1, 0); glVertex2f(ancho, 0);
-    glTexCoord2f(0, 0); glVertex2f(0, 0);
-    glEnd();
-    glEnable(GL_LIGHTING);
-    glDisable(GL_TEXTURE_2D);
-
-    glPopMatrix();
-    glMatrixMode(GL_PROJECTION);
-    glEnable(GL_DEPTH_TEST);
+    dibujar_textura("imagenes/pausa.png");
 }
 
 void VistaJuego::dibujar_promocion_speed() {
-    GLdouble ancho = glutGet(GLUT_WINDOW_WIDTH);
-    GLdouble alto = glutGet(GLUT_WINDOW_HEIGHT);
-
-    glDisable(GL_DEPTH_TEST);
-    glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
-    glLoadIdentity();
-    gluOrtho2D(0, glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT), 0);
-
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D,
-        ETSIDI::getTexture("imagenes/promocion_speed.png").id);
-    glDisable(GL_LIGHTING);
-    glBegin(GL_POLYGON);
-    glColor3f(1, 1, 1);
-    glTexCoord2f(0, 1); glVertex2f(0, alto);
-    glTexCoord2f(1, 1); glVertex2f(ancho, alto);
-    glTexCoord2f(1, 0); glVertex2f(ancho, 0);
-    glTexCoord2f(0, 0); glVertex2f(0, 0);
-    glEnd();
-    glEnable(GL_LIGHTING);
-    glDisable(GL_TEXTURE_2D);
-
-    glPopMatrix();
-    glMatrixMode(GL_PROJECTION);
-    glEnable(GL_DEPTH_TEST);
+    dibujar_textura("imagenes/promocion_speed.png");
 }
 
 void VistaJuego::dibujar_promocion_4x5() {
-    GLdouble ancho = glutGet(GLUT_WINDOW_WIDTH);
-    GLdouble alto = glutGet(GLUT_WINDOW_HEIGHT);
-
-    glDisable(GL_DEPTH_TEST);
-    glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
-    glLoadIdentity();
-    gluOrtho2D(0, glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT), 0);
-
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D,
-    ETSIDI::getTexture("imagenes/promocion_4x5.png").id);
-    glDisable(GL_LIGHTING);
-    glBegin(GL_POLYGON);
-    glColor3f(1, 1, 1);
-    glTexCoord2f(0, 1); glVertex2f(0, alto);
-    glTexCoord2f(1, 1); glVertex2f(ancho, alto);
-    glTexCoord2f(1, 0); glVertex2f(ancho, 0);
-    glTexCoord2f(0, 0); glVertex2f(0, 0);
-    glEnd();
-    glEnable(GL_LIGHTING);
-    glDisable(GL_TEXTURE_2D);
-
-    glPopMatrix();
-    glMatrixMode(GL_PROJECTION);
-    glEnable(GL_DEPTH_TEST);
+    dibujar_textura("imagenes/promocion_4x5.png");
 }
 
 void VistaJuego::dibujar_fin_tablas() {
-    GLdouble ancho = glutGet(GLUT_WINDOW_WIDTH);
-    GLdouble alto = glutGet(GLUT_WINDOW_HEIGHT);
-
-    glDisable(GL_DEPTH_TEST);
-    glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
-    glLoadIdentity();
-    gluOrtho2D(0, glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT), 0);
-
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D,
-    ETSIDI::getTexture("imagenes/tablas.png").id);
-    glDisable(GL_LIGHTING);
-    glBegin(GL_POLYGON);
-    glColor3f(1, 1, 1);
-    glTexCoord2f(0, 1); glVertex2f(0, alto);
-    glTexCoord2f(1, 1); glVertex2f(ancho, alto);
-    glTexCoord2f(1, 0); glVertex2f(ancho, 0);
-    glTexCoord2f(0, 0); glVertex2f(0, 0);
-    glEnd();
-    glEnable(GL_LIGHTING);
-    glDisable(GL_TEXTURE_2D);
-
-    glPopMatrix();
-    glMatrixMode(GL_PROJECTION);
-    glEnable(GL_DEPTH_TEST);
+    dibujar_textura("imagenes/tablas.png");
 }
 
 void VistaJuego::dibujar_victoria_ciencias() {
-    GLdouble ancho = glutGet(GLUT_WINDOW_WIDTH);
-    GLdouble alto = glutGet(GLUT_WINDOW_HEIGHT);
-
-    glDisable(GL_DEPTH_TEST);
-    glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
-    glLoadIdentity();
-    gluOrtho2D(0, glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT), 0);
-
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D,
-    ETSIDI::getTexture("imagenes/victoria_ciencias.png").id);
-    glDisable(GL_LIGHTING);
-    glBegin(GL_POLYGON);
-    glColor3f(1, 1, 1);
-    glTexCoord2f(0, 1); glVertex2f(0, alto);
-    glTexCoord2f(1, 1); glVertex2f(ancho, alto);
-    glTexCoord2f(1, 0); glVertex2f(ancho, 0);
-    glTexCoord2f(0, 0); glVertex2f(0, 0);
-    glEnd();
-    glEnable(GL_LIGHTING);
-    glDisable(GL_TEXTURE_2D);
-
-    glPopMatrix();
-    glMatrixMode(GL_PROJECTION);
-    glEnable(GL_DEPTH_TEST);
+    dibujar_textura("imagenes/victoria_ciencias.png");
 }
 
 void VistaJuego::dibujar_victoria_letras() {
-    GLdouble ancho = glutGet(GLUT_WINDOW_WIDTH);
-    GLdouble alto = glutGet(GLUT_WINDOW_HEIGHT);
-
-    glDisable(GL_DEPTH_TEST);
-    glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
-    glLoadIdentity();
-    gluOrtho2D(0, glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT), 0);
-
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D,
-        ETSIDI::getTexture("imagenes/victoria_letras.png").id);
-    glDisable(GL_LIGHTING);
-    glBegin(GL_POLYGON);
-    glColor3f(1, 1, 1);
-    glTexCoord2f(0, 1); glVertex2f(0, alto);
-    glTexCoord2f(1, 1); glVertex2f(ancho, alto);
-    glTexCoord2f(1, 0); glVertex2f(ancho, 0);
-    glTexCoord2f(0, 0); glVertex2f(0, 0);
-    glEnd();
-    glEnable(GL_LIGHTING);
-    glDisable(GL_TEXTURE_2D);
-
-    glPopMatrix();
-    glMatrixMode(GL_PROJECTION);
-    glEnable(GL_DEPTH_TEST);
+    dibujar_textura("imagenes/victoria_letras.png");
 }

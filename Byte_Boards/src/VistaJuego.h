@@ -2,6 +2,7 @@
 
 
 class VistaJuego {
+	void dibujar_textura(const char* ruta_imagen);
 public:
 
 	// MENU
