@@ -103,7 +103,11 @@ void GestorJuego::interactuar(int cursor_x, int cursor_y) {
         // Segunda selección (intento de mover)
         else {
             partida->jugar(casilla_seleccionada, casilla_clicada);
-            casilla_seleccionada = { -1, -1 };  
+            casilla_seleccionada = { -1, -1 };
+
+            if (partida->verificar_promocion_disponible()) 
+                estado_juego = PROMOCION;
+        
         }
         }
          break;
