@@ -16,12 +16,12 @@ protected:
     int largura = 0;
     int altura = 0;
     vector<Pieza*> lista_piezas;
+    vector<pair<int, int>> movimientos_validos;
 
 public:
     Tablero(TipoJuego m);
     Tablero(const Tablero& otro);
     ~Tablero();
-
 
     void dibujar(pair<int, int> casilla_seleccionada, EstadoTurno turno_actual);
     const VistaTablero& ver_vista_tablero() const;

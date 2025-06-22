@@ -51,13 +51,14 @@ vector<pair<int, int>> Partida::listar_movimientos_validos(pair<int, int> casill
 
 void Partida::dibujar() {
     vista_partida->actualizar_camara(turno_actual);
+    tablero->dibujar(casilla_seleccionada, turno_actual);
 }
 
 void Partida::actualizar_casilla(pair<int, int> casilla_nueva) {
     if (casilla_nueva != casilla_seleccionada)
         casilla_seleccionada = casilla_nueva;
-
-    tablero->dibujar(casilla_seleccionada, turno_actual);
+    else
+        tablero->dibujar(casilla_seleccionada, turno_actual);
     //cout << "(" << casilla_seleccionada.first << ", " << casilla_seleccionada.second << ") ";
     //cout << casilla_seleccionada.first * tablero->ver_largura() + casilla_seleccionada.second << endl;
 }

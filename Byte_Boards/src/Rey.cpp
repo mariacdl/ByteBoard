@@ -1,4 +1,7 @@
 #include "Rey.h"
+#include <iostream>
+
+using namespace std;
 
 char Rey::ver_tipo() const {
 	return 'R';
@@ -26,8 +29,9 @@ bool Rey::validar_movimiento(pair<int, int> desde, pair<int, int> para, const Ta
 	// Movimiento válido si es 1 casilla a cualquier dirección
 	if (abs(delta_x) > 1 || abs(delta_y) > 1) {
 		// Verificar si enroque es posible
-		if (!verificar_enroque(desde, para, tablero) && numero_movimientos == 0)
-			return false;
+        if (!verificar_enroque(desde, para, tablero))
+            return false;
+
 	}
 
 	// Verificar si casilla esta ocupada
@@ -37,55 +41,55 @@ bool Rey::validar_movimiento(pair<int, int> desde, pair<int, int> para, const Ta
 			return false;
 
 		// Si es el rey enemigo:
-		if (destino->ver_tipo() == 'R')
-			return determinar_jaque;
+        if (destino->ver_tipo() == 'R' && !determinar_jaque)
+            return false;
 	}
-
 	return true;
 }
 
 bool Rey::verificar_enroque(pair<int, int> desde, pair<int, int> para, const Tablero& tablero) const {
-	int desde_y = desde.first;
-	int desde_x = desde.second;
-	int para_y = para.first;
-	int para_x = para.second;
+    int desde_y = desde.first;
+    int desde_x = desde.second;
+    int para_y = para.first;
+    int para_x = para.second;
 
-	// Enroque hacia la izquierda
-	if (para_x == desde_x - 2 && para_y == desde_y) {
-		// Verificar si hay piezas entre el rey y la torre
-		if (tablero.ver_pieza(make_pair(desde_y, desde_x - 1)) != nullptr ||
-			tablero.ver_pieza(make_pair(desde_y, desde_x - 2)) != nullptr)
-			return false;
+    // Debe ser el primer movimiento del rey
+    if (numero_movimientos != 0)
+        return false;
 
-		// Enroque corto
-		Pieza* torre = tablero.ver_pieza(make_pair(desde_y, desde_x - 3));
-		if (torre != nullptr && torre->ver_tipo() == 'T' && torre->ver_color() == color)
-			return true;
+    // Deve ser en la horizontal
+    if (desde_y != para_y)
+        return false;
 
-		// Enroque largo
-		torre = tablero.ver_pieza(make_pair(desde_y, desde_x - 4));
-		if (torre != nullptr && torre->ver_tipo() == 'T' && torre->ver_color() == color &&
-			tablero.ver_pieza(make_pair(desde_y, desde_x - 3)) == nullptr)
-			return true;
-	}
+    // Enroque corto para la derecha
+    if (para_x == desde_x + 2) {
+        // Torre en la punta derecha
+        Pieza* torre = tablero.ver_pieza(make_pair(desde_y, tablero.ver_largura() - 1));
+        if (torre == nullptr || torre->ver_tipo() != 'T' || torre->ver_color() != color || torre->ver_numero_movimientos() != 0)
+            return false;
 
-	// Enroque hacia la derecha
-	if (para_x == desde_x + 2 && para_y == desde_y) {
-		if (tablero.ver_pieza(make_pair(desde_y, desde_x + 1)) != nullptr ||
-			tablero.ver_pieza(make_pair(desde_y, desde_x + 2)) != nullptr)
-			return false;
+        // Casillas libres entre rey y torre
+        for (int x = desde_x + 1; x < tablero.ver_largura() - 1; ++x) 
+            if (tablero.ver_pieza(make_pair(desde_y, x)) != nullptr)
+                return false;
 
-		// Enroque corto
-		Pieza* torre = tablero.ver_pieza(make_pair(desde_y, desde_x + 3));
-		if (torre != nullptr && torre->ver_tipo() == 'T' && torre->ver_color() == color)
-			return true;
+        return true;
+    }
 
-		// Enroque largo
-		torre = tablero.ver_pieza(make_pair(desde_y, desde_x + 4));
-		if (torre != nullptr && torre->ver_tipo() == 'T' && torre->ver_color() == color &&
-			tablero.ver_pieza(make_pair(desde_y, desde_x + 3)) == nullptr)
-			return true;
-	}
+    // Enroque largo para la izquierda
+    if (para_x == desde_x - 2) {
+        // Torre debe estar en la punta izquierda
+        Pieza* torre = tablero.ver_pieza(make_pair(desde_y, 0));
+        if (torre == nullptr || torre->ver_tipo() != 'T' || torre->ver_color() != color || torre->ver_numero_movimientos() != 0)
+            return false;
 
-	return false;
+        // Casillas libres entre rey y torre
+        for (int x = desde_x - 1; x > 0; --x) 
+            if (tablero.ver_pieza(make_pair(desde_y, x)) != nullptr)
+                return false;
+
+        return true;
+    }
+    return false;
 }
+

@@ -19,16 +19,16 @@ Tablero::Tablero(TipoJuego m) : modalidad(m), largura((m == JUEGO_4x5) ? 4 : 5),
 
     if (modalidad == JUEGO_4x5) {
         colocar_pieza({ 0, 0 }, 'R', NEGRO);
-        colocar_pieza({ 0, 1 }, 'C', NEGRO);
-        colocar_pieza({ 0, 2 }, 'A', NEGRO);
+        //colocar_pieza({ 0, 1 }, 'C', NEGRO);
+        //colocar_pieza({ 0, 2 }, 'A', NEGRO);
         colocar_pieza({ 0, 3 }, 'T', NEGRO);
         colocar_pieza({ 1, 0 }, 'P', NEGRO);
 
         colocar_pieza({ 4, 3 }, 'R', BLANCO);
-        colocar_pieza({ 4, 2 }, 'C', BLANCO);
-        colocar_pieza({ 4, 1 }, 'A', BLANCO);
+        //colocar_pieza({ 4, 2 }, 'C', BLANCO);
+        //colocar_pieza({ 4, 1 }, 'A', BLANCO);
         colocar_pieza({ 4, 0 }, 'T', BLANCO);
-        colocar_pieza({ 3, 3 }, 'P', BLANCO);
+        //colocar_pieza({ 3, 3 }, 'P', BLANCO);
     }
     else {
         colocar_pieza({ 0, 0 }, 'D', NEGRO);
@@ -68,6 +68,7 @@ void Tablero::dibujar(pair<int, int> casilla_seleccionada, EstadoTurno turno_act
     vista_tablero->dibujar_tablero(*this);
     vista_tablero->dibujar_seleccion(casilla_seleccionada, *this);
     vista_tablero->dibujar_movimientos(casilla_seleccionada, *this, turno_actual);
+
 }
 
 const VistaTablero& Tablero::ver_vista_tablero() const { return *vista_tablero; }
@@ -137,6 +138,7 @@ bool Tablero::validar_movimiento(pair<int, int> origen, pair<int, int> destino, 
 vector<pair<int, int>> Tablero::listar_movimientos_validos(pair<int, int> casilla, EstadoTurno turno_actual) const {
     vector<pair<int, int>> movimientos_validos;
 
+    // Verificar si la pieza es del jugador
     Pieza* pieza = ver_pieza(casilla);
     if (pieza->ver_color() != turno_actual)
         return movimientos_validos; 
@@ -157,13 +159,16 @@ vector<pair<int, int>> Tablero::listar_movimientos_validos(pair<int, int> casill
             }
         }
     }
+    cout << "Movimientos validos para " << pieza->ver_tipo() << pieza->ver_color();
+    for (auto m : movimientos_validos)
+        cout << " (" << m.first << ", " << m.second << ")";
+    cout << endl;
     return movimientos_validos;
 }
 
 bool Tablero::determinar_jaque(EstadoTurno color) const {
     pair<int, int> pos_rey = { -1, -1 };
 
-    cout << "bonk! determinar_jaque" << endl;
     // Buscar la posición del rey del color actual
     for (int i = 0; i < lista_piezas.size(); ++i) {
         Pieza* pieza = lista_piezas[i];
@@ -198,7 +203,7 @@ bool Tablero::determinar_jaque(EstadoTurno color) const {
         const pair<int, int>& pos_enemiga = pieza_posicion_enemiga.second;
 
 
-        if (validar_movimiento(pos_enemiga, pos_rey))
+        if (validar_movimiento(pos_enemiga, pos_rey, true))
             return true; // El rey está en jaque
     }
 

@@ -19,7 +19,7 @@ bool Torre::validar_movimiento(pair<int, int> desde, pair<int, int> para, const 
 	if (para_x < 0 || para_x >= tablero.ver_largura() || para_y < 0 || para_y >= tablero.ver_altura())
 		return false;
 
-	// Verificar si no hay movimiento
+	// Verificar si movimiento es al mismo lugar
 	if (delta_x == 0 && delta_y == 0)
 		return false;
 
