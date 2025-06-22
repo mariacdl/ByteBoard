@@ -11,5 +11,5 @@ public:
 	Caballo(EstadoTurno c, int n = 0) : Pieza(c, n) {};
 
 	char ver_tipo() const;
-	bool validar_movimiento(pair<int, int> desde, pair<int, int> para, const Tablero& tablero) const override;
+	bool validar_movimiento(pair<int, int> desde, pair<int, int> para, const Tablero& tablero, bool jaque = false) const override;
 };

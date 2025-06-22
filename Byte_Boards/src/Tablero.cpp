@@ -8,6 +8,8 @@
 #include "Dama.h"
 #include "Estados.h"
 #include <iostream>
+#include <algorithm>
+#include <iterator>
 
 using namespace std;
 
@@ -50,10 +52,10 @@ Tablero::~Tablero() {
     for (auto pieza : lista_piezas) delete pieza;
 }
 
-void Tablero::dibujar(pair<int, int> casilla_seleccionada) {
+void Tablero::dibujar(pair<int, int> casilla_seleccionada, EstadoTurno turno_actual) {
     vista_tablero->dibujar_tablero(*this);
     vista_tablero->dibujar_seleccion(casilla_seleccionada, *this);
-    vista_tablero->dibujar_movimientos(casilla_seleccionada, *this);
+    vista_tablero->dibujar_movimientos(casilla_seleccionada, *this, turno_actual);
 }
 
 const VistaTablero& Tablero::ver_vista_tablero() const { return *vista_tablero; }
@@ -62,12 +64,18 @@ int Tablero::ver_largura() const { return largura; }
 char Tablero::ver_modalidad() const { return modalidad; }
 
 Pieza* Tablero::ver_pieza(pair<int, int> pos) const {
-    return lista_piezas[largura * pos.first + pos.second];
+    cout << "Pieza seleccionada en (" << pos.first << ", " << pos.second << ")" << endl;
+
+    int indice = largura * pos.first + pos.second;
+    if (indice < 0 || indice >= largura * altura)
+        return nullptr;
+    else 
+        return lista_piezas[largura * pos.first + pos.second];
 }
 
 void Tablero::colocar_pieza(pair<int, int> pos, char tipo, EstadoTurno color, int numero_movimientos) {
-    int index = largura * pos.first + pos.second;
-    delete lista_piezas[index]; // evita memory leak
+    int indice = largura * pos.first + pos.second;
+    lista_piezas[indice] = nullptr;
 
     Pieza* nueva = nullptr;
     switch (tipo) {
@@ -79,47 +87,120 @@ void Tablero::colocar_pieza(pair<int, int> pos, char tipo, EstadoTurno color, in
     case 'R': nueva = new Rey(color); break;
     default: nueva = nullptr;
     }
-    lista_piezas[index] = nueva;
+    lista_piezas[indice] = nueva;
+}
+
+void Tablero::colocar_pieza(pair<int, int> origen, pair<int, int> destino) {
+    int indice_origen = largura * origen.first + origen.second;
+    int indice_destino = largura * destino.first + destino.second;
+
+    lista_piezas[indice_origen]->incrementar_movimiento();
+    lista_piezas[indice_destino] = lista_piezas[indice_origen];
+    
+    lista_piezas[indice_origen] = nullptr;
 }
 
 void Tablero::retirar_pieza(pair<int, int> pos) {
-    int index = largura * pos.first + pos.second;
-    delete lista_piezas[index];
-    lista_piezas[index] = nullptr;
+    int indice = largura * pos.first + pos.second;
+    lista_piezas[indice] = nullptr;
 }
 
 void Tablero::mover_pieza(pair<int, int> origen, pair<int, int> destino) {
-    int index_origen = largura * origen.first + origen.second;
-    int index_destino = largura * destino.first + destino.second;
+    Pieza* pieza_origen = ver_pieza(origen);
+    Pieza* pieza_destino = ver_pieza(destino);
 
-    if (lista_piezas[index_origen]) {
-        delete lista_piezas[index_destino]; // capturar si hay
-        lista_piezas[index_destino] = lista_piezas[index_origen];
-        lista_piezas[index_origen] = nullptr;
-        lista_piezas[index_destino]->incrementar_movimiento();
-    }
+    if (pieza_destino)
+        retirar_pieza(destino);
+
+    if (pieza_origen)
+        colocar_pieza(origen, destino);
 }
 
-bool Tablero::validar_movimiento(pair<int, int> origen, pair<int, int> destino) const {
+bool Tablero::validar_movimiento(pair<int, int> origen, pair<int, int> destino, bool jaque) const {
     Pieza* pieza = ver_pieza(origen);
-    return pieza && pieza->validar_movimiento(origen, destino, *this);
+    if (pieza == nullptr) 
+        return false;
+    else
+        return  pieza->validar_movimiento(origen, destino, *this, jaque);
 }
 
-vector<pair<int, int>> Tablero::listar_movimientos_validos(pair<int, int> casilla) const {
+vector<pair<int, int>> Tablero::listar_movimientos_validos(pair<int, int> casilla, EstadoTurno turno_actual) const {
     vector<pair<int, int>> movimientos_validos;
+
+    cout << "bonk! listar_movimientos_validos" << endl;
+
+    Pieza* pieza = ver_pieza(casilla);
+    if (pieza->ver_color() != turno_actual)
+        return movimientos_validos; 
+
     for (int x = 0; x < altura; ++x) {
         for (int y = 0; y < largura; ++y) {
-            if (validar_movimiento(casilla, { x, y })) {
-                movimientos_validos.emplace_back(x, y);
+            pair<int, int> destino = { x, y };
+
+            // Primero verificar si el movimiento es válido en sí (sin considerar jaque)
+            if (validar_movimiento(casilla, destino)) {
+                // Simular movimiento en un tablero copia
+                //Tablero copia = *this;
+                //copia.mover_pieza(casilla, destino);
+
+                cout << "bonk! copia.mover_pieza" << endl;
+
+                // Si después del movimiento el rey propio NO queda en jaque
+                //if (!copia.determinar_jaque(turno_actual)) {
+                //    movimientos_validos.push_back(destino);
+                //}
+                movimientos_validos.push_back(destino);
             }
         }
     }
-    cout << modalidad << "     ";
-    for (auto mov : movimientos_validos) {
-        cout << "   (" << mov.first << ", " << mov.second << ") ";
-        cout << mov.first * largura + mov.second << endl;
-    }
+
     return movimientos_validos;
+}
+
+bool Tablero::determinar_jaque(EstadoTurno color) const {
+    return false;
+    //pair<int, int> pos_rey = { -1, -1 };
+
+    //cout << "bonk! determinar_jaque" << endl;
+    //// Buscar la posición del rey del color actual
+    //for (int i = 0; i < lista_piezas.size(); ++i) {
+    //    Pieza* pieza = lista_piezas[i];
+    //    if (pieza != nullptr) {
+    //        if (pieza->ver_color() == color && pieza->ver_tipo() == 'R') {
+    //            pos_rey = { i / largura, i % largura };
+    //            break;
+    //        }
+    //    }
+    //}
+
+    //// Si no se encontró el rey, no hay jaque
+    //if (pos_rey.first == -1)
+    //    return false;
+
+    //// Buscar todas las piezas enemigas
+    //// Par pieza y posicion de pieza enemiga
+    //vector<pair<Pieza*, pair<int, int>>> lista_pieza_posicion_enemiga; 
+    //for (int i = 0; i < lista_piezas.size(); ++i) {
+    //    Pieza* pieza = lista_piezas[i];
+    //    if (pieza != nullptr) {
+    //        if (pieza->ver_color() != color) {
+    //            pair<int, int> pos_enemiga = { i / largura, i % largura };
+    //            lista_pieza_posicion_enemiga.push_back({ pieza, pos_enemiga });
+    //        }
+    //    }
+    //}
+
+    //// Verificar si alguna pieza enemiga puede capturar al rey
+    //for (const auto& pieza_posicion_enemiga : lista_pieza_posicion_enemiga) {
+    //    const Pieza* pieza = pieza_posicion_enemiga.first;
+    //    const pair<int, int>& pos_enemiga = pieza_posicion_enemiga.second;
+
+    //    if (validar_movimiento(pos_enemiga, pos_rey, true))
+    //        return true; // El rey está en jaque
+    //}
+
+    //// Ninguna pieza enemiga amenaza al rey
+    //return false;
 }
 
 const vector<Pieza*>& Tablero::listar_piezas() const {

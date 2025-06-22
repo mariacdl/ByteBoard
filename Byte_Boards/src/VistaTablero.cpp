@@ -95,9 +95,9 @@ void VistaTablero::dibujar_seleccion(pair<int, int> casilla, const Tablero& tabl
     }
 }
 
-void VistaTablero::dibujar_movimientos(pair<int, int> casilla, const Tablero& tablero) {
+void VistaTablero::dibujar_movimientos(pair<int, int> casilla, const Tablero& tablero, EstadoTurno turno_actual) {
     if (casilla != make_pair(-1, -1)) {
-        const vector<pair<int, int>>& lista_jugadas_validas = tablero.listar_movimientos_validos(casilla);
+        const vector<pair<int, int>>& lista_jugadas_validas = tablero.listar_movimientos_validos(casilla, turno_actual);
         for (const auto& jugada_valida : lista_jugadas_validas) {
             dibujar_seleccion(jugada_valida,tablero, 1.0f, 1.0f, 0.0f);
         }

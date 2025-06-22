@@ -84,9 +84,28 @@ void GestorJuego::interactuar(int cursor_x, int cursor_y) {
     case MENU:
         seleccionar_menu(cursor_x, cursor_y);
         break;
-    case EN_JUEGO:
-        seleccionar_casilla(cursor_x, cursor_y);
-        break;
+    case EN_JUEGO: {
+        pair<int, int> casilla_clicada = seleccionar_casilla(cursor_x, cursor_y);
+
+        // Clic fuera del tablero
+        if (casilla_clicada == make_pair(-1, -1)) 
+            casilla_seleccionada = { -1, -1 };
+
+        // Clic en la misma casilla seleccionada: deseleccionar
+        else if (casilla_clicada == casilla_seleccionada) 
+            casilla_seleccionada = { -1, -1 };
+        
+        // Primera selección (seleccionando pieza)
+        else if (casilla_seleccionada == make_pair(-1, -1)) 
+            casilla_seleccionada = casilla_clicada;
+
+        // Segunda selección (intento de mover)
+        else {
+            partida->jugar(casilla_seleccionada, casilla_clicada);
+            casilla_seleccionada = { -1, -1 };  
+        }
+        }
+         break;
     case PAUSA:
         seleccionar_pausa(cursor_x, cursor_y);
         break;
@@ -141,12 +160,11 @@ void GestorJuego::seleccionar_menu(int cursor_x, int cursor_y) {
     }
 }
 
-void GestorJuego::seleccionar_casilla(int cursor_x, int cursor_y) {
-      // Si el juego no está en estado válido, anula selección
-    if (estado_juego != EN_JUEGO || partida == nullptr) {
-        casilla_seleccionada = { -1, -1 };
-        return;
-    }
+pair<int,int> GestorJuego::seleccionar_casilla(int cursor_x, int cursor_y) {
+     // Si el juego no está en estado válido, anula selección
+    if (estado_juego != EN_JUEGO || partida == nullptr) 
+        return { -1, -1 };
+
 
     // Obtener matrices y viewport
     GLint viewport[4];
@@ -165,10 +183,8 @@ void GestorJuego::seleccionar_casilla(int cursor_x, int cursor_y) {
     glReadPixels(cursor_x, static_cast<int>(winY), 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &winZ);
 
     // Si la profundidad es 1.0f significa que no hay nada dibujado en ese píxel (clic fuera)
-    if (winZ == 1.0f) {
-        casilla_seleccionada = { -1, -1 };
-        return;
-    }
+    if (winZ == 1.0f) 
+        return  { -1, -1 };
 
     gluUnProject(winX, winY, winZ, modelview, projection, viewport, &posX, &posY, &posZ);
 
@@ -182,12 +198,11 @@ void GestorJuego::seleccionar_casilla(int cursor_x, int cursor_y) {
     // Verifica si la posición calculada está dentro del tablero
     if (fila >= 0 && fila < partida->ver_tablero().ver_altura() &&
         columna >= 0 && columna < partida->ver_tablero().ver_largura()) {
-        casilla_seleccionada = { fila, columna };
+        return { fila, columna };
     }
-    else {
+    else 
         // Clic fuera del área del tablero
-        casilla_seleccionada = { -1, -1 };
-    }
+        return{ -1, -1 };
 }
 
 void GestorJuego::seleccionar_pausa(int cursor_x, int cursor_y) {

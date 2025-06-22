@@ -4,7 +4,7 @@ char Dama::ver_tipo() const {
 	return 'D';
 }
 
-bool Dama::validar_movimiento(pair<int, int> desde, pair<int, int> para, const Tablero& tablero) const {
+bool Dama::validar_movimiento(pair<int, int> desde, pair<int, int> para, const Tablero& tablero, bool jaque) const {
 	Pieza* destino = tablero.ver_pieza(para); // first = y, second = x
 
 	int desde_y = desde.first;
@@ -39,11 +39,12 @@ bool Dama::validar_movimiento(pair<int, int> desde, pair<int, int> para, const T
 		y += paso_y;
 	}
 
-	// Si la casilla destino está ocupada...
+	// Verificar si casilla esta ocupada
 	if (destino != nullptr) {
-		// No se puede capturar al rey
+		// No se puede capturar al rey enemigo
+		// A menos que sea para verificar jaque
 		if (destino->ver_tipo() == 'R')
-			return false;
+			return jaque;
 
 		// No se puede capturar una pieza del mismo color
 		if (destino->ver_color() == color)

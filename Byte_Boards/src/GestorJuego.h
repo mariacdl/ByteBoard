@@ -28,14 +28,14 @@ public:
     void dibujar();
     void interactuar(int cursor_x, int cursor_y);
 
+    pair<int, int> seleccionar_casilla(int cursor_x, int cursor_y);
+    void iniciar_partida();
+
     void seleccionar_menu(int cursor_x, int cursor_y);
-    void seleccionar_casilla(int cursor_x, int cursor_y);
     void seleccionar_pausa(int cursor_x, int cursor_y);
     void seleccionar_promocion(int cursor_x, int cursor_y);
     void seleccionar_fin(int cursor_x, int cursor_y);
 
     void procesar_tecla(unsigned char key);
-    void iniciar_partida();
     bool click_area(int cursor_x, int cursor_y, int x1, int y1, int x2, int y2) const;
-
 };

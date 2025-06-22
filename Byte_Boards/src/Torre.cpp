@@ -4,7 +4,7 @@ char Torre::ver_tipo() const {
 	return 'T';
 }
 
-bool Torre::validar_movimiento(pair<int, int> desde, pair<int, int> para, const Tablero& tablero) const {
+bool Torre::validar_movimiento(pair<int, int> desde, pair<int, int> para, const Tablero& tablero, bool jaque) const {
 	Pieza* destino = tablero.ver_pieza(para); // first = y, second = x
 
 	int desde_y = desde.first;
@@ -23,9 +23,17 @@ bool Torre::validar_movimiento(pair<int, int> desde, pair<int, int> para, const 
 	if (delta_x == 0 && delta_y == 0)
 		return false;
 
-	// Verificar si intenta capturar su propio rey
-	if (destino != nullptr && destino->ver_tipo() == 'R' && destino->ver_color() == color)
-		return false;
+	// Verificar si casilla esta ocupada
+	if (destino != nullptr) {
+		// No se puede capturar al rey enemigo
+		// A menos que sea para verificar jaque
+		if (destino->ver_tipo() == 'R')
+			return jaque;
+
+		// No se puede capturar una pieza del mismo color
+		if (destino->ver_color() == color)
+			return false;
+	}
 
 	// Verificar si el movimiento es solo en línea recta (horizontal o vertical)
 	if (delta_x != 0 && delta_y != 0)
@@ -46,10 +54,6 @@ bool Torre::validar_movimiento(pair<int, int> desde, pair<int, int> para, const 
 				return false;
 		}
 	}
-
-	// Verificar si hay una pieza aliada en el destino
-	if (destino != nullptr && destino->ver_color() == color)
-		return false;
 
 	// Movimiento válido
 	return true;

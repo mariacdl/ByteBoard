@@ -4,7 +4,7 @@ char Peon::ver_tipo() const {
 	return 'P';
 }
 
-bool Peon::validar_movimiento(pair<int, int> desde, pair<int, int> para, const Tablero& tablero) const {
+bool Peon::validar_movimiento(pair<int, int> desde, pair<int, int> para, const Tablero& tablero, bool jaque) const {
 	Pieza* destino = tablero.ver_pieza(para);
 
 	int desde_y = desde.first;
@@ -26,20 +26,28 @@ bool Peon::validar_movimiento(pair<int, int> desde, pair<int, int> para, const T
 	if (delta_x == 0 && delta_y == 0)
 		return false;
 
-	// No puede capturar su propio rey
-	if (destino != nullptr && destino->ver_tipo() == 'R' && destino->ver_color() == color)
-		return false;
+	// Verificar si casilla esta ocupada
+	if (destino != nullptr) {
+		// No se puede capturar al rey enemigo
+		// A menos que sea para verificar jaque
+		if (destino->ver_tipo() == 'R')
+			return jaque;
 
-	// Avance simple
+		// No se puede capturar una pieza del mismo color
+		if (destino->ver_color() == color)
+			return false;
+	}
+
+	// Avance simple (una casilla hacia adelante, casilla libre)
 	if (delta_x == 0 && delta_y == direccion && destino == nullptr)
 		return true;
 
-	// Avance doble
+	// Avance doble (desde la fila inicial, ambas casillas deben estar libres)
 	if (validar_avance_doble(desde, para, tablero))
 		return true;
 
-	// Captura diagonal
-	if (abs(delta_x) == 1 && delta_y == direccion && destino != nullptr && destino->ver_color() != color)
+	// Captura diagonal (una casilla en diagonal, hay enemigo presente)
+	if (abs(delta_x) == 1 && delta_y == direccion && destino != nullptr)
 		return true;
 
 	// En passant
@@ -48,6 +56,7 @@ bool Peon::validar_movimiento(pair<int, int> desde, pair<int, int> para, const T
 
 	return false;
 }
+
 
 bool Peon::validar_avance_doble(pair<int, int> desde, pair<int, int> para, const Tablero& tablero) const {
 	Pieza* destino = tablero.ver_pieza(para);

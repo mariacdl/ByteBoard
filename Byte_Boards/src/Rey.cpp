@@ -4,7 +4,7 @@ char Rey::ver_tipo() const {
 	return 'R';
 }
 
-bool Rey::validar_movimiento(pair<int, int> desde, pair<int, int> para, const Tablero& tablero) const {
+bool Rey::validar_movimiento(pair<int, int> desde, pair<int, int> para, const Tablero& tablero, bool jaque) const {
 	Pieza* destino = tablero.ver_pieza(para); // first = y, second = x
 
 	int desde_y = desde.first;
@@ -26,17 +26,18 @@ bool Rey::validar_movimiento(pair<int, int> desde, pair<int, int> para, const Ta
 	// Movimiento válido si es 1 casilla a cualquier dirección
 	if (abs(delta_x) > 1 || abs(delta_y) > 1) {
 		// Verificar si enroque es posible
-		if (!verificar_enroque(desde, para, tablero))
+		if (!verificar_enroque(desde, para, tablero) && numero_movimientos == 0)
 			return false;
 	}
 
-	// Casilla ocupada
+	// Verificar si casilla esta ocupada
 	if (destino != nullptr) {
-		// No se puede capturar al rey
+		// No se puede capturar al rey enemigo
+		// A menos que sea para verificar jaque
 		if (destino->ver_tipo() == 'R')
-			return false;
+			return jaque;
 
-		// No se puede capturar una pieza aliada
+		// No se puede capturar una pieza del mismo color
 		if (destino->ver_color() == color)
 			return false;
 	}
