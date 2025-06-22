@@ -48,4 +48,6 @@ public:
     bool determinar_jaque(EstadoTurno color) const;
 
     pair<int, int> ver_peon_promocionable() const;
+
+    bool verificar_falta_material() const;
 };

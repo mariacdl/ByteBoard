@@ -69,6 +69,8 @@ void GestorJuego::dibujar() {
         }
         break;
     case EN_JUEGO:
+        if (partida == nullptr)
+            partida = new Partida();
         partida->dibujar();
         partida->actualizar_casilla(casilla_seleccionada);
         break;
@@ -107,7 +109,10 @@ void GestorJuego::interactuar(int cursor_x, int cursor_y) {
 
             if (partida->verificar_promocion_disponible()) 
                 estado_juego = PROMOCION;
-        
+            
+            tipo_fin = partida->determinar_victoria();
+            if (tipo_fin != NO_FINALIZADO)
+                estado_juego = FIN;
         }
         }
          break;

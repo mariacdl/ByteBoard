@@ -1,5 +1,5 @@
 #include "Partida.h"
-#include "Tablero.h"
+#include "tablero.h"
 #include "Pieza.h"
 #include "Estados.h"
 #include "GestorJuego.h"
@@ -42,14 +42,6 @@ void Partida::alternar_turno() {
     numero_turnos++;
 }
 
-bool Partida::verificar_movimiento(pair<int, int> desde, pair<int, int> para, bool jaque = false) {
-    return tablero->validar_movimiento(desde, para, jaque);
-}
-
-vector<pair<int, int>> Partida::listar_movimientos_validos(pair<int, int> casilla) {
-    return tablero->listar_movimientos_validos(casilla, turno_actual);
-}
-
 void Partida::dibujar() {
     vista_partida->actualizar_camara(turno_actual);
     tablero->dibujar(casilla_seleccionada, ultimos_movimientos_validos);
@@ -70,7 +62,8 @@ void Partida::jugar(pair<int, int> desde, pair<int, int> para) {
     if (validar_jugada(desde, para)) {
         tablero->mover_pieza(desde, para);
         alternar_turno();
-    } else {
+    }
+    else {
         ultimos_movimientos_validos.clear();
     }
 }
@@ -78,7 +71,6 @@ void Partida::jugar(pair<int, int> desde, pair<int, int> para) {
 bool Partida::validar_jugada(pair<int, int>desde, pair<int, int>para) {
     auto pieza = tablero->ver_pieza(desde);
     auto copia_tablero = tablero;
-    auto rey_en_jaque = (turno_actual == BLANCO) ? rey_blanco_en_jaque : rey_negro_en_jaque;
 
     // Revisa si pieza existe
     if (pieza == nullptr) {
@@ -96,7 +88,7 @@ bool Partida::validar_jugada(pair<int, int>desde, pair<int, int>para) {
     }
         
     // Verifica si la jugada es valida (sin contar jaque)
-    auto movimientos_validos = listar_movimientos_validos(desde);
+    auto movimientos_validos = tablero->listar_movimientos_validos(desde, turno_actual);
     if (find(movimientos_validos.begin(), movimientos_validos.end(), para) == movimientos_validos.end()) {
         cout << "Movimiento invalido desde (" << desde.first << ", " << desde.second << ")";
         cout << " hasta (" << para.first << ", " << para.second << ")" << endl;
@@ -114,6 +106,46 @@ bool Partida::verificar_promocion_disponible() {
 }
 
 void Partida::promocionar(char nuevo_tipo) const {
-
     tablero->colocar_pieza(pos_peon_promocionable, nuevo_tipo);
+}
+
+TipoFin Partida::determinar_victoria() const {
+    //  Verificar si el jugador actual tiene algún movimiento legal
+    bool tiene_movimientos = false;
+    auto rey_en_jaque = tablero->determinar_jaque(turno_actual);
+
+    for (int x = 0; x < tablero->ver_altura(); ++x) {
+        for (int y = 0; y < tablero->ver_largura(); ++y) {
+            pair<int, int> origen = { x, y };
+            Pieza* pieza = tablero->ver_pieza(origen);
+            if (pieza && pieza->ver_color() == turno_actual) {
+                auto movimientos = tablero->listar_movimientos_validos(origen, turno_actual);
+
+                if (!movimientos.empty()) {
+                    tiene_movimientos = true;
+                    break;
+                }
+            }
+        }
+        if (tiene_movimientos) break;
+    }
+    
+    // Si no hay movimientos, determinar jaque mate o ahogado
+    if (!tiene_movimientos) {
+        if (turno_actual == NEGRO && rey_en_jaque)
+            return VICTORIA_CIENCIAS; 
+        else if (turno_actual == BLANCO && rey_en_jaque)
+            return VICTORIA_LETRAS;
+        else
+            return TABLAS; // El jugador actual no está en jaque pero no puede moverse: ahogado
+        
+    }
+
+    // Falta de material
+    if (tablero->verificar_falta_material()) {
+        return TABLAS;
+    }
+
+    // 4. Ninguna condición de victoria
+    return NO_FINALIZADO;
 }

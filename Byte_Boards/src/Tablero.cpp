@@ -199,6 +199,7 @@ vector<pair<int, int>> Tablero::listar_movimientos_validos(pair<int, int> casill
     return movimientos_validos;
 }
 
+// Determina jaque en el proprio rey
 bool Tablero::determinar_jaque(EstadoTurno color) const {
     pair<int, int> pos_rey = { -1, -1 };
 
@@ -314,4 +315,58 @@ pair<int, int> Tablero::ver_peon_promocionable() const{
 
     // No hay peón para promover
     return { -1, -1 };
+}
+
+bool Tablero::verificar_falta_material() const {
+    int num_piezas = 0;
+    int num_peones = 0;
+    int num_torres = 0;
+    int num_damas = 0;
+    int num_alfiles_b = 0, num_alfiles_n = 0;
+    int num_caballos = 0;
+
+    for (const auto& pieza : lista_piezas) {
+        if (!pieza) continue;
+
+        char tipo = pieza->ver_tipo();
+        ++num_piezas;
+
+        switch (tipo) {
+        case 'P': ++num_peones; break;
+        case 'T': ++num_torres; break;
+        case 'D': ++num_damas; break;
+        case 'C': ++num_caballos; break;
+        case 'A': {
+            // Determinar si está en casilla blanca o negra
+            int i = &pieza - &lista_piezas[0];
+            int fila = i / largura;
+            int col = i % largura;
+            if ((fila + col) % 2 == 0)
+                ++num_alfiles_b;
+            else
+                ++num_alfiles_n;
+            break;
+        }
+        }
+    }
+
+    // Solo quedan los dos reyes
+    if (num_piezas == 2) return true;
+
+    // Rey + alfil vs rey
+    if (num_piezas == 3 && num_peones == 0 && num_torres == 0 && num_damas == 0 && num_caballos == 0 &&
+        (num_alfiles_b + num_alfiles_n) == 1)
+        return true;
+
+    // Rey + caballo vs rey
+    if (num_piezas == 3 && num_caballos == 1 && num_peones == 0 && num_torres == 0 && num_damas == 0 &&
+        (num_alfiles_b + num_alfiles_n) == 0)
+        return true;
+
+    // Rey + alfil vs rey + alfil, si ambos alfiles están en el mismo color
+    if (num_piezas == 4 && num_peones == 0 && num_torres == 0 && num_damas == 0 && num_caballos == 0 &&
+        ((num_alfiles_b == 2 && num_alfiles_n == 0) || (num_alfiles_b == 0 && num_alfiles_n == 2)))
+        return true;
+
+    return false; // Hay material suficiente para ganar
 }

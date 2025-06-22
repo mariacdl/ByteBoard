@@ -21,12 +21,6 @@ private:
     pair<int, int> pos_peon_promocionable = { -1,-1 };
     pair<int, int> casilla_seleccionada = { -1,-1 };
 
-    bool rey_negro_en_jaque = false;
-    bool rey_blanco_en_jaque = false;
-
-
-    bool verificar_movimiento(pair<int, int> desde, pair<int, int> para, bool jaque);
-    vector<pair<int, int>> listar_movimientos_validos(pair<int, int> casilla);
     void alternar_turno();
 public:
     Partida(TipoJuego m = JUEGO_4x5, EstadoTurno c = BLANCO);
@@ -46,4 +40,6 @@ public:
 
     bool verificar_promocion_disponible();
     void promocionar(char nuevo_tipo) const;
+
+    TipoFin determinar_victoria() const;
 };
