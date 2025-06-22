@@ -66,6 +66,9 @@
     <ClCompile Include="src\VistaJuego.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
+    <ClCompile Include="src\OponenteArtificial.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Partida.h">
@@ -112,6 +115,9 @@
     </ClInclude>
     <ClInclude Include="src\Torre.h">
       <Filter>Archivos de encabezado\Piezas</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OponenteArtificial.h">
+      <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -4,8 +4,10 @@
 #include <vector>
 #include <VistaPartida.h>
 #include <Estados.h>
+#include "OponenteArtificial.h"
 
 using namespace std;
+
 
 class Partida {
 private:
@@ -15,6 +17,7 @@ private:
     EstadoTurno turno_actual; 
     EstadoTurno color_jugador1;
     TipoJuego modalidad; 
+    OponenteArtificial* oponente_ia = nullptr;
 
     vector<pair<int, int>> ultimos_movimientos_validos;
 
@@ -42,4 +45,7 @@ public:
     void promocionar(char nuevo_tipo) const;
 
     TipoFin determinar_victoria() const;
+
+    void establecer_oponente();
+    void ejecutar_turno(); 
 };

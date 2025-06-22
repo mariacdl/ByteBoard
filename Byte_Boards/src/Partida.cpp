@@ -18,6 +18,7 @@ Partida::Partida(TipoJuego m, EstadoTurno c) : modalidad(m), color_jugador1(c), 
 Partida::~Partida() {
     delete vista_partida;
     delete tablero;
+    delete oponente_ia;
 }
 
 const Tablero& Partida::ver_tablero() const {
@@ -51,7 +52,7 @@ void Partida::actualizar_casilla(pair<int, int> casilla_nueva) {
     if (casilla_nueva != casilla_seleccionada) {
         casilla_seleccionada = casilla_nueva;
 
-        if (casilla_nueva != make_pair(-1, -1))
+        if (casilla_nueva != make_pair(-1, -1)) 
             ultimos_movimientos_validos = tablero->listar_movimientos_validos(casilla_nueva, turno_actual);
         else
             ultimos_movimientos_validos.clear();
@@ -60,8 +61,35 @@ void Partida::actualizar_casilla(pair<int, int> casilla_nueva) {
 
 void Partida::jugar(pair<int, int> desde, pair<int, int> para) {
     if (validar_jugada(desde, para)) {
+
+        // Display en terminal
+        Pieza* pieza = tablero->ver_pieza(desde);
+        cout << "Estamos en el turno : " << numero_turnos + 1 << endl;
+        cout << "Movimientos ejecutado de " << pieza->ver_tipo() << pieza->ver_color();
+        cout << " desde (" << desde.first << ", " << desde.second << ") para";
+        cout << " (" << para.first << ", " << para.second << ")" << endl;
+
+        // Ejecucion
         tablero->mover_pieza(desde, para);
         alternar_turno();
+        
+        if (oponente_ia != nullptr) {
+            // Elegir jugada por IA
+            pair<pair<int, int>, pair<int, int>> jugada = oponente_ia->elegir_proxima_jugada(*tablero);
+
+            // Display en terminal
+            cout << "Oponente IA existe" << endl;
+            Pieza* pieza = tablero->ver_pieza(jugada.first);
+
+            cout << "Estamos en el turno : " << numero_turnos + 1 << endl;
+            cout << "Movimientos ejecutado de " << pieza->ver_tipo() << pieza->ver_color();
+            cout << " desde (" << jugada.first.first << ", " << jugada.first.second << ") para";
+            cout << " (" << jugada.second.first << ", " << jugada.second.second << ")" << endl;
+
+            // Ejecucion
+            tablero->mover_pieza(jugada.first, jugada.second);
+            alternar_turno();
+        }
     }
     else {
         ultimos_movimientos_validos.clear();
@@ -77,9 +105,6 @@ bool Partida::validar_jugada(pair<int, int>desde, pair<int, int>para) {
         cout << "Selecciona una pieza" << endl;
         return false;
     }
-
-    cout << turno_actual << endl;
-    cout << pieza->ver_color() << "  " << pieza->ver_tipo() << endl;
 
     // Verifica si la pieza es del jugador
     if (pieza->ver_color() != turno_actual) {
@@ -133,12 +158,11 @@ TipoFin Partida::determinar_victoria() const {
     // Si no hay movimientos, determinar jaque mate o ahogado
     if (!tiene_movimientos) {
         if (turno_actual == NEGRO && rey_en_jaque)
-            return VICTORIA_CIENCIAS; 
+            return VICTORIA_CIENCIAS;
         else if (turno_actual == BLANCO && rey_en_jaque)
             return VICTORIA_LETRAS;
         else
             return TABLAS; // El jugador actual no está en jaque pero no puede moverse: ahogado
-        
     }
 
     // Falta de material
@@ -146,6 +170,23 @@ TipoFin Partida::determinar_victoria() const {
         return TABLAS;
     }
 
-    // 4. Ninguna condición de victoria
+    // Ninguna condición de victoria
     return NO_FINALIZADO;
+}
+
+void Partida::establecer_oponente() {
+    oponente_ia = new OponenteArtificial();
+}
+
+void Partida::ejecutar_turno() {
+    if (oponente_ia && ((turno_actual == BLANCO && oponente_ia->ver_color()) ||
+        (turno_actual == NEGRO && oponente_ia->ver_color()))) {
+        // Juega el oponente artificial
+        auto jugada = oponente_ia->elegir_proxima_jugada(*tablero);
+        if (jugada.first.first != -1) {
+            tablero->mover_pieza(jugada.first, jugada.second);
+        }
+    }
+    else 
+        cout << "ERROR: IA no tiene jugadas!" << endl;
 }

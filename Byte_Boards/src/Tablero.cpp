@@ -19,16 +19,16 @@ Tablero::Tablero(TipoJuego m) : modalidad(m), largura((m == JUEGO_4x5) ? 4 : 5),
 
     if (modalidad == JUEGO_4x5) {
         colocar_pieza({ 0, 0 }, 'R', NEGRO);
-        //colocar_pieza({ 0, 1 }, 'C', NEGRO);
-        //colocar_pieza({ 0, 2 }, 'A', NEGRO);
+        colocar_pieza({ 0, 1 }, 'C', NEGRO);
+        colocar_pieza({ 0, 2 }, 'A', NEGRO);
         colocar_pieza({ 0, 3 }, 'T', NEGRO);
         colocar_pieza({ 1, 0 }, 'P', NEGRO);
 
         colocar_pieza({ 4, 3 }, 'R', BLANCO);
-        //colocar_pieza({ 4, 2 }, 'C', BLANCO);
-        //colocar_pieza({ 4, 1 }, 'A', BLANCO);
+        colocar_pieza({ 4, 2 }, 'C', BLANCO);
+        colocar_pieza({ 4, 1 }, 'A', BLANCO);
         colocar_pieza({ 4, 0 }, 'T', BLANCO);
-        //colocar_pieza({ 3, 3 }, 'P', BLANCO);
+        colocar_pieza({ 3, 3 }, 'P', BLANCO);
     }
     else {
         colocar_pieza({ 0, 0 }, 'D', NEGRO);
@@ -134,10 +134,10 @@ void Tablero::mover_pieza(pair<int, int> origen, pair<int, int> destino) {
     Pieza* pieza_origen = ver_pieza(origen);
     Pieza* pieza_destino = ver_pieza(destino);
 
-    cout << "Moviendo " << pieza_origen->ver_tipo() << pieza_origen->ver_color();
-    cout << " desde (" << origen.first << ", " << origen.second << ")";
-    cout << "para (" << destino.first << ", " << destino.second << ")";
-    cout << endl;
+    //cout << "Moviendo " << pieza_origen->ver_tipo() << pieza_origen->ver_color();
+    //cout << " desde (" << origen.first << ", " << origen.second << ")";
+    //cout << "para (" << destino.first << ", " << destino.second << ")";
+    //cout << endl;
 
     // Al capturar en passat, retira el peon
     if (pieza_origen->ver_tipo() == 'P')
@@ -190,12 +190,12 @@ vector<pair<int, int>> Tablero::listar_movimientos_validos(pair<int, int> casill
                 }
             }
         }
-        cout << "Movimientos validos para " << pieza->ver_tipo() << pieza->ver_color();
+        
+        cout << " (" << casilla.first << ", " << casilla.second << ") :";
         for (auto m : movimientos_validos)
             cout << " (" << m.first << ", " << m.second << ")";
         cout << endl;
     }
-
     return movimientos_validos;
 }
 

@@ -70,7 +70,7 @@ void GestorJuego::dibujar() {
         break;
     case EN_JUEGO:
         if (partida == nullptr)
-            partida = new Partida();
+            iniciar_partida();
         partida->dibujar();
         partida->actualizar_casilla(casilla_seleccionada);
         break;
@@ -352,8 +352,16 @@ void GestorJuego::iniciar_partida() {
         delete partida;
         partida = nullptr; 
     }
-    else if (tipo_oponente != SIN_OPONENTE && tipo_juego != NO_DECIDIDO) 
+    else if (tipo_oponente == JUGADOR && tipo_juego != NO_DECIDIDO) {
+        cout << "Partida contra JUGADOR " << ((tipo_juego == JUEGO_4x5) ? "4x5" : "SPEED") << endl;
         partida = new Partida(tipo_juego, BLANCO);
+
+    }
+    else if (tipo_oponente == IA && tipo_juego != NO_DECIDIDO) {
+        cout << "Partida contra IA " << ((tipo_juego == JUEGO_4x5) ? "4x5" : "SPEED") << endl;
+        partida = new Partida(tipo_juego, BLANCO);
+        partida->establecer_oponente();
+    }
     else
         partida = nullptr;
     

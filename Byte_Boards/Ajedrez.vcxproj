@@ -22,6 +22,7 @@
     <ClCompile Include="src\Alfil.cpp" />
     <ClCompile Include="src\Caballo.cpp" />
     <ClCompile Include="src\Dama.cpp" />
+    <ClCompile Include="src\OponenteArtificial.cpp" />
     <ClCompile Include="src\VistaJuego.cpp" />
     <ClCompile Include="src\VistaPiezas.cpp" />
     <ClCompile Include="src\VistaTablero.cpp" />
@@ -36,6 +37,7 @@
     <ClCompile Include="src\VistaPartida.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\OponenteArtificial.h" />
     <ClInclude Include="src\Rey.h" />
     <ClInclude Include="src\Estados.h" />
     <ClInclude Include="src\Alfil.h" />
