@@ -47,6 +47,18 @@ Tablero::Tablero(TipoJuego m) : modalidad(m), largura((m == JUEGO_4x5) ? 4 : 5),
     }
 }
 
+
+Tablero::Tablero(const Tablero& otro)
+    : modalidad(otro.modalidad), largura(otro.largura), altura(otro.altura) {
+    vista_tablero = new VistaTablero(*otro.vista_tablero);
+    lista_piezas.resize(largura * altura, nullptr);
+    for (int i = 0; i < lista_piezas.size(); ++i) {
+        if (otro.lista_piezas[i] != nullptr)
+            // Queria poner un constructor de copia pero ia ser un infierno implementarlo aqui
+            lista_piezas[i] = otro.lista_piezas[i]->clonar(); 
+    }
+}
+
 Tablero::~Tablero() {
     delete vista_tablero;
     for (auto pieza : lista_piezas) delete pieza;
@@ -64,8 +76,6 @@ int Tablero::ver_largura() const { return largura; }
 char Tablero::ver_modalidad() const { return modalidad; }
 
 Pieza* Tablero::ver_pieza(pair<int, int> pos) const {
-    cout << "Pieza seleccionada en (" << pos.first << ", " << pos.second << ")" << endl;
-
     int indice = largura * pos.first + pos.second;
     if (indice < 0 || indice >= largura * altura)
         return nullptr;
@@ -116,18 +126,16 @@ void Tablero::mover_pieza(pair<int, int> origen, pair<int, int> destino) {
         colocar_pieza(origen, destino);
 }
 
-bool Tablero::validar_movimiento(pair<int, int> origen, pair<int, int> destino, bool jaque) const {
+bool Tablero::validar_movimiento(pair<int, int> origen, pair<int, int> destino, bool determinar_jaque) const {
     Pieza* pieza = ver_pieza(origen);
     if (pieza == nullptr) 
         return false;
     else
-        return  pieza->validar_movimiento(origen, destino, *this, jaque);
+        return  pieza->validar_movimiento(origen, destino, *this, determinar_jaque);
 }
 
 vector<pair<int, int>> Tablero::listar_movimientos_validos(pair<int, int> casilla, EstadoTurno turno_actual) const {
     vector<pair<int, int>> movimientos_validos;
-
-    cout << "bonk! listar_movimientos_validos" << endl;
 
     Pieza* pieza = ver_pieza(casilla);
     if (pieza->ver_color() != turno_actual)
@@ -139,68 +147,63 @@ vector<pair<int, int>> Tablero::listar_movimientos_validos(pair<int, int> casill
 
             // Primero verificar si el movimiento es válido en sí (sin considerar jaque)
             if (validar_movimiento(casilla, destino)) {
-                // Simular movimiento en un tablero copia
-                //Tablero copia = *this;
-                //copia.mover_pieza(casilla, destino);
-
-                cout << "bonk! copia.mover_pieza" << endl;
+                // Simular movimiento en una copia profunda del tablero
+                Tablero copia = *this;
+                copia.mover_pieza(casilla, destino);
 
                 // Si después del movimiento el rey propio NO queda en jaque
-                //if (!copia.determinar_jaque(turno_actual)) {
-                //    movimientos_validos.push_back(destino);
-                //}
-                movimientos_validos.push_back(destino);
+                if (!copia.determinar_jaque(turno_actual)) 
+                    movimientos_validos.push_back(destino);
             }
         }
     }
-
     return movimientos_validos;
 }
 
 bool Tablero::determinar_jaque(EstadoTurno color) const {
+    pair<int, int> pos_rey = { -1, -1 };
+
+    cout << "bonk! determinar_jaque" << endl;
+    // Buscar la posición del rey del color actual
+    for (int i = 0; i < lista_piezas.size(); ++i) {
+        Pieza* pieza = lista_piezas[i];
+        if (pieza != nullptr) {
+            if (pieza->ver_color() == color && pieza->ver_tipo() == 'R') {
+                pos_rey = { i / largura, i % largura };
+                break;
+            }
+        }
+    }
+
+    // Si no se encontró el rey, no hay jaque
+    if (pos_rey.first == -1)
+        return false;
+
+    // Buscar todas las piezas enemigas
+    // Par pieza y posicion de pieza enemiga
+    vector<pair<Pieza*, pair<int, int>>> lista_pieza_posicion_enemiga; 
+    for (int i = 0; i < lista_piezas.size(); ++i) {
+        Pieza* pieza = lista_piezas[i];
+        if (pieza != nullptr) {
+            if (pieza->ver_color() != color) {
+                pair<int, int> pos_enemiga = { i / largura, i % largura };
+                lista_pieza_posicion_enemiga.push_back({ pieza, pos_enemiga });
+            }
+        }
+    }
+
+    // Verificar si alguna pieza enemiga puede capturar al rey
+    for (const auto& pieza_posicion_enemiga : lista_pieza_posicion_enemiga) {
+        const Pieza* pieza = pieza_posicion_enemiga.first;
+        const pair<int, int>& pos_enemiga = pieza_posicion_enemiga.second;
+
+
+        if (validar_movimiento(pos_enemiga, pos_rey))
+            return true; // El rey está en jaque
+    }
+
+    // Ninguna pieza enemiga amenaza al rey
     return false;
-    //pair<int, int> pos_rey = { -1, -1 };
-
-    //cout << "bonk! determinar_jaque" << endl;
-    //// Buscar la posición del rey del color actual
-    //for (int i = 0; i < lista_piezas.size(); ++i) {
-    //    Pieza* pieza = lista_piezas[i];
-    //    if (pieza != nullptr) {
-    //        if (pieza->ver_color() == color && pieza->ver_tipo() == 'R') {
-    //            pos_rey = { i / largura, i % largura };
-    //            break;
-    //        }
-    //    }
-    //}
-
-    //// Si no se encontró el rey, no hay jaque
-    //if (pos_rey.first == -1)
-    //    return false;
-
-    //// Buscar todas las piezas enemigas
-    //// Par pieza y posicion de pieza enemiga
-    //vector<pair<Pieza*, pair<int, int>>> lista_pieza_posicion_enemiga; 
-    //for (int i = 0; i < lista_piezas.size(); ++i) {
-    //    Pieza* pieza = lista_piezas[i];
-    //    if (pieza != nullptr) {
-    //        if (pieza->ver_color() != color) {
-    //            pair<int, int> pos_enemiga = { i / largura, i % largura };
-    //            lista_pieza_posicion_enemiga.push_back({ pieza, pos_enemiga });
-    //        }
-    //    }
-    //}
-
-    //// Verificar si alguna pieza enemiga puede capturar al rey
-    //for (const auto& pieza_posicion_enemiga : lista_pieza_posicion_enemiga) {
-    //    const Pieza* pieza = pieza_posicion_enemiga.first;
-    //    const pair<int, int>& pos_enemiga = pieza_posicion_enemiga.second;
-
-    //    if (validar_movimiento(pos_enemiga, pos_rey, true))
-    //        return true; // El rey está en jaque
-    //}
-
-    //// Ninguna pieza enemiga amenaza al rey
-    //return false;
 }
 
 const vector<Pieza*>& Tablero::listar_piezas() const {

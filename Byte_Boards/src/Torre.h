@@ -12,5 +12,7 @@ public:
 	Torre(EstadoTurno c, int n = 0) : Pieza(c, n) {};
 
 	char ver_tipo() const;
-	bool validar_movimiento(pair<int, int> desde, pair<int, int> para, const Tablero& tablero, bool jaque = false) const override;
+	bool validar_movimiento(pair<int, int> desde, pair<int, int> para, const Tablero& tablero, bool determinar_jaque = false) const override;
+
+	Torre* clonar() const override { return new Torre(*this); };
 };

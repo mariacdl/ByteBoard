@@ -20,5 +20,7 @@ public:
     void incrementar_movimiento();
 
     virtual char ver_tipo() const = 0; // 'P', 'T', etc
-    virtual bool validar_movimiento(pair<int, int> desde, pair<int, int> para, const Tablero & tablero, bool jaque = false) const = 0;
+    virtual bool validar_movimiento(pair<int, int> desde, pair<int, int> para, const Tablero & tablero, bool determinar_jaque = false) const = 0;
+
+    virtual Pieza* clonar() const = 0;
 };

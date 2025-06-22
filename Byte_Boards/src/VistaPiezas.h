@@ -20,5 +20,8 @@ class VistaPiezas {
 	void dibujar_rey_negro(pair<int, int> pos, float tam, const Tablero& tablero);
 	void dibujar_dama_negro(pair<int, int> pos, float tam, const Tablero& tablero);
 public:
+	VistaPiezas() {};
+	VistaPiezas(const VistaPiezas& otro) {};
+
 	void dibujar_piezas(float tam, const Tablero& tablero);
 };

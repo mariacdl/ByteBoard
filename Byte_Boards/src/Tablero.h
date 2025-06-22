@@ -19,7 +19,9 @@ protected:
 
 public:
     Tablero(TipoJuego m);
+    Tablero(const Tablero& otro);
     ~Tablero();
+
 
     void dibujar(pair<int, int> casilla_seleccionada, EstadoTurno turno_actual);
     const VistaTablero& ver_vista_tablero() const;
@@ -38,6 +40,6 @@ public:
     void mover_pieza(pair<int, int> origen, pair<int, int> destino);
     
     vector<pair<int, int>> listar_movimientos_validos(pair<int, int> casilla, EstadoTurno turno_actual) const;
-    bool validar_movimiento(pair<int, int> origen, pair<int, int> destino, bool jaque = false) const;
+    bool validar_movimiento(pair<int, int> origen, pair<int, int> destino, bool determinar_jaque = false) const;
     bool determinar_jaque(EstadoTurno color) const;
 };

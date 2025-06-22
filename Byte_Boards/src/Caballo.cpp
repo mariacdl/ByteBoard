@@ -4,7 +4,7 @@ char Caballo::ver_tipo() const {
 	return 'C';
 }
 
-bool Caballo::validar_movimiento(pair<int, int> desde, pair<int, int> para, const Tablero& tablero, bool jaque) const {
+bool Caballo::validar_movimiento(pair<int, int> desde, pair<int, int> para, const Tablero& tablero, bool determinar_jaque) const {
 	Pieza* destino = tablero.ver_pieza(para); // Recordar: first = y, second = x
 
 	int desde_y = desde.first;
@@ -29,14 +29,13 @@ bool Caballo::validar_movimiento(pair<int, int> desde, pair<int, int> para, cons
 
 	// Verificar si casilla esta ocupada
 	if (destino != nullptr) {
-		// No se puede capturar al rey enemigo
-		// A menos que sea para verificar jaque
-		if (destino->ver_tipo() == 'R')
-			return jaque;
-
 		// No se puede capturar una pieza del mismo color
 		if (destino->ver_color() == color)
 			return false;
+
+		// Si es el rey enemigo:
+		if (destino->ver_tipo() == 'R')
+			return determinar_jaque;
 	}
 
 	return true;
