@@ -2,6 +2,7 @@
 #include "Tablero.h"
 #include "Pieza.h"
 #include "Estados.h"
+#include "GestorJuego.h"
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -51,22 +52,26 @@ vector<pair<int, int>> Partida::listar_movimientos_validos(pair<int, int> casill
 
 void Partida::dibujar() {
     vista_partida->actualizar_camara(turno_actual);
-    tablero->dibujar(casilla_seleccionada, turno_actual);
+    tablero->dibujar(casilla_seleccionada, ultimos_movimientos_validos);
 }
 
 void Partida::actualizar_casilla(pair<int, int> casilla_nueva) {
-    if (casilla_nueva != casilla_seleccionada)
+    if (casilla_nueva != casilla_seleccionada) {
         casilla_seleccionada = casilla_nueva;
-    else
-        tablero->dibujar(casilla_seleccionada, turno_actual);
-    //cout << "(" << casilla_seleccionada.first << ", " << casilla_seleccionada.second << ") ";
-    //cout << casilla_seleccionada.first * tablero->ver_largura() + casilla_seleccionada.second << endl;
+
+        if (casilla_nueva != make_pair(-1, -1))
+            ultimos_movimientos_validos = tablero->listar_movimientos_validos(casilla_nueva, turno_actual);
+        else
+            ultimos_movimientos_validos.clear();
+    }
 }
 
 void Partida::jugar(pair<int, int> desde, pair<int, int> para) {
     if (validar_jugada(desde, para)) {
         tablero->mover_pieza(desde, para);
         alternar_turno();
+    } else {
+        ultimos_movimientos_validos.clear();
     }
 }
 
@@ -98,35 +103,12 @@ bool Partida::validar_jugada(pair<int, int>desde, pair<int, int>para) {
         return false;
     }
         
-    //// Verificar si es enroque (largo)
-    //if (pieza->ver_tipo() == 'R' && abs(desde.second - para.second) > 2 && !rey_en_jaque) {
-    //    // Por la derecha
-    //    if (desde.second > para.second)
-    //        // Mover torre
-    //        copia_tablero->mover_pieza({ desde.first , para.second + 2 }, { para.first, desde.second + 1 });
-
-    //    // Por la izquierda
-    //    else
-    //        // Mover torre
-    //        copia_tablero->mover_pieza({ desde.first , para.second - 2 }, { para.first, desde.second - 1 });
-    //}
-
-    //// Verificar si es enroque (corto)
-    //else if (pieza->ver_tipo() == 'R' && abs(desde.first - para.first) > 1 && !rey_en_jaque) {
-    //    // Por la derecha
-    //    if (desde.second > para.second)
-    //        // Mover torre
-    //        copia_tablero->mover_pieza({ desde.first , para.second + 1 }, { para.first, desde.second + 1 });
-
-    //    // Por la izquierda
-    //    else
-    //        // Mover torre
-    //        copia_tablero->mover_pieza({ desde.first , para.second - 1 }, { para.first, desde.second - 1 });
-    //}
-
     return true;
 }
 
 void Partida::promocionar(char nuevo_tipo) const {
-
+    pair<int, int> peon = tablero->ver_peon_promocionable();
+    if (peon != make_pair(-1, -1)) {
+        // hacer algo
+    }
 }

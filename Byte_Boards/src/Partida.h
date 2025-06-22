@@ -16,15 +16,14 @@ private:
     EstadoTurno color_jugador1;
     TipoJuego modalidad; 
 
+    vector<pair<int, int>> ultimos_movimientos_validos;
+
     pair<int, int> promocion = { -1,-1 };
-    pair<int, int> peon_passant = { -1,-1 };
     pair<int, int> casilla_seleccionada = { -1,-1 };
 
     bool rey_negro_en_jaque = false;
     bool rey_blanco_en_jaque = false;
 
-    vector<char> promocionesB;
-    vector<char> promocionesN;
 
     bool verificar_movimiento(pair<int, int> desde, pair<int, int> para, bool jaque);
     vector<pair<int, int>> listar_movimientos_validos(pair<int, int> casilla);

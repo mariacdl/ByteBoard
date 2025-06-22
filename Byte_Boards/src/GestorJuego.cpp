@@ -96,9 +96,10 @@ void GestorJuego::interactuar(int cursor_x, int cursor_y) {
             casilla_seleccionada = { -1, -1 };
         
         // Primera selección (seleccionando pieza)
-        else if (casilla_seleccionada == make_pair(-1, -1)) 
+        else if (casilla_seleccionada == make_pair(-1, -1)) {
             casilla_seleccionada = casilla_clicada;
-
+            partida->actualizar_casilla(casilla_seleccionada);
+        }
         // Segunda selección (intento de mover)
         else {
             partida->jugar(casilla_seleccionada, casilla_clicada);

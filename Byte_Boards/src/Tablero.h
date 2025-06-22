@@ -16,14 +16,14 @@ protected:
     int largura = 0;
     int altura = 0;
     vector<Pieza*> lista_piezas;
-    vector<pair<int, int>> movimientos_validos;
+    
 
 public:
     Tablero(TipoJuego m);
     Tablero(const Tablero& otro);
     ~Tablero();
 
-    void dibujar(pair<int, int> casilla_seleccionada, EstadoTurno turno_actual);
+    void dibujar(pair<int, int> casilla_seleccionada, vector<pair<int, int>> ultimos_movimientos_validos);
     const VistaTablero& ver_vista_tablero() const;
 
     int ver_altura() const;
@@ -42,8 +42,9 @@ public:
     void captura_en_passant(pair<int, int>origen, pair<int, int> destino);
     void mover_enroque(pair<int, int>origen, pair<int, int> destino);
 
-    
     vector<pair<int, int>> listar_movimientos_validos(pair<int, int> casilla, EstadoTurno turno_actual) const;
     bool validar_movimiento(pair<int, int> origen, pair<int, int> destino, bool determinar_jaque = false) const;
     bool determinar_jaque(EstadoTurno color) const;
+
+    pair<int, int> ver_peon_promocionable() const;
 };

@@ -2,6 +2,7 @@
 #include "VistaPiezas.h"
 #include "freeglut.h"
 #include <utility>
+#include <vector>
 #include <Estados.h>
 
 using namespace std;
@@ -19,6 +20,6 @@ public:
 	~VistaTablero() { delete vista_piezas; };
 	void dibujar_tablero(const Tablero& tablero);
 	void dibujar_seleccion(pair<int,int> casilla, const Tablero& tablero, GLfloat r = 0.0f, GLfloat g = 1.0f, GLfloat b = 0.0f) const;
-	void dibujar_movimientos(pair<int, int> casilla, const Tablero& tablero, EstadoTurno turno_actual);
+	void dibujar_movimientos(vector<pair<int, int>> movimientos_validos, const Tablero& tablero);
 	float getTam() const;
 };

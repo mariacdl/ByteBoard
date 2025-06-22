@@ -64,10 +64,16 @@ Tablero::~Tablero() {
     for (auto pieza : lista_piezas) delete pieza;
 }
 
-void Tablero::dibujar(pair<int, int> casilla_seleccionada, EstadoTurno turno_actual) {
+void Tablero::dibujar(pair<int, int> casilla_seleccionada, vector<pair<int,int>> ultimos_movimientos_validos) {
     vista_tablero->dibujar_tablero(*this);
     vista_tablero->dibujar_seleccion(casilla_seleccionada, *this);
-    vista_tablero->dibujar_movimientos(casilla_seleccionada, *this, turno_actual);
+    if (casilla_seleccionada != make_pair(-1, -1)) {
+        Pieza* pieza = ver_pieza(casilla_seleccionada);
+        if (pieza != nullptr) {
+            const vector<pair<int, int>>& movimientos = ultimos_movimientos_validos;
+            vista_tablero->dibujar_movimientos(movimientos, *this);
+        }
+    }
 
 }
 
@@ -90,12 +96,12 @@ void Tablero::colocar_pieza(pair<int, int> pos, char tipo, EstadoTurno color, in
 
     Pieza* nueva = nullptr;
     switch (tipo) {
-    case 'P': nueva = new Peon(color); break;
-    case 'T': nueva = new Torre(color); break;
-    case 'A': nueva = new Alfil(color); break;
-    case 'C': nueva = new Caballo(color); break;
-    case 'D': nueva = new Dama(color); break;
-    case 'R': nueva = new Rey(color); break;
+    case 'P': nueva = new Peon(color, numero_movimientos); break;
+    case 'T': nueva = new Torre(color, numero_movimientos); break;
+    case 'A': nueva = new Alfil(color, numero_movimientos); break;
+    case 'C': nueva = new Caballo(color, numero_movimientos); break;
+    case 'D': nueva = new Dama(color, numero_movimientos); break;
+    case 'R': nueva = new Rey(color, numero_movimientos); break;
     default: nueva = nullptr;
     }
     lista_piezas[indice] = nueva;
@@ -155,29 +161,33 @@ vector<pair<int, int>> Tablero::listar_movimientos_validos(pair<int, int> casill
 
     // Verificar si la pieza es del jugador
     Pieza* pieza = ver_pieza(casilla);
-    if (pieza->ver_color() != turno_actual)
-        return movimientos_validos; 
 
-    for (int x = 0; x < altura; ++x) {
-        for (int y = 0; y < largura; ++y) {
-            pair<int, int> destino = { x, y };
+    if (pieza != nullptr) {
+        if (pieza->ver_color() != turno_actual)
+            return movimientos_validos;
 
-            // Primero verificar si el movimiento es válido en sí (sin considerar jaque)
-            if (validar_movimiento(casilla, destino)) {
-                // Simular movimiento en una copia profunda del tablero
-                Tablero copia = *this;
-                copia.mover_pieza(casilla, destino);
+        for (int x = 0; x < altura; ++x) {
+            for (int y = 0; y < largura; ++y) {
+                pair<int, int> destino = { x, y };
 
-                // Si después del movimiento el rey propio NO queda en jaque
-                if (!copia.determinar_jaque(turno_actual)) 
-                    movimientos_validos.push_back(destino);
+                // Primero verificar si el movimiento es válido en sí (sin considerar jaque)
+                if (validar_movimiento(casilla, destino)) {
+                    // Simular movimiento en una copia profunda del tablero
+                    Tablero copia = *this;
+                    copia.mover_pieza(casilla, destino);
+
+                    // Si después del movimiento el rey propio NO queda en jaque
+                    if (!copia.determinar_jaque(turno_actual))
+                        movimientos_validos.push_back(destino);
+                }
             }
         }
+        cout << "Movimientos validos para " << pieza->ver_tipo() << pieza->ver_color();
+        for (auto m : movimientos_validos)
+            cout << " (" << m.first << ", " << m.second << ")";
+        cout << endl;
     }
-    cout << "Movimientos validos para " << pieza->ver_tipo() << pieza->ver_color();
-    for (auto m : movimientos_validos)
-        cout << " (" << m.first << ", " << m.second << ")";
-    cout << endl;
+
     return movimientos_validos;
 }
 
@@ -275,4 +285,25 @@ void Tablero::mover_enroque(pair<int, int>origen, pair<int, int> destino) {
             if(torre->ver_tipo() == 'T' && torre->ver_numero_movimientos() == 0 && torre->ver_color() == rey->ver_color())
                 mover_pieza(origen_torre, destino_torre);
     }
+}
+
+pair<int, int> Tablero::ver_peon_promocionable() const{
+    for (int y = 0; y < largura; ++y) {
+        // Revisa última fila para BLANCOS
+        pair<int, int> pos_blanco = { 0, y };
+        Pieza* peon_blanco = ver_pieza(pos_blanco);
+        if (peon_blanco)
+            if(peon_blanco->ver_tipo() == 'P' && peon_blanco->ver_color() == BLANCO)
+                return pos_blanco;
+
+        // Revisa última fila para NEGROS
+        pair<int, int> pos_negro = { altura - 1, y };
+        Pieza* peon_negro = ver_pieza(pos_negro);
+        if (peon_negro != nullptr)
+            if(peon_negro->ver_tipo() == 'P' && peon_negro->ver_color() == NEGRO)
+                return pos_negro;
+    }
+
+    // No hay peón para promover
+    return { -1, -1 };
 }
