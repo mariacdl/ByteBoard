@@ -120,9 +120,24 @@ void Tablero::mover_pieza(pair<int, int> origen, pair<int, int> destino) {
     Pieza* pieza_origen = ver_pieza(origen);
     Pieza* pieza_destino = ver_pieza(destino);
 
-    if (pieza_destino)
-        retirar_pieza(destino);
+    cout << "Moviendo " << pieza_origen->ver_tipo() << pieza_origen->ver_color();
+    cout << " desde (" << origen.first << ", " << origen.second << ")";
+    cout << "para (" << destino.first << ", " << destino.second << ")";
+    cout << endl;
 
+    // Al capturar en passat, retira el peon
+    if (pieza_origen->ver_tipo() == 'P')
+        captura_en_passant(origen, destino);
+
+    // Captura normal
+    else if (pieza_destino)
+        retirar_pieza(destino);
+    
+    // Al hacer enroque mueve la torre
+    if (pieza_origen->ver_tipo() == 'R')
+        mover_enroque(origen, destino);
+
+    // Movimiento normal
     if (pieza_origen)
         colocar_pieza(origen, destino);
 }
@@ -213,4 +228,51 @@ bool Tablero::determinar_jaque(EstadoTurno color) const {
 
 const vector<Pieza*>& Tablero::listar_piezas() const {
     return lista_piezas;
+}
+
+void Tablero::captura_en_passant(pair<int, int>origen, pair<int, int> destino) {
+    Pieza* pieza = ver_pieza(origen);
+
+    int direccion = (pieza->ver_color() == BLANCO) ? -1 : 1;
+    pair<int, int> pos_peon_avance_doble = { destino.first - direccion, destino.second };
+
+    Pieza* peon_avance_doble = ver_pieza(pos_peon_avance_doble);
+    if (peon_avance_doble != nullptr)
+        if(peon_avance_doble->ver_tipo() == 'P' && 
+            peon_avance_doble->ver_numero_movimientos() == 1 &&
+            peon_avance_doble->ver_color() != pieza->ver_color())
+            retirar_pieza(pos_peon_avance_doble);
+}
+
+void Tablero::mover_enroque(pair<int, int>origen, pair<int, int> destino) {
+    Pieza* rey = ver_pieza(origen);
+
+    // Verificar si es enroque
+    if (origen.first == destino.first && abs(destino.second - origen.second) == 2) {
+
+        // Enroque corto a la derecha
+        bool es_enroque_corto = (destino.second - origen.second > 0);
+
+        int fila = origen.first;
+
+        pair<int, int> origen_torre;
+        pair<int, int> destino_torre;
+
+        if (es_enroque_corto) {
+            // Enroque corto 
+            origen_torre = { fila, ver_largura() - 1 };              // torre en la esquina derecha
+            destino_torre = { fila, origen.second + 1 };             // torre justo al lado derecho del rey antes de enroque
+        }
+        else {
+            // Enroque largo 
+            origen_torre = { fila, 0 };                              // torre en la esquina izquierda
+            destino_torre = { fila, origen.second - 1 };             // torre justo al lado izquierda del rey antes de enroque
+        }
+
+        Pieza* torre = ver_pieza(origen_torre);
+
+        if (torre != nullptr)
+            if(torre->ver_tipo() == 'T' && torre->ver_numero_movimientos() == 0 && torre->ver_color() == rey->ver_color())
+                mover_pieza(origen_torre, destino_torre);
+    }
 }

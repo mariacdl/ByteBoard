@@ -38,6 +38,10 @@ public:
 
     void retirar_pieza(pair<int, int> pos);
     void mover_pieza(pair<int, int> origen, pair<int, int> destino);
+
+    void captura_en_passant(pair<int, int>origen, pair<int, int> destino);
+    void mover_enroque(pair<int, int>origen, pair<int, int> destino);
+
     
     vector<pair<int, int>> listar_movimientos_validos(pair<int, int> casilla, EstadoTurno turno_actual) const;
     bool validar_movimiento(pair<int, int> origen, pair<int, int> destino, bool determinar_jaque = false) const;
