@@ -18,7 +18,7 @@ private:
 
     vector<pair<int, int>> ultimos_movimientos_validos;
 
-    pair<int, int> promocion = { -1,-1 };
+    pair<int, int> pos_peon_promocionable = { -1,-1 };
     pair<int, int> casilla_seleccionada = { -1,-1 };
 
     bool rey_negro_en_jaque = false;
@@ -44,5 +44,6 @@ public:
     void jugar(pair<int, int> desde, pair<int, int> para);
     bool validar_jugada(pair<int, int> desde, pair<int, int> para);
 
+    bool verificar_promocion_disponible();
     void promocionar(char nuevo_tipo) const;
 };

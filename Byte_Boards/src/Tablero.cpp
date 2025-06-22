@@ -107,6 +107,14 @@ void Tablero::colocar_pieza(pair<int, int> pos, char tipo, EstadoTurno color, in
     lista_piezas[indice] = nueva;
 }
 
+void Tablero::colocar_pieza(pair<int, int> pos, char nuevo_tipo) {
+    Pieza* pieza_vieja = ver_pieza(pos);
+    EstadoTurno color = pieza_vieja->ver_color();
+    int numero_movimientos = pieza_vieja->ver_numero_movimientos();
+
+    colocar_pieza(pos, nuevo_tipo, color, numero_movimientos);
+}
+
 void Tablero::colocar_pieza(pair<int, int> origen, pair<int, int> destino) {
     int indice_origen = largura * origen.first + origen.second;
     int indice_destino = largura * destino.first + destino.second;

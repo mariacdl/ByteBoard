@@ -106,9 +106,14 @@ bool Partida::validar_jugada(pair<int, int>desde, pair<int, int>para) {
     return true;
 }
 
+bool Partida::verificar_promocion_disponible() {
+    pair<int, int> pos_peon = tablero->ver_peon_promocionable();
+    pos_peon_promocionable = pos_peon;
+    if (pos_peon != make_pair(-1, -1))
+        return true;
+}
+
 void Partida::promocionar(char nuevo_tipo) const {
-    pair<int, int> peon = tablero->ver_peon_promocionable();
-    if (peon != make_pair(-1, -1)) {
-        // hacer algo
-    }
+
+    tablero->colocar_pieza(pos_peon_promocionable, nuevo_tipo);
 }

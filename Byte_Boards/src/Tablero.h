@@ -33,8 +33,9 @@ public:
     Pieza* ver_pieza(pair<int, int> pos) const;
     const vector<Pieza*>& listar_piezas() const;
 
-    void colocar_pieza(pair<int, int> pos, char tipo, EstadoTurno color, int numero_movimientos = 0);
+    void colocar_pieza(pair<int, int> pos, char nuevo_tipo);
     void colocar_pieza(pair<int, int> origen, pair<int, int> destino);
+    void colocar_pieza(pair<int, int> pos, char tipo, EstadoTurno color, int numero_movimientos = 0);
 
     void retirar_pieza(pair<int, int> pos);
     void mover_pieza(pair<int, int> origen, pair<int, int> destino);
