@@ -7,7 +7,6 @@
 #include "Caballo.h"
 #include "Dama.h"
 #include "Estados.h"
-#include "CancionAjedrez.h"
 #include <iostream>
 #include <algorithm>
 #include <iterator>
@@ -152,39 +151,9 @@ void Tablero::mover_pieza(pair<int, int> origen, pair<int, int> destino) {
     if (pieza_origen->ver_tipo() == 'R')
         mover_enroque(origen, destino);
 
-    if (pieza_origen == nullptr) {
-        // No hay pieza que mover, quizás un log o simplemente salir
-        return;
-    }
-
     // Movimiento normal
     if (pieza_origen)
         colocar_pieza(origen, destino);
-
-    SonidoAjedrez::reproducirMovimiento();
-
-    EstadoTurno turno_rival = (pieza_origen->ver_color() == BLANCO) ? NEGRO : BLANCO;
-    bool tiene_movimientos = false;
-
-    if (determinar_jaque(turno_rival)) {
-        for (int i = 0; i < lista_piezas.size(); ++i) {
-            Pieza* p = lista_piezas[i];
-            if (p && p->ver_color() == turno_rival) {
-                pair<int, int> pos = { i / largura, i % largura };
-                auto movs = listar_movimientos_validos(pos, turno_rival);
-                if (!movs.empty()) {
-                    tiene_movimientos = true;
-                    break;
-                }
-            }
-        }
-
-        if (!tiene_movimientos) {
-
-           // SonidoAjedrez::reproducirJaqueMate();
-        }
-    }
-    
 }
 
 bool Tablero::validar_movimiento(pair<int, int> origen, pair<int, int> destino, bool determinar_jaque) const {
@@ -230,7 +199,7 @@ vector<pair<int, int>> Tablero::listar_movimientos_validos(pair<int, int> casill
     return movimientos_validos;
 }
 
-// Determina jaque en el proprio rey
+// Determina jaque del rey oponente
 bool Tablero::determinar_jaque(EstadoTurno color) const {
     pair<int, int> pos_rey = { -1, -1 };
 

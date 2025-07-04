@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -23,6 +23,7 @@
     <ClCompile Include="src\Caballo.cpp" />
     <ClCompile Include="src\Dama.cpp" />
     <ClCompile Include="src\OponenteArtificial.cpp" />
+    <ClCompile Include="src\Sonido.cpp" />
     <ClCompile Include="src\VistaJuego.cpp" />
     <ClCompile Include="src\VistaPiezas.cpp" />
     <ClCompile Include="src\VistaTablero.cpp" />
@@ -43,6 +44,7 @@
     <ClInclude Include="src\Alfil.h" />
     <ClInclude Include="src\Caballo.h" />
     <ClInclude Include="src\Dama.h" />
+    <ClInclude Include="src\Sonido.h" />
     <ClInclude Include="src\VistaJuego.h" />
     <ClInclude Include="src\VistaPiezas.h" />
     <ClInclude Include="src\VistaTablero.h" />

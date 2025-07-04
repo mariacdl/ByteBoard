@@ -1,6 +1,10 @@
 #include "VistaJuego.h"
 #include "freeglut.h"
-#include "etsidi.h" 
+#include "etsidi.h"
+#include <iostream>
+#include <Sonido.h>
+
+using namespace std;
 
 
 void VistaJuego::dibujar_textura(const char* ruta_imagen) {
@@ -31,6 +35,16 @@ void VistaJuego::dibujar_textura(const char* ruta_imagen) {
     glPopMatrix(); // Restaura la matriz de proyección guardada
     glMatrixMode(GL_MODELVIEW); 
     glEnable(GL_DEPTH_TEST); // Habilita el test de profundidad de nuevo
+}
+
+VistaJuego::VistaJuego() {
+    cout << "iniciar vista juego" << endl;
+    Sonido::iniciarMusicaMenu();
+}
+
+VistaJuego::~VistaJuego() {
+    cout << "retirar vista juego" << endl;
+    Sonido::detenerMusica();
 }
 
 void VistaJuego::dibujar_menu_tablero() {

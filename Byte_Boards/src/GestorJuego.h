@@ -22,7 +22,7 @@ private:
     pair<int, int> casilla_seleccionada = { -1, -1 };
 
 public:
-    GestorJuego() : partida(), vista_juego() {};
+    GestorJuego() : partida(), vista_juego(new VistaJuego()) {};
     ~GestorJuego() = default;
 
     void dibujar();

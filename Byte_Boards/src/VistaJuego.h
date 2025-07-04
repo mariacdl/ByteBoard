@@ -4,6 +4,8 @@
 class VistaJuego {
 	void dibujar_textura(const char* ruta_imagen);
 public:
+	VistaJuego();
+	~VistaJuego();
 
 	// MENU
 	void dibujar_menu_tablero();

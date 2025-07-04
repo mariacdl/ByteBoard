@@ -6,6 +6,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <Sonido.h>
 
 using namespace std;
 
@@ -71,6 +72,7 @@ void Partida::jugar(pair<int, int> desde, pair<int, int> para) {
 
         // Ejecucion
         tablero->mover_pieza(desde, para);
+        Sonido::reproducirMovimiento();
         alternar_turno();
         
         if (oponente_ia != nullptr) {
@@ -88,8 +90,13 @@ void Partida::jugar(pair<int, int> desde, pair<int, int> para) {
 
             // Ejecucion
             tablero->mover_pieza(jugada.first, jugada.second);
+            Sonido::reproducirMovimiento();
             alternar_turno();
         }
+
+        // Validar jaque para ejecutar sonido
+        if (tablero->determinar_jaque(turno_actual))
+            Sonido::reproducirJaque();
     }
     else {
         ultimos_movimientos_validos.clear();
@@ -131,6 +138,7 @@ bool Partida::verificar_promocion_disponible() {
 }
 
 void Partida::promocionar(char nuevo_tipo) const {
+    Sonido::reproducirJaqueMate();
     tablero->colocar_pieza(pos_peon_promocionable, nuevo_tipo);
 }
 
@@ -157,10 +165,16 @@ TipoFin Partida::determinar_victoria() const {
     
     // Si no hay movimientos, determinar jaque mate o ahogado
     if (!tiene_movimientos) {
-        if (turno_actual == NEGRO && rey_en_jaque)
+        if (turno_actual == NEGRO && rey_en_jaque) {
+            Sonido::reproducirJaqueMate();
             return VICTORIA_CIENCIAS;
-        else if (turno_actual == BLANCO && rey_en_jaque)
+        }
+           
+        else if (turno_actual == BLANCO && rey_en_jaque) {
+            Sonido::reproducirJaqueMate();
             return VICTORIA_LETRAS;
+        }
+            
         else
             return TABLAS; // El jugador actual no está en jaque pero no puede moverse: ahogado
     }

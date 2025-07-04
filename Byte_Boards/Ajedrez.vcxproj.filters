@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Archivos de origen">
@@ -19,21 +19,27 @@
     <Filter Include="Archivos de encabezado\Piezas">
       <UniqueIdentifier>{39925301-673a-464e-8cad-774ff0e2af72}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de origen\Vistas">
+      <UniqueIdentifier>{1ca22c70-1491-49ec-836b-d1600d5404b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Gestores">
+      <UniqueIdentifier>{9db7fc10-c0a7-4239-a011-d3974637c3b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Gestores">
+      <UniqueIdentifier>{441e415a-a1f4-4183-b011-9c71f78c208d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Vistas">
+      <UniqueIdentifier>{5e6118b2-35a8-4534-8197-42073455118c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Utilidades">
+      <UniqueIdentifier>{e308d05e-d0c7-4ce1-9482-b6cec815ae9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Utilidades">
+      <UniqueIdentifier>{97c47a8c-3fe7-4a1a-a6dd-5bd3e16ded43}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Tablero.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GestorJuego.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VistaPiezas.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VistaTablero.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="src\Alfil.cpp">
@@ -57,35 +63,35 @@
     <ClCompile Include="src\Torre.cpp">
       <Filter>Archivos de origen\Piezas</Filter>
     </ClCompile>
-    <ClCompile Include="src\Partida.cpp">
-      <Filter>Archivos de origen</Filter>
+    <ClCompile Include="src\VistaJuego.cpp">
+      <Filter>Archivos de origen\Vistas</Filter>
     </ClCompile>
     <ClCompile Include="src\VistaPartida.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Archivos de origen\Vistas</Filter>
     </ClCompile>
-    <ClCompile Include="src\VistaJuego.cpp">
-      <Filter>Archivos de origen</Filter>
+    <ClCompile Include="src\VistaPiezas.cpp">
+      <Filter>Archivos de origen\Vistas</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VistaTablero.cpp">
+      <Filter>Archivos de origen\Vistas</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GestorJuego.cpp">
+      <Filter>Archivos de origen\Gestores</Filter>
     </ClCompile>
     <ClCompile Include="src\OponenteArtificial.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Archivos de origen\Gestores</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Partida.cpp">
+      <Filter>Archivos de origen\Gestores</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tablero.cpp">
+      <Filter>Archivos de origen\Gestores</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Sonido.cpp">
+      <Filter>Archivos de origen\Utilidades</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Partida.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Tablero.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GestorJuego.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\VistaPiezas.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\VistaTablero.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="src\Alfil.h">
       <Filter>Archivos de encabezado\Piezas</Filter>
     </ClInclude>
@@ -101,23 +107,41 @@
     <ClInclude Include="src\Pieza.h">
       <Filter>Archivos de encabezado\Piezas</Filter>
     </ClInclude>
-    <ClInclude Include="src\VistaPartida.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\VistaJuego.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Estados.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="src\Rey.h">
       <Filter>Archivos de encabezado\Piezas</Filter>
     </ClInclude>
     <ClInclude Include="src\Torre.h">
       <Filter>Archivos de encabezado\Piezas</Filter>
     </ClInclude>
+    <ClInclude Include="src\VistaPiezas.h">
+      <Filter>Archivos de encabezado\Vistas</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VistaJuego.h">
+      <Filter>Archivos de encabezado\Vistas</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VistaPartida.h">
+      <Filter>Archivos de encabezado\Vistas</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VistaTablero.h">
+      <Filter>Archivos de encabezado\Vistas</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tablero.h">
+      <Filter>Archivos de encabezado\Gestores</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GestorJuego.h">
+      <Filter>Archivos de encabezado\Gestores</Filter>
+    </ClInclude>
     <ClInclude Include="src\OponenteArtificial.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Archivos de encabezado\Gestores</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Partida.h">
+      <Filter>Archivos de encabezado\Gestores</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Estados.h">
+      <Filter>Archivos de encabezado\Utilidades</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Sonido.h">
+      <Filter>Archivos de encabezado\Utilidades</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
