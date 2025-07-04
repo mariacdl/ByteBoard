@@ -46,8 +46,8 @@ bool Torre::validar_movimiento(pair<int, int> desde, pair<int, int> para, const 
 	// Verificar si casilla esta ocupada
 	if (destino != nullptr) {
 		// No se puede capturar una pieza del mismo color
-		if (destino->ver_color() == color)
-			return false;
+		//if (destino->ver_color() == color)
+		//	return false;
 
 		// Si es el rey enemigo:
 		if (destino->ver_tipo() == 'R')
